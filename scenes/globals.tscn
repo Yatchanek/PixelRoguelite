@@ -1,6 +1,15 @@
-[gd_scene load_steps=2 format=3 uid="uid://beiw80lx4fxap"]
+[gd_scene load_steps=10 format=3 uid="uid://beiw80lx4fxap"]
 
 [ext_resource type="Script" path="res://scripts/globals.gd" id="1_5d332"]
+[ext_resource type="Texture2D" uid="uid://ba7qd4tqi3j2t" path="res://graphics/citrink-1x.png" id="2_pl0k6"]
+[ext_resource type="Texture2D" uid="uid://gpi6qq3gocse" path="res://graphics/gothic-bit-1x.png" id="3_bshta"]
+[ext_resource type="Texture2D" uid="uid://cij1x85oaiilt" path="res://graphics/berry-nebula-1x.png" id="4_7xv2h"]
+[ext_resource type="Texture2D" uid="uid://67iq0627ohqu" path="res://graphics/waverator-1x.png" id="5_udu2e"]
+[ext_resource type="Texture2D" uid="uid://dftewbwm5o40c" path="res://graphics/secam-1x.png" id="6_hdoym"]
+[ext_resource type="Texture2D" uid="uid://b1ml5ji1mp1am" path="res://graphics/mahyellaw-22-1x.png" id="7_k5h5i"]
+[ext_resource type="Texture2D" uid="uid://b767ylx2jblqv" path="res://graphics/submerged-chimera-1x.png" id="8_1y5pw"]
+[ext_resource type="Texture2D" uid="uid://7ndkyqgciiwa" path="res://graphics/retro-8-1x.png" id="9_6q21s"]
 
 [node name="Globals" type="Node"]
 script = ExtResource("1_5d332")
+palette_images = Array[Texture2D]([ExtResource("2_pl0k6"), ExtResource("3_bshta"), ExtResource("4_7xv2h"), ExtResource("5_udu2e"), ExtResource("6_hdoym"), ExtResource("7_k5h5i"), ExtResource("8_1y5pw"), ExtResource("9_6q21s")])

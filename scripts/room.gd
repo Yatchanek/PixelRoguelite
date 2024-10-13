@@ -61,7 +61,7 @@ var first_visited : int
 
 var last_visited : int
 
-var respawn_interval : int = 30
+var respawn_interval : int = 60
 
 var max_enemies : int
 var enemies_spawned : int = 0
@@ -77,19 +77,20 @@ signal room_exited(coords : Vector2, exit_index : int)
 
 
 func _ready() -> void:
+	print("Entering", room_data.coords)
 	if room_data.last_visited == room_data.first_visited:
 		Globals.rng.seed = room_data.first_visited
 		room_data.rng_seed = room_data.first_visited
-		room_data.max_enemies = Globals.rng.randi_range(2, 5)
-		room_data.obstacle_count = Globals.rng.randi_range(0, 5)
+		room_data.max_enemies = randi_range(2, 5)
+		room_data.obstacle_count = randi_range(0, 5)
 		
 	else:
 		Globals.rng.seed = room_data.rng_seed
 		max_enemies = room_data.max_enemies
 		obstacle_count = room_data.obstacle_count
-		
+	#room_data.print_data()
 	
-	var time_since_last_visit : int = Time.get_ticks_msec() - last_visited
+	var time_since_last_visit : int = Time.get_ticks_msec() - room_data.last_visited
 	
 	if room_data.last_visited == room_data.first_visited or time_since_last_visit > respawn_interval * 1000:
 		activate_doors()
@@ -101,9 +102,10 @@ func _ready() -> void:
 		
 	create_walls()
 	configure_room()
-	if !is_first_room:
-		for i in room_data.obstacle_count:
-			create_obstacles()
+	#prints(room_data.coords, room_data.coords == Vector2i.ZERO)
+	if !room_data.coords == Vector2i.ZERO:
+		#for i in room_data.obstacle_count:
+		create_obstacles()
 	await get_tree().process_frame
 	create_navigation_polygon()
 
@@ -111,9 +113,26 @@ func create_navigation_polygon():
 	var points : PackedVector2Array = []
 	for corner in corners:
 		points.append(corner)
+	points = Geometry2D.offset_polygon(points, 12)[0]
 
 	$NavigationRegion2D.navigation_polygon.add_outline(points)
 	$NavigationRegion2D.bake_navigation_polygon()
+
+
+func change_color_palette():
+	apply_color_palette()
+	for enemy in enemies.get_children():
+		enemy.apply_color_palette()
+	for obstacle in obstacles.get_children():
+		obstacle.apply_color_palette()
+
+func apply_color_palette():
+	walls.default_color = Globals.color_palettes[Globals.current_palette][5]
+	for exit in exit_markers.get_children():
+		exit.self_modulate = Globals.color_palettes[Globals.current_palette][7]
+		
+	for door in doors.get_children():
+		door.color = Globals.color_palettes[Globals.current_palette][3]
 
 func create_walls():
 	walls.width = Globals.WALL_THICKNESS
@@ -138,6 +157,8 @@ func configure_room():
 			exit_markers.get_child(i).show()
 			if enemies_spawned == room_data.max_enemies:
 				exits.get_child(i).set_deferred("disabled", false)
+	
+	apply_color_palette()
 
 func create_obstacles():
 	var shape : PackedVector2Array = get_obstacle_polygon()
@@ -177,23 +198,24 @@ func get_obstacle_polygon() -> PackedVector2Array:
 	
 	if type == 0:
 		points = [
-			Vector2(-size * 0.5, -Globals.WALL_THICKNESS * 0.5), Vector2(size * 0.5, -Globals.WALL_THICKNESS * 0.5), 
-			Vector2(size * 0.5, Globals.WALL_THICKNESS * 0.5), Vector2(-size * 0.5, Globals.WALL_THICKNESS * 0.5)
+			Vector2(0,0), Vector2(size, 0), 
+			Vector2(size, Globals.WALL_THICKNESS), Vector2(0, Globals.WALL_THICKNESS)
 		] 
 	
 	elif type == 1:
 		points = [
-			Vector2(-Globals.WALL_THICKNESS * 0.5, -Globals.WALL_THICKNESS * 0.5),
-			Vector2(-Globals.WALL_THICKNESS * 0.5 + size, -Globals.WALL_THICKNESS * 0.5),
-			Vector2(-Globals.WALL_THICKNESS * 0.5 + size, Globals.WALL_THICKNESS * 0.5),
-			Vector2(Globals.WALL_THICKNESS * 0.5, Globals.WALL_THICKNESS * 0.5),
-			Vector2(Globals.WALL_THICKNESS * 0.5, Globals.WALL_THICKNESS * 0.5 + size),
-			Vector2(-Globals.WALL_THICKNESS * 0.5, Globals.WALL_THICKNESS * 0.5 + size),
+			Vector2(0, 0),
+			Vector2(size, 0),
+			Vector2(size, Globals.WALL_THICKNESS),
+			Vector2(Globals.WALL_THICKNESS, Globals.WALL_THICKNESS),
+			Vector2(Globals.WALL_THICKNESS, Globals.WALL_THICKNESS+ size),
+			Vector2(0, Globals.WALL_THICKNESS + size),
 			#Vector2(0, 0), Vector2(size, 0), 
 			#Vector2(size, Globals.WALL_THICKNESS), Vector2(0, Globals.WALL_THICKNESS)
 		]
-	var xform : Transform2D = Transform2D(snappedf(Globals.rng.randf_range(0, TAU), PI / 16), Vector2.ZERO)
-		
+	var polygon_rotation : float = snappedf(Globals.rng.randf_range(0, TAU), PI / 8)
+	var xform : Transform2D = Transform2D(polygon_rotation, Vector2.ZERO)
+	print(polygon_rotation)	
 	return xform * points
 
 func get_obstacle_bounding_rect(polygon : PackedVector2Array):
@@ -213,23 +235,32 @@ func maxv(curvec : Vector2 ,newvec : Vector2 ):
 	return Vector2(max(curvec.x,newvec.x),max(curvec.y,newvec.y))
 	
 func activate_doors():
+	if !is_inside_tree():
+		return
+	await get_tree().create_timer(1.0).timeout
 	for i in exits.get_child_count():
 		if room_data.layout_type & exit_mappings[i] != 0:
 				var tw : Tween = create_tween()
 				tw.tween_property(doors.get_child(i), "modulate:a", 1.0, 0.5)
 			
 func deactivate_doors():
+	if !is_inside_tree():
+		return
+	await get_tree().create_timer(1.25).timeout
 	for i in exits.get_child_count():
 		if room_data.layout_type & exit_mappings[i] != 0:
-			var col_shape : CollisionShape2D = exits.get_child(i)
-			col_shape.set_deferred("disabled", false)
-			var tw : Tween = create_tween()
-			tw.tween_property(doors.get_child(i), "modulate:a", 0.0, 0.5)
+			open_door(i)
 
+func open_door(index : int):
+	var tw : Tween = create_tween()
+	tw.tween_property(doors.get_child(index), "modulate:a", 0.0, 0.5)
+	await tw.finished
+	var col_shape : CollisionShape2D = exits.get_child(index)
+	col_shape.set_deferred("disabled", false)	
 
 func _on_exits_body_shape_entered(_body_rid: RID, _body: Node2D, _body_shape_index: int, local_shape_index: int) -> void:
 	room_exited.emit(room_data.coords, local_shape_index)
-
+	prints("Exiting from", room_data.coords, "Exit number", local_shape_index)
 
 func _on_timer_timeout() -> void:
 	if enemies_spawned == room_data.max_enemies:
@@ -275,6 +306,5 @@ func _on_enemy_destroyed():
 	if is_inside_tree():
 		enemies_killed += 1
 		if enemies_killed == room_data.max_enemies:
-			await get_tree().create_timer(1.0).timeout
 			deactivate_doors()
 			timer.start(respawn_interval)

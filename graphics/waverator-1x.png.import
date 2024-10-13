@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bwir2s2huib6f"
-path="res://.godot/imported/player.png-26d9c6af45ae5592f9dbf183c24e435a.ctex"
+uid="uid://67iq0627ohqu"
+path="res://.godot/imported/waverator-1x.png-7a6d02801e5236beac83740e492a5add.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://graphics/player.png"
-dest_files=["res://.godot/imported/player.png-26d9c6af45ae5592f9dbf183c24e435a.ctex"]
+source_file="res://graphics/waverator-1x.png"
+dest_files=["res://.godot/imported/waverator-1x.png-7a6d02801e5236beac83740e492a5add.ctex"]
 
 [params]
 

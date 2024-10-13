@@ -31,7 +31,9 @@ func _unhandled_input(event: InputEvent) -> void:
 		if event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 			shoot()
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _ready() -> void:
+	apply_color_palette()
+
 func _process(_delta: float) -> void:
 	var dir_to_mouse : Vector2 = turret.global_position.direction_to(get_global_mouse_position())
 	var target_transform : Transform2D = turret.global_transform.looking_at(turret.global_position + dir_to_mouse)
@@ -56,6 +58,10 @@ func _physics_process(_delta: float) -> void:
 	
 	move_and_slide()
 
+func apply_color_palette():
+	body.self_modulate = Globals.color_palettes[Globals.current_palette][3]
+	turret.self_modulate = Globals.color_palettes[Globals.current_palette][1]
+
 func take_damage(_amount : int):
 	hp -= 1
 	if hp <= 0:
@@ -72,7 +78,13 @@ func take_damage(_amount : int):
 	else:
 		var tw : Tween = create_tween()
 		tw.tween_property(body, "modulate", Color.RED, 0.1)
-		tw.tween_property(body, "modulate", Color(0.435, 0.408, 0.478), 0.1)
+		tw.tween_property(body, "modulate", Color.WHITE, 0.1)
+
+func deactivate_collision():
+	$CollisionShape2D.set_deferred("disabled", true)
+	
+func activate_collision():
+	$CollisionShape2D.set_deferred("disabled", false)
 
 func shoot():
 	if !can_shoot:

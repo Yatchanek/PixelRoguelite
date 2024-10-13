@@ -37,9 +37,9 @@ z_index = 1
 script = ExtResource("1_sifb4")
 
 [node name="Walls" type="Line2D" parent="."]
+z_index = -1
 closed = true
 width = 4.0
-default_color = Color(0.0862745, 0.431373, 0.478431, 1)
 
 [node name="Borders" type="StaticBody2D" parent="."]
 collision_layer = 4
@@ -81,32 +81,30 @@ shape = SubResource("RectangleShape2D_52jlp")
 disabled = true
 
 [node name="ExitMarkers" type="Node2D" parent="."]
+z_index = 1
 
 [node name="TopMarker" type="Polygon2D" parent="ExitMarkers"]
 visible = false
 position = Vector2(160, -1)
-color = Color(0.12549, 0.0823529, 0.2, 1)
-polygon = PackedVector2Array(-30, -4, 30, -4, 30, 4, -30, 4)
+polygon = PackedVector2Array(-30, -2, 30, -2, 30, 2, -30, 2)
 
 [node name="RightMarker" type="Polygon2D" parent="ExitMarkers"]
 visible = false
 position = Vector2(321, 90)
-color = Color(0.12549, 0.0823529, 0.2, 1)
-polygon = PackedVector2Array(-4, -30, 4, -30, 4, 30, -4, 30)
+polygon = PackedVector2Array(-2, -30, 2, -30, 2, 30, -2, 30)
 
 [node name="BottomMarker" type="Polygon2D" parent="ExitMarkers"]
 visible = false
 position = Vector2(160, 181)
-color = Color(0.12549, 0.0823529, 0.2, 1)
-polygon = PackedVector2Array(-30, -4, 30, -4, 30, 4, -30, 4)
+polygon = PackedVector2Array(-30, -2, 30, -2, 30, 2, -30, 2)
 
 [node name="LeftMarker" type="Polygon2D" parent="ExitMarkers"]
 visible = false
 position = Vector2(-1, 90)
-color = Color(0.12549, 0.0823529, 0.2, 1)
-polygon = PackedVector2Array(-4, -30, 4, -30, 4, 30, -4, 30)
+polygon = PackedVector2Array(-2, -30, 2, -30, 2, 30, -2, 30)
 
 [node name="Doors" type="Node2D" parent="."]
+z_index = 2
 
 [node name="TopDoor" type="Polygon2D" parent="Doors"]
 modulate = Color(1, 1, 1, 0)

@@ -3,7 +3,8 @@ extends Node2D
 
 @onready var player: CharacterBody2D = $Player
 @onready var enemies: Node2D = $Enemies
-@onready var veil: ColorRect = $"../CanvasLayer/Veil"
+@onready var veil: ColorRect = $"../Veil/Veil"
+@onready var background: ColorRect = $"../Background/Background"
 
 const explosion_scene = preload("res://scenes/explosion.tscn")
 const room_scene = preload("res://scenes/room.tscn")
@@ -27,58 +28,66 @@ var exit_mappings : Dictionary = {
 	Vector2i(0, 1) : 0b0100,
 	Vector2i(-1, 0) : 0b1000
 }
-#
+
+func _unhandled_input(event: InputEvent) -> void:
+	if event is InputEventKey:
+		if event.pressed and event.keycode == KEY_P:
+			Globals.current_palette = wrapi(Globals.current_palette + 1, 0, Globals.color_palettes.size())
+			apply_color_palette()
+			player.apply_color_palette()
+			current_room.change_color_palette()
+			Globals.adjust_explosion_colors()
+			
 ## Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	change_room(Vector2i.ZERO, 0)
-
+	
+func apply_color_palette():
+	veil.color = Globals.color_palettes[Globals.current_palette][7]
+	background.color = Globals.color_palettes[Globals.current_palette][7]
 
 func change_room(previous_room_coords : Vector2i, exit_index : int):
 	player.dead = true
+	player.deactivate_collision()
 	var tw : Tween = create_tween()
 	tw.tween_property(veil, "modulate:a", 1.0, 0.25)
 	await tw.finished
 	if current_room:
 		current_room.queue_free()
 		
-	var new_room : Room = room_scene.instantiate()
-	new_room.position = get_viewport_rect().size * 0.5
+	var new_room : Room
 	
-	new_room.connect("room_exited", _on_room_exited)
+	await get_tree().process_frame
 	
 	if room_grid.size() > 0:
 		match exit_index:
 			0:
-				player.position.y = get_viewport_rect().size.y * 0.5 + Globals.PLAYFIELD_HEIGHT * 0.5 - 10
+				player.position.y = get_viewport_rect().size.y * 0.5 + Globals.PLAYFIELD_HEIGHT * 0.5 - 16
 			1:
-				player.position.x = get_viewport_rect().size.x * 0.5 - Globals.PLAYFIELD_WIDTH * 0.5 + 10
+				player.position.x = get_viewport_rect().size.x * 0.5 - Globals.PLAYFIELD_WIDTH * 0.5 + 16
 			2:
-				player.position.y = get_viewport_rect().size.y * 0.5 - Globals.PLAYFIELD_HEIGHT * 0.5 + 10
+				player.position.y = get_viewport_rect().size.y * 0.5 - Globals.PLAYFIELD_HEIGHT * 0.5 + 16
 			3:
-				player.position.x = get_viewport_rect().size.x * 0.5 + Globals.PLAYFIELD_WIDTH * 0.5 - 10
+				player.position.x = get_viewport_rect().size.x * 0.5 + Globals.PLAYFIELD_WIDTH * 0.5 - 16
 	
-	var current_time = Time.get_ticks_msec()
-			
+
 	if room_grid.size() == 0:
-		var coords : Vector2i = Vector2i.ZERO
-		var exit_layout : int = [3, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15].pick_random()
-		var room_data : RoomData = create_room_data(coords, exit_layout, current_time, current_time)
-		new_room.is_first_room = true
-		new_room.room_data = room_data
-		room_grid[room_data.coords] = room_data
+		new_room = create_new_room(Vector2i.ZERO)
 	elif !room_grid.has(previous_room_coords + directions[exit_index]):
 		var coords : Vector2i = previous_room_coords + directions[exit_index]
-		var exit_layout : int = create_new_room(new_room.coords)
-		var room_data : RoomData = create_room_data(coords, exit_layout, current_time, current_time)
-		new_room.room_data = room_data
-		room_grid[room_data.coords] = room_data
+		new_room = create_new_room(coords)
 	else:
+		new_room = room_scene.instantiate()
 		new_room.room_data = room_grid[previous_room_coords + directions[exit_index]]
 
-	new_room.player = player
+	new_room.connect("room_exited", _on_room_exited)
+
+	new_room.position = get_viewport_rect().size * 0.5
+
+	room_grid[new_room.room_data.coords] = new_room.room_data
+	current_room = new_room
 	
 	call_deferred("add_child", new_room)
-	current_room = new_room
 	
 	tw = create_tween()
 	tw.tween_interval(0.25)
@@ -86,6 +95,7 @@ func change_room(previous_room_coords : Vector2i, exit_index : int):
 	
 	await tw.finished
 	player.dead = false
+	player.activate_collision()
 
 func create_room_data(coords : Vector2i, layout : int, first_visited : int, last_visited : int) -> RoomData:
 	var data : RoomData = RoomData.new()
@@ -106,32 +116,58 @@ func count_empty_neighbours(coords : Vector2i):
 		
 	return empty_neighbour_count
 
-func create_new_room(coords : Vector2i):
+func create_new_room(coords : Vector2i) -> Room:
+	var new_room : Room = room_scene.instantiate()
+	var exit_layout : int
+	var current_time = Time.get_ticks_msec()
+	
+	if coords == Vector2i.ZERO:
+		exit_layout = [3, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15].pick_random()
+		new_room.is_first_room = true
+		
+	else:
+		exit_layout = choose_exit_layout(coords)
+		
+	var room_data : RoomData = create_room_data(coords, exit_layout, current_time, current_time)
+	new_room.room_data = room_data
+	new_room.player = player
+	
+
+	
+	return new_room
+	
+
+	
+func choose_exit_layout(coords : Vector2i) -> int:
+	var layout : int
+	
 	var possible_layouts : Array[int] = []
 	var empty_neighbours_count = count_empty_neighbours(coords)
-	for i in range(1, 16):
-		var accepted : bool = true
+
+	var layout_candidates : Array[int] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+	if empty_neighbours_count == 3:
+		layout_candidates = [3, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15]
+
+	elif empty_neighbours_count == 2:
+		layout_candidates = [7, 11, 13, 14, 15]
+
+
+	for i in layout_candidates:
+		var accepted : bool = false
+		
 		for j in range(0, 4):
 			var neighbour_coords : Vector2i = coords + directions[j]
 			if !room_grid.has(neighbour_coords):
 				continue	
 			else:
 				if i & exit_mappings[directions[j]] != 0 and room_grid[neighbour_coords].layout_type & exit_mappings[-directions[j]] != 0:
-					if empty_neighbours_count == 3:
-						if [1, 2, 4, 8].has(i):
-							accepted = false
-					elif empty_neighbours_count == 2:
-						if [1, 2, 3, 4, 5, 6, 8, 9, 10, 12].has(i):
-							accepted = false
-				else:
-					accepted = false
-					
-				
+					accepted = true						
 		if accepted:
 			possible_layouts.append(i)
+				
+	layout = possible_layouts.pick_random()	
+	return layout
 	
-	return possible_layouts.pick_random()
-
 func _on_room_exited(room_coords: Vector2i, exit_index : int):
 	room_grid[room_coords].last_visited = Time.get_ticks_msec()
 	change_room(room_coords, exit_index)

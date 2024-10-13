@@ -1,8 +1,9 @@
-[gd_scene load_steps=9 format=3 uid="uid://cbt43bob567kg"]
+[gd_scene load_steps=10 format=3 uid="uid://cbt43bob567kg"]
 
 [ext_resource type="Script" path="res://scripts/basic_enemy.gd" id="1_e1a7r"]
-[ext_resource type="Texture2D" uid="uid://bwir2s2huib6f" path="res://graphics/player.png" id="2_xhwg0"]
+[ext_resource type="Texture2D" uid="uid://bwir2s2huib6f" path="res://graphics/enemy.png" id="2_xhwg0"]
 [ext_resource type="PackedScene" uid="uid://drd2m072phc4v" path="res://scenes/hitbox.tscn" id="3_fnd2q"]
+[ext_resource type="Texture2D" uid="uid://dietthbp24v1a" path="res://graphics/enemy_chasis.png" id="3_qna52"]
 [ext_resource type="PackedScene" uid="uid://cwshy400yx3qo" path="res://scenes/hurt_box.tscn" id="4_eud2o"]
 [ext_resource type="Texture2D" uid="uid://ceogro3x3yhep" path="res://graphics/circle.png" id="5_d1m83"]
 
@@ -24,6 +25,7 @@ collision_mask = 6
 script = ExtResource("1_e1a7r")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+visible = false
 shape = SubResource("CircleShape2D_48w8c")
 
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
@@ -33,12 +35,15 @@ avoidance_enabled = true
 wait_time = 0.1
 
 [node name="Body" type="Sprite2D" parent="."]
-modulate = Color(0.698, 0.851, 0.259, 0)
+modulate = Color(1, 1, 1, 0)
 texture_filter = 1
 texture = ExtResource("2_xhwg0")
 
+[node name="Chasis" type="Sprite2D" parent="Body"]
+texture = ExtResource("3_qna52")
+
 [node name="Indicator" type="Sprite2D" parent="."]
-modulate = Color(0.698039, 0.85098, 0.258824, 0)
+modulate = Color(1, 1, 1, 0)
 scale = Vector2(1e-05, 1e-05)
 texture = ExtResource("5_d1m83")
 
@@ -46,6 +51,7 @@ texture = ExtResource("5_d1m83")
 one_shot = true
 
 [node name="Hitbox" parent="." node_paths=PackedStringArray("target") instance=ExtResource("3_fnd2q")]
+visible = false
 collision_layer = 32
 collision_mask = 0
 target = NodePath("..")
@@ -54,6 +60,7 @@ target = NodePath("..")
 shape = SubResource("RectangleShape2D_d8mox")
 
 [node name="HurtBox" parent="." instance=ExtResource("4_eud2o")]
+visible = false
 collision_layer = 256
 collision_mask = 0
 monitoring = false

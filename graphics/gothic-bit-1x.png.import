@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://7ver4i5m5skd"
-path="res://.godot/imported/Bez nazwy.png-3f91d4480920abd89ff8ef189bc2da37.ctex"
+uid="uid://gpi6qq3gocse"
+path="res://.godot/imported/gothic-bit-1x.png-f15067d083b94ab6b6866907f324b0f4.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Bez nazwy.png"
-dest_files=["res://.godot/imported/Bez nazwy.png-3f91d4480920abd89ff8ef189bc2da37.ctex"]
+source_file="res://graphics/gothic-bit-1x.png"
+dest_files=["res://.godot/imported/gothic-bit-1x.png-f15067d083b94ab6b6866907f324b0f4.ctex"]
 
 [params]
 
