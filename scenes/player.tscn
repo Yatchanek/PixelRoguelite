@@ -1,0 +1,52 @@
+[gd_scene load_steps=7 format=3 uid="uid://60nvyx6hcw6k"]
+
+[ext_resource type="Script" path="res://scripts/player.gd" id="1_7xbh1"]
+[ext_resource type="Texture2D" uid="uid://g22icpq7aoi7" path="res://graphics/player_body.png" id="2_qwwgp"]
+[ext_resource type="Texture2D" uid="uid://di8e5pfsvxv7u" path="res://graphics/player_turret.png" id="3_cbyhj"]
+[ext_resource type="PackedScene" uid="uid://drd2m072phc4v" path="res://scenes/hitbox.tscn" id="4_h6job"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_bs7nj"]
+radius = 4.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_mxbb2"]
+resource_local_to_scene = true
+size = Vector2(8, 8)
+
+[node name="Player" type="CharacterBody2D"]
+z_index = 2
+texture_filter = 1
+collision_mask = 4
+script = ExtResource("1_7xbh1")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_bs7nj")
+
+[node name="Body" type="Sprite2D" parent="."]
+modulate = Color(0.0862745, 0.431373, 0.478431, 1)
+texture = ExtResource("2_qwwgp")
+
+[node name="Turret" type="Sprite2D" parent="."]
+modulate = Color(0.988235, 0.964706, 0.376471, 1)
+texture = ExtResource("3_cbyhj")
+offset = Vector2(2, 0)
+
+[node name="Muzzle" type="Marker2D" parent="Turret"]
+position = Vector2(8, 0)
+
+[node name="ShootTimer" type="Timer" parent="."]
+wait_time = 0.2
+one_shot = true
+
+[node name="Hitbox" parent="." node_paths=PackedStringArray("target") instance=ExtResource("4_h6job")]
+visible = false
+collision_layer = 16
+collision_mask = 256
+monitorable = false
+target = NodePath("..")
+
+[node name="CollisionShape2D" parent="Hitbox" index="0"]
+shape = SubResource("RectangleShape2D_mxbb2")
+
+[connection signal="timeout" from="ShootTimer" to="." method="_on_shoot_timer_timeout"]
+
+[editable path="Hitbox"]

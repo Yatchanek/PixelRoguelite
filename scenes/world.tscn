@@ -1,0 +1,65 @@
+[gd_scene load_steps=5 format=3 uid="uid://ddylky5tp6bpd"]
+
+[ext_resource type="Script" path="res://scripts/world.gd" id="1_k8agj"]
+[ext_resource type="PackedScene" uid="uid://60nvyx6hcw6k" path="res://scenes/player.tscn" id="1_p7l7c"]
+[ext_resource type="Shader" path="res://crt.gdshader" id="3_smk6s"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ft2ng"]
+shader = ExtResource("3_smk6s")
+shader_parameter/crt_curve = 0.0
+shader_parameter/crt_scan_line_color = 0.478
+shader_parameter/crt_aperture_grille_rate = 0.562
+shader_parameter/crt_blur = 1.0
+shader_parameter/crt_white_noise_rate = 0.0
+shader_parameter/crt_brightness = 1.7
+
+[node name="Game" type="Node"]
+
+[node name="World" type="Node2D" parent="."]
+script = ExtResource("1_k8agj")
+
+[node name="Player" parent="World" instance=ExtResource("1_p7l7c")]
+position = Vector2(160, 90)
+collision_mask = 5
+
+[node name="Enemies" type="Node2D" parent="World"]
+
+[node name="Background" type="CanvasLayer" parent="."]
+layer = -10
+
+[node name="ColorRect" type="ColorRect" parent="Background"]
+z_index = -1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.12549, 0.0823529, 0.2, 1)
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+layer = 5
+
+[node name="Veil" type="ColorRect" parent="CanvasLayer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.12549, 0.0823529, 0.2, 1)
+
+[node name="CRTOverlay" type="ColorRect" parent="."]
+visible = false
+z_index = 7
+material = SubResource("ShaderMaterial_ft2ng")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[connection signal="bullet_fired" from="World/Player" to="World" method="_on_bullet_fired"]
+[connection signal="died" from="World/Player" to="World" method="_on_player_died"]
+[connection signal="exploded" from="World/Player" to="World" method="_on_explosion"]

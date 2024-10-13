@@ -1,0 +1,148 @@
+[gd_scene load_steps=11 format=3 uid="uid://dcryx3x5sypq"]
+
+[ext_resource type="Script" path="res://scripts/room.gd" id="1_sifb4"]
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_adgi7"]
+normal = Vector2(0, 1)
+distance = -192.55
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_xv8b5"]
+normal = Vector2(-1, 0)
+distance = -320.0
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_46mbi"]
+distance = -250.02
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_o3lx8"]
+normal = Vector2(1, 0)
+distance = -157.54
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_p5rs7"]
+size = Vector2(48, 6)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_g7bu8"]
+size = Vector2(6, 48)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_u0xep"]
+size = Vector2(48, 6)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_52jlp"]
+size = Vector2(6, 48)
+
+[sub_resource type="NavigationPolygon" id="NavigationPolygon_vic26"]
+agent_radius = 16.0
+
+[node name="Room" type="Node2D"]
+z_index = 1
+script = ExtResource("1_sifb4")
+
+[node name="Walls" type="Line2D" parent="."]
+closed = true
+width = 4.0
+default_color = Color(0.0862745, 0.431373, 0.478431, 1)
+
+[node name="Borders" type="StaticBody2D" parent="."]
+collision_layer = 4
+
+[node name="TopBorder" type="CollisionShape2D" parent="Borders"]
+shape = SubResource("WorldBoundaryShape2D_adgi7")
+
+[node name="RightBorder" type="CollisionShape2D" parent="Borders"]
+shape = SubResource("WorldBoundaryShape2D_xv8b5")
+
+[node name="BottomBorder" type="CollisionShape2D" parent="Borders"]
+shape = SubResource("WorldBoundaryShape2D_46mbi")
+
+[node name="LeftBorder" type="CollisionShape2D" parent="Borders"]
+shape = SubResource("WorldBoundaryShape2D_o3lx8")
+
+[node name="Exits" type="Area2D" parent="."]
+collision_layer = 0
+monitorable = false
+
+[node name="TopExit" type="CollisionShape2D" parent="Exits"]
+position = Vector2(160, -1)
+shape = SubResource("RectangleShape2D_p5rs7")
+disabled = true
+
+[node name="RightExit" type="CollisionShape2D" parent="Exits"]
+position = Vector2(321, 90)
+shape = SubResource("RectangleShape2D_g7bu8")
+disabled = true
+
+[node name="BottomExit" type="CollisionShape2D" parent="Exits"]
+position = Vector2(160, 181)
+shape = SubResource("RectangleShape2D_u0xep")
+disabled = true
+
+[node name="LeftExit" type="CollisionShape2D" parent="Exits"]
+position = Vector2(-1, 90)
+shape = SubResource("RectangleShape2D_52jlp")
+disabled = true
+
+[node name="ExitMarkers" type="Node2D" parent="."]
+
+[node name="TopMarker" type="Polygon2D" parent="ExitMarkers"]
+visible = false
+position = Vector2(160, -1)
+color = Color(0.12549, 0.0823529, 0.2, 1)
+polygon = PackedVector2Array(-30, -4, 30, -4, 30, 4, -30, 4)
+
+[node name="RightMarker" type="Polygon2D" parent="ExitMarkers"]
+visible = false
+position = Vector2(321, 90)
+color = Color(0.12549, 0.0823529, 0.2, 1)
+polygon = PackedVector2Array(-4, -30, 4, -30, 4, 30, -4, 30)
+
+[node name="BottomMarker" type="Polygon2D" parent="ExitMarkers"]
+visible = false
+position = Vector2(160, 181)
+color = Color(0.12549, 0.0823529, 0.2, 1)
+polygon = PackedVector2Array(-30, -4, 30, -4, 30, 4, -30, 4)
+
+[node name="LeftMarker" type="Polygon2D" parent="ExitMarkers"]
+visible = false
+position = Vector2(-1, 90)
+color = Color(0.12549, 0.0823529, 0.2, 1)
+polygon = PackedVector2Array(-4, -30, 4, -30, 4, 30, -4, 30)
+
+[node name="Doors" type="Node2D" parent="."]
+
+[node name="TopDoor" type="Polygon2D" parent="Doors"]
+modulate = Color(1, 1, 1, 0)
+position = Vector2(160, -2)
+color = Color(0.321569, 0.764706, 0.247059, 1)
+polygon = PackedVector2Array(-28, -2, 28, -2, 28, 2, -28, 2)
+
+[node name="RightDoor" type="Polygon2D" parent="Doors"]
+modulate = Color(1, 1, 1, 0)
+position = Vector2(322, 90)
+color = Color(0.321569, 0.764706, 0.247059, 1)
+polygon = PackedVector2Array(-2, -28, 2, -28, 2, 28, -2, 28)
+
+[node name="BottomDoor" type="Polygon2D" parent="Doors"]
+modulate = Color(1, 1, 1, 0)
+position = Vector2(160, 182)
+color = Color(0.321569, 0.764706, 0.247059, 1)
+polygon = PackedVector2Array(-28, -2, 28, -2, 28, 2, -28, 2)
+
+[node name="LeftDoor" type="Polygon2D" parent="Doors"]
+modulate = Color(1, 1, 1, 0)
+position = Vector2(-2, 90)
+color = Color(0.321569, 0.764706, 0.247059, 1)
+polygon = PackedVector2Array(-2, -28, 2, -28, 2, 28, -2, 28)
+
+[node name="Enemies" type="Node2D" parent="."]
+
+[node name="Bullets" type="Node2D" parent="."]
+
+[node name="Timer" type="Timer" parent="."]
+one_shot = true
+
+[node name="NavigationRegion2D" type="NavigationRegion2D" parent="."]
+navigation_polygon = SubResource("NavigationPolygon_vic26")
+
+[node name="Obstacles" type="Node2D" parent="NavigationRegion2D"]
+
+[connection signal="body_shape_entered" from="Exits" to="." method="_on_exits_body_shape_entered"]
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

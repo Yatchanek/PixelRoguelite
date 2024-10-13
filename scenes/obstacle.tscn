@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=3 uid="uid://vcvrgrshhnv6"]
+
+[ext_resource type="Script" path="res://scripts/obstacle.gd" id="1_wtgxw"]
+
+[node name="Obstacle" type="StaticBody2D"]
+collision_layer = 4
+collision_mask = 3
+script = ExtResource("1_wtgxw")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
+
+[node name="Polygon2D" type="Polygon2D" parent="."]
+color = Color(0.0862745, 0.431373, 0.478431, 1)
+polygon = PackedVector2Array(-2, -30, 2, -30, 2, 30, -2, 30)
