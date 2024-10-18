@@ -3,19 +3,21 @@ extends Node
 @export var palette_images : Array[Texture2D] = []
 
 var explosion_material : ParticleProcessMaterial = preload("res://explosion.tres")
+var missile_material : ParticleProcessMaterial = preload("res://missile.tres")
 
 var rng : RandomNumberGenerator
 
-const PLAYFIELD_WIDTH : int = 280
-const PLAYFIELD_HEIGHT : int = 144
-const WALL_THICKNESS : int = 4
+const PLAYFIELD_WIDTH : int = 560
+const PLAYFIELD_HEIGHT : int = 280
+const WALL_THICKNESS : int = 8
+const CELL_SIZE : int = 16
 
 var current_palette : int = 0
 
 var color_palettes : Array[PackedColorArray] = [
 ]
 
-
+var player : Player
 
 func _ready() -> void:
 	rng = RandomNumberGenerator.new()
@@ -36,4 +38,7 @@ func adjust_explosion_colors():
 		gradient.add_point(i * 0.143, color_palettes[current_palette][i])
 		
 	explosion_material.color_initial_ramp.gradient = gradient
+	missile_material.color_initial_ramp.gradient = gradient
 		
+func _on_player_ready(_player : Player):
+	player = _player

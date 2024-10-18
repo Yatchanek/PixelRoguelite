@@ -2,6 +2,8 @@ extends StaticBody2D
 class_name Obstacle
 
 var shape : PackedVector2Array
+var power : int = 1
+
 @onready var body: Polygon2D = $Polygon2D
 
 # Called when the node enters the scene tree for the first time.

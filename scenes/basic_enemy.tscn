@@ -1,51 +1,49 @@
-[gd_scene load_steps=10 format=3 uid="uid://cbt43bob567kg"]
+[gd_scene load_steps=9 format=3 uid="uid://cbt43bob567kg"]
 
 [ext_resource type="Script" path="res://scripts/basic_enemy.gd" id="1_e1a7r"]
 [ext_resource type="Texture2D" uid="uid://bwir2s2huib6f" path="res://graphics/enemy.png" id="2_xhwg0"]
 [ext_resource type="PackedScene" uid="uid://drd2m072phc4v" path="res://scenes/hitbox.tscn" id="3_fnd2q"]
 [ext_resource type="Texture2D" uid="uid://dietthbp24v1a" path="res://graphics/enemy_chasis.png" id="3_qna52"]
 [ext_resource type="PackedScene" uid="uid://cwshy400yx3qo" path="res://scenes/hurt_box.tscn" id="4_eud2o"]
-[ext_resource type="Texture2D" uid="uid://ceogro3x3yhep" path="res://graphics/circle.png" id="5_d1m83"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_48w8c"]
-radius = 4.0
+radius = 6.0
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_d8mox"]
 resource_local_to_scene = true
-size = Vector2(8, 8)
+size = Vector2(16, 16)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_xonui"]
 resource_local_to_scene = true
-size = Vector2(8, 8)
+size = Vector2(16, 16)
 
 [node name="BasicEnemy" type="CharacterBody2D"]
 texture_filter = 1
 collision_layer = 2
 collision_mask = 6
 script = ExtResource("1_e1a7r")
+speed = 128.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 visible = false
 shape = SubResource("CircleShape2D_48w8c")
 
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
+path_max_distance = 10.0
 avoidance_enabled = true
+radius = 20.0
+neighbor_distance = 112.0
+max_speed = 128.0
 
 [node name="Timer" type="Timer" parent="."]
 wait_time = 0.1
 
 [node name="Body" type="Sprite2D" parent="."]
-modulate = Color(1, 1, 1, 0)
 texture_filter = 1
 texture = ExtResource("2_xhwg0")
 
 [node name="Chasis" type="Sprite2D" parent="Body"]
 texture = ExtResource("3_qna52")
-
-[node name="Indicator" type="Sprite2D" parent="."]
-modulate = Color(1, 1, 1, 0)
-scale = Vector2(1e-05, 1e-05)
-texture = ExtResource("5_d1m83")
 
 [node name="ShootTimer" type="Timer" parent="."]
 one_shot = true
@@ -53,7 +51,7 @@ one_shot = true
 [node name="Hitbox" parent="." node_paths=PackedStringArray("target") instance=ExtResource("3_fnd2q")]
 visible = false
 collision_layer = 32
-collision_mask = 0
+collision_mask = 512
 target = NodePath("..")
 
 [node name="CollisionShape2D" parent="Hitbox" index="0"]

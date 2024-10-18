@@ -1,0 +1,65 @@
+[gd_scene load_steps=11 format=3 uid="uid://d1xi0pomqm0m"]
+
+[ext_resource type="Script" path="res://scripts/upgrade_card.gd" id="1_iqs6v"]
+[ext_resource type="FontFile" uid="uid://wnb2movo6eli" path="res://fonts/m6x11 Daniel LInssen.ttf" id="1_odrpe"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wh3xy"]
+bg_color = Color(0.0177324, 0.0177324, 0.0177324, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_qe658"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_fmt5r"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_2cxg3"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_jeuoj"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ysjec"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_dan6o"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_6tq4s"]
+font = ExtResource("1_odrpe")
+
+[node name="UpgradeCard" type="PanelContainer"]
+process_mode = 3
+custom_minimum_size = Vector2(112, 160)
+theme_override_styles/panel = SubResource("StyleBoxFlat_wh3xy")
+script = ExtResource("1_iqs6v")
+
+[node name="Button" type="Button" parent="."]
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_styles/focus = SubResource("StyleBoxEmpty_qe658")
+theme_override_styles/hover_pressed_mirrored = SubResource("StyleBoxEmpty_fmt5r")
+theme_override_styles/hover_pressed = SubResource("StyleBoxEmpty_2cxg3")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_jeuoj")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_ysjec")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_dan6o")
+
+[node name="Label" type="Label" parent="Button"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -11.0
+offset_right = 20.0
+offset_bottom = 3.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "speed 
++16"
+label_settings = SubResource("LabelSettings_6tq4s")
+horizontal_alignment = 1
+uppercase = true
+
+[connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]
+[connection signal="pressed" from="Button" to="." method="_on_button_pressed"]

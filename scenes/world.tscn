@@ -1,8 +1,12 @@
-[gd_scene load_steps=5 format=3 uid="uid://ddylky5tp6bpd"]
+[gd_scene load_steps=12 format=3 uid="uid://ddylky5tp6bpd"]
 
 [ext_resource type="Script" path="res://scripts/world.gd" id="1_k8agj"]
 [ext_resource type="PackedScene" uid="uid://60nvyx6hcw6k" path="res://scenes/player.tscn" id="1_p7l7c"]
+[ext_resource type="Script" path="res://scripts/game.gd" id="1_u0rsy"]
 [ext_resource type="Shader" path="res://crt.gdshader" id="3_smk6s"]
+[ext_resource type="Script" path="res://scripts/hud.gd" id="4_l11xs"]
+[ext_resource type="Texture2D" uid="uid://d3otih1xwa7g2" path="res://graphics/progress_bar.png" id="6_e2n24"]
+[ext_resource type="FontFile" uid="uid://wnb2movo6eli" path="res://fonts/m6x11 Daniel LInssen.ttf" id="6_in5tj"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ft2ng"]
 shader = ExtResource("3_smk6s")
@@ -13,7 +17,24 @@ shader_parameter/crt_blur = 1.0
 shader_parameter/crt_white_noise_rate = 0.0
 shader_parameter/crt_brightness = 1.7
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pyc1a"]
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+
+[sub_resource type="LabelSettings" id="LabelSettings_xoy25"]
+font = ExtResource("6_in5tj")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_imcsv"]
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+
 [node name="Game" type="Node"]
+process_mode = 3
+script = ExtResource("1_u0rsy")
 
 [node name="Veil" type="CanvasLayer" parent="."]
 layer = 5
@@ -42,6 +63,7 @@ mouse_filter = 2
 color = Color(0.12549, 0.0823529, 0.2, 1)
 
 [node name="World" type="Node2D" parent="."]
+process_mode = 1
 texture_filter = 1
 script = ExtResource("1_k8agj")
 
@@ -62,6 +84,154 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
+[node name="Hud" type="CanvasLayer" parent="."]
+process_mode = 3
+layer = 5
+script = ExtResource("4_l11xs")
+
+[node name="Control" type="Control" parent="Hud"]
+texture_filter = 1
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="TopBar" type="PanelContainer" parent="Hud/Control"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 12)
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 12.0
+grow_horizontal = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_pyc1a")
+
+[node name="MarginContainer" type="MarginContainer" parent="Hud/Control/TopBar"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 2
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 0
+
+[node name="UpperBar" type="HBoxContainer" parent="Hud/Control/TopBar/MarginContainer"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Hud/Control/TopBar/MarginContainer/UpperBar"]
+layout_mode = 2
+size_flags_vertical = 0
+mouse_filter = 2
+
+[node name="XPLabel" type="Label" parent="Hud/Control/TopBar/MarginContainer/UpperBar/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 0
+text = "XP:"
+label_settings = SubResource("LabelSettings_xoy25")
+
+[node name="XPAmountLabel" type="Label" parent="Hud/Control/TopBar/MarginContainer/UpperBar/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(56, 0)
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_vertical = 0
+text = "0	"
+label_settings = SubResource("LabelSettings_xoy25")
+horizontal_alignment = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Hud/Control/TopBar/MarginContainer/UpperBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 2
+
+[node name="HPLabel" type="Label" parent="Hud/Control/TopBar/MarginContainer/UpperBar/HBoxContainer2"]
+layout_mode = 2
+size_flags_vertical = 0
+text = "HP:"
+label_settings = SubResource("LabelSettings_xoy25")
+uppercase = true
+
+[node name="HPBar" type="TextureProgressBar" parent="Hud/Control/TopBar/MarginContainer/UpperBar/HBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+max_value = 5.0
+value = 5.0
+texture_progress = ExtResource("6_e2n24")
+
+[node name="BottomBar" type="PanelContainer" parent="Hud/Control"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 12)
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -2.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_imcsv")
+
+[node name="MarginContainer" type="MarginContainer" parent="Hud/Control/BottomBar"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 2
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 0
+
+[node name="LowerBar" type="HBoxContainer" parent="Hud/Control/BottomBar/MarginContainer"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Hud/Control/BottomBar/MarginContainer/LowerBar"]
+layout_mode = 2
+size_flags_vertical = 0
+mouse_filter = 2
+
+[node name="RoomLabel" type="Label" parent="Hud/Control/BottomBar/MarginContainer/LowerBar/HBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 0
+text = "ROOM:"
+label_settings = SubResource("LabelSettings_xoy25")
+
+[node name="CoordsLabel" type="Label" parent="Hud/Control/BottomBar/MarginContainer/LowerBar/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(56, 0)
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_vertical = 0
+label_settings = SubResource("LabelSettings_xoy25")
+horizontal_alignment = 2
+
+[node name="UpgradeRow" type="HBoxContainer" parent="Hud/Control"]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/separation = 16
+
+[connection signal="exp_value_changed" from="World" to="." method="_on_world_exp_value_changed"]
+[connection signal="player_health_changed" from="World" to="." method="_on_world_player_health_changed"]
+[connection signal="room_changed" from="World" to="." method="_on_world_room_changed"]
 [connection signal="bullet_fired" from="World/Player" to="World" method="_on_bullet_fired"]
 [connection signal="died" from="World/Player" to="World" method="_on_player_died"]
 [connection signal="exploded" from="World/Player" to="World" method="_on_explosion"]
+[connection signal="health_changed" from="World/Player" to="World" method="_on_player_health_changed"]

@@ -1,19 +1,19 @@
 extends Area2D
 class_name HitBox
 
-@export var target : CharacterBody2D
+@export var target : Node2D
 
 func _on_area_entered(area: Area2D) -> void:
 	if is_instance_valid(target):
-		target.take_damage(area.damage)
+		target.take_damage(area.damage, Vector2.ZERO)
 
 func _on_body_entered(body: Node2D) -> void:
-	if is_instance_valid(target):
-		target.take_damage(body.damage)
+	if is_instance_valid(target) and body != target:
+		target.take_damage(body.power, Vector2.ZERO)
 
-func receive_damage(amount : int):
+func receive_damage(amount : int, dir : Vector2):
 	if is_instance_valid(target):
-		target.take_damage(amount)	
+		target.take_damage(amount, dir)	
 
 func deactivate():
 	$CollisionShape2D.set_deferred("disabled", true)

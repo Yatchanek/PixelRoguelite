@@ -1,0 +1,39 @@
+[remap]
+
+importer="font_data_dynamic"
+type="FontFile"
+uid="uid://fow4km3krvac"
+path="res://.godot/imported/EightBit Atari-Regular.ttf-e9fabdc651c83ba1f67722eb2f601993.fontdata"
+
+[deps]
+
+source_file="res://fonts/EightBit Atari-Regular.ttf"
+dest_files=["res://.godot/imported/EightBit Atari-Regular.ttf-e9fabdc651c83ba1f67722eb2f601993.fontdata"]
+
+[params]
+
+Rendering=null
+antialiasing=1
+generate_mipmaps=false
+disable_embedded_bitmaps=true
+multichannel_signed_distance_field=false
+msdf_pixel_range=8
+msdf_size=48
+allow_system_fallback=true
+force_autohinter=false
+hinting=1
+subpixel_positioning=0
+oversampling=0.0
+Fallbacks=null
+fallbacks=[]
+Compress=null
+compress=true
+preload=[{
+"chars": [],
+"glyphs": [],
+"name": "New Configuration",
+"size": Vector2i(16, 0)
+}]
+language_support={}
+script_support={}
+opentype_features={}

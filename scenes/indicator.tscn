@@ -1,0 +1,9 @@
+[gd_scene load_steps=3 format=3 uid="uid://d2epvby5lw7gl"]
+
+[ext_resource type="Texture2D" uid="uid://y515xvck8o7a" path="res://graphics/exclamation.png" id="1_3s5ud"]
+[ext_resource type="Script" path="res://scripts/indicator.gd" id="2_8f1qh"]
+
+[node name="Indicator" type="Sprite2D"]
+modulate = Color(1, 1, 1, 0)
+texture = ExtResource("1_3s5ud")
+script = ExtResource("2_8f1qh")

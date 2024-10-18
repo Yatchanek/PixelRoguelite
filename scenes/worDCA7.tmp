@@ -1,0 +1,220 @@
+[gd_scene load_steps=12 format=3 uid="uid://ddylky5tp6bpd"]
+
+[ext_resource type="Script" path="res://scripts/world.gd" id="1_k8agj"]
+[ext_resource type="PackedScene" uid="uid://60nvyx6hcw6k" path="res://scenes/player.tscn" id="1_p7l7c"]
+[ext_resource type="Script" path="res://scripts/game.gd" id="1_u0rsy"]
+[ext_resource type="Shader" path="res://crt.gdshader" id="3_smk6s"]
+[ext_resource type="Script" path="res://scripts/hud.gd" id="4_l11xs"]
+[ext_resource type="FontFile" uid="uid://fow4km3krvac" path="res://fonts/EightBit Atari-Regular.ttf" id="4_lgvhx"]
+[ext_resource type="Texture2D" uid="uid://d3otih1xwa7g2" path="res://graphics/progress_bar.png" id="6_e2n24"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ft2ng"]
+shader = ExtResource("3_smk6s")
+shader_parameter/crt_curve = 0.0
+shader_parameter/crt_scan_line_color = 0.478
+shader_parameter/crt_aperture_grille_rate = 0.562
+shader_parameter/crt_blur = 1.0
+shader_parameter/crt_white_noise_rate = 0.0
+shader_parameter/crt_brightness = 1.7
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pyc1a"]
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+
+[sub_resource type="LabelSettings" id="LabelSettings_xoy25"]
+line_spacing = 0.0
+font = ExtResource("4_lgvhx")
+font_size = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_imcsv"]
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+
+[node name="Game" type="Node"]
+script = ExtResource("1_u0rsy")
+
+[node name="Veil" type="CanvasLayer" parent="."]
+layer = 5
+
+[node name="Veil" type="ColorRect" parent="Veil"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.12549, 0.0823529, 0.2, 1)
+
+[node name="Background" type="CanvasLayer" parent="."]
+layer = -3
+
+[node name="Background" type="ColorRect" parent="Background"]
+z_index = -2
+texture_filter = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.12549, 0.0823529, 0.2, 1)
+
+[node name="World" type="Node2D" parent="."]
+texture_filter = 1
+script = ExtResource("1_k8agj")
+
+[node name="Player" parent="World" instance=ExtResource("1_p7l7c")]
+position = Vector2(160, 90)
+collision_mask = 5
+
+[node name="Enemies" type="Node2D" parent="World"]
+
+[node name="CRTOverlay" type="ColorRect" parent="."]
+visible = false
+z_index = 7
+material = SubResource("ShaderMaterial_ft2ng")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Hud" type="CanvasLayer" parent="."]
+layer = 5
+script = ExtResource("4_l11xs")
+
+[node name="Control" type="Control" parent="Hud"]
+texture_filter = 1
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="TopBar" type="PanelContainer" parent="Hud/Control"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 12)
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 12.0
+grow_horizontal = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_pyc1a")
+
+[node name="MarginContainer" type="MarginContainer" parent="Hud/Control/TopBar"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 2
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = 2
+theme_override_constants/margin_bottom = 0
+
+[node name="UpperBar" type="HBoxContainer" parent="Hud/Control/TopBar/MarginContainer"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Hud/Control/TopBar/MarginContainer/UpperBar"]
+layout_mode = 2
+size_flags_vertical = 0
+mouse_filter = 2
+
+[node name="XPLabel" type="Label" parent="Hud/Control/TopBar/MarginContainer/UpperBar/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 0
+text = "XP:"
+label_settings = SubResource("LabelSettings_xoy25")
+
+[node name="XPAmountLabel" type="Label" parent="Hud/Control/TopBar/MarginContainer/UpperBar/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(56, 0)
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_vertical = 0
+text = "0	"
+label_settings = SubResource("LabelSettings_xoy25")
+horizontal_alignment = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Hud/Control/TopBar/MarginContainer/UpperBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 2
+
+[node name="HPLabel" type="Label" parent="Hud/Control/TopBar/MarginContainer/UpperBar/HBoxContainer2"]
+layout_mode = 2
+size_flags_vertical = 0
+text = "HP:"
+label_settings = SubResource("LabelSettings_xoy25")
+uppercase = true
+
+[node name="HPBar" type="TextureProgressBar" parent="Hud/Control/TopBar/MarginContainer/UpperBar/HBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 0
+max_value = 5.0
+value = 5.0
+texture_progress = ExtResource("6_e2n24")
+
+[node name="BottomBar" type="PanelContainer" parent="Hud/Control"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 12)
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -2.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_imcsv")
+
+[node name="MarginContainer" type="MarginContainer" parent="Hud/Control/BottomBar"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 2
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = 2
+theme_override_constants/margin_bottom = 0
+
+[node name="LowerBar" type="HBoxContainer" parent="Hud/Control/BottomBar/MarginContainer"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Hud/Control/BottomBar/MarginContainer/LowerBar"]
+layout_mode = 2
+size_flags_vertical = 0
+mouse_filter = 2
+
+[node name="RoomLabel" type="Label" parent="Hud/Control/BottomBar/MarginContainer/LowerBar/HBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 0
+text = "ROOM:"
+label_settings = SubResource("LabelSettings_xoy25")
+
+[node name="CoordsLabel" type="Label" parent="Hud/Control/BottomBar/MarginContainer/LowerBar/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(56, 0)
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_vertical = 0
+label_settings = SubResource("LabelSettings_xoy25")
+horizontal_alignment = 2
+
+[connection signal="exp_value_changed" from="World" to="." method="_on_world_exp_value_changed"]
+[connection signal="player_health_changed" from="World" to="." method="_on_world_player_health_changed"]
+[connection signal="room_changed" from="World" to="." method="_on_world_room_changed"]
+[connection signal="bullet_fired" from="World/Player" to="World" method="_on_bullet_fired"]
+[connection signal="died" from="World/Player" to="World" method="_on_player_died"]
+[connection signal="exploded" from="World/Player" to="World" method="_on_explosion"]
+[connection signal="health_changed" from="World/Player" to="World" method="_on_player_health_changed"]

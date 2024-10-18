@@ -1,7 +1,7 @@
 extends Node2D
 
 
-@onready var player: CharacterBody2D = $Player
+@onready var player: Player = $Player
 @onready var enemies: Node2D = $Enemies
 @onready var veil: ColorRect = $"../Veil/Veil"
 @onready var background: ColorRect = $"../Background/Background"
@@ -12,6 +12,9 @@ const room_scene = preload("res://scenes/room.tscn")
 
 var enemy_count : int = 0
 var current_room : Room
+var rooms_spawned : int = 0
+
+var leveled_up : bool
 
 var room_grid : Dictionary = {}
 
@@ -29,18 +32,17 @@ var exit_mappings : Dictionary = {
 	Vector2i(-1, 0) : 0b1000
 }
 
-func _unhandled_input(event: InputEvent) -> void:
-	if event is InputEventKey:
-		if event.pressed and event.keycode == KEY_P:
-			Globals.current_palette = wrapi(Globals.current_palette + 1, 0, Globals.color_palettes.size())
-			apply_color_palette()
-			player.apply_color_palette()
-			current_room.change_color_palette()
-			Globals.adjust_explosion_colors()
-			
+signal room_changed(coords : Vector2)
+signal player_health_changed(value : int)
+signal exp_value_changed(value : int)
+
+		
 ## Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	change_room(Vector2i.ZERO, 0)
+	apply_color_palette()
+	EventBus.upgrade_card_pressed.connect(_on_upgrade_selected)
+	EventBus.player_leveled_up.connect(_on_player_leveled_up)
 	
 func apply_color_palette():
 	veil.color = Globals.color_palettes[Globals.current_palette][7]
@@ -52,6 +54,9 @@ func change_room(previous_room_coords : Vector2i, exit_index : int):
 	var tw : Tween = create_tween()
 	tw.tween_property(veil, "modulate:a", 1.0, 0.25)
 	await tw.finished
+	if leveled_up:
+		leveled_up = false
+		EventBus.upgrade_time.emit()
 	if current_room:
 		current_room.queue_free()
 		
@@ -62,27 +67,32 @@ func change_room(previous_room_coords : Vector2i, exit_index : int):
 	if room_grid.size() > 0:
 		match exit_index:
 			0:
-				player.position.y = get_viewport_rect().size.y * 0.5 + Globals.PLAYFIELD_HEIGHT * 0.5 - 16
+				player.position.y = get_viewport_rect().size.y * 0.5 + Globals.PLAYFIELD_HEIGHT * 0.5 - Globals.CELL_SIZE * 2
 			1:
-				player.position.x = get_viewport_rect().size.x * 0.5 - Globals.PLAYFIELD_WIDTH * 0.5 + 16
+				player.position.x = get_viewport_rect().size.x * 0.5 - Globals.PLAYFIELD_WIDTH * 0.5 + Globals.CELL_SIZE * 2
 			2:
-				player.position.y = get_viewport_rect().size.y * 0.5 - Globals.PLAYFIELD_HEIGHT * 0.5 + 16
+				player.position.y = get_viewport_rect().size.y * 0.5 - Globals.PLAYFIELD_HEIGHT * 0.5 + Globals.CELL_SIZE * 2
 			3:
-				player.position.x = get_viewport_rect().size.x * 0.5 + Globals.PLAYFIELD_WIDTH * 0.5 - 16
+				player.position.x = get_viewport_rect().size.x * 0.5 + Globals.PLAYFIELD_WIDTH * 0.5 - Globals.CELL_SIZE * 2
 	
 
 	if room_grid.size() == 0:
+		rooms_spawned += 1
 		new_room = create_new_room(Vector2i.ZERO)
 	elif !room_grid.has(previous_room_coords + directions[exit_index]):
+		rooms_spawned += 1
 		var coords : Vector2i = previous_room_coords + directions[exit_index]
 		new_room = create_new_room(coords)
 	else:
 		new_room = room_scene.instantiate()
 		new_room.room_data = room_grid[previous_room_coords + directions[exit_index]]
 
-	new_room.connect("room_exited", _on_room_exited)
+	new_room.room_exited.connect(_on_room_exited)
+	new_room.enemy_destroyed.connect(_on_enemy_destroyed)
+	
 
 	new_room.position = get_viewport_rect().size * 0.5
+	new_room.total_rooms = rooms_spawned
 
 	room_grid[new_room.room_data.coords] = new_room.room_data
 	current_room = new_room
@@ -96,6 +106,7 @@ func change_room(previous_room_coords : Vector2i, exit_index : int):
 	await tw.finished
 	player.dead = false
 	player.activate_collision()
+	room_changed.emit(current_room.room_data.coords)
 
 func create_room_data(coords : Vector2i, layout : int, first_visited : int, last_visited : int) -> RoomData:
 	var data : RoomData = RoomData.new()
@@ -123,7 +134,7 @@ func create_new_room(coords : Vector2i) -> Room:
 	
 	if coords == Vector2i.ZERO:
 		exit_layout = [3, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15].pick_random()
-		new_room.is_first_room = true
+		
 		
 	else:
 		exit_layout = choose_exit_layout(coords)
@@ -172,6 +183,14 @@ func _on_room_exited(room_coords: Vector2i, exit_index : int):
 	room_grid[room_coords].last_visited = Time.get_ticks_msec()
 	change_room(room_coords, exit_index)
 
+func _on_enemy_destroyed(exp_value : int):
+	player.gain_exp(exp_value)
+	exp_value_changed.emit(player.experience)
+
+
+func _on_player_health_changed(value : int):
+	player_health_changed.emit(value)
+
 func _on_player_died():
 	for enemy in enemies.get_children():
 		enemy.target = null
@@ -187,3 +206,21 @@ func _on_explosion(pos : Vector2):
 func _on_bullet_fired(bullet: Node2D, pos: Vector2) -> void:
 	bullet.position = current_room.to_local(pos)
 	current_room.bullets.call_deferred("add_child", bullet)
+	
+func _on_upgrade_selected(data: UpgradeData):
+	if data.current_type == UpgradeData.Upgrades.SPEED:
+		player.speed += data.amount
+	if data.current_type == UpgradeData.Upgrades.FIRERATE:
+		player.fire_rate -= data.amount
+	if data.current_type == UpgradeData.Upgrades.HITPOINTS:
+		player.max_hp += data.amount
+		player.hp += data.amount
+		EventBus.player_max_health_changed.emit(player.max_hp)
+		player.health_changed.emit(player.hp)
+	if data.current_type == UpgradeData.Upgrades.BULLET_SPEED:
+		player.bullet_speed += data.amount
+	if data.current_type == UpgradeData.Upgrades.BULLET_DAMAGE:
+		player.power += data.amount
+
+func _on_player_leveled_up():
+	leveled_up = true

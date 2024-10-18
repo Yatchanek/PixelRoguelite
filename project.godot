@@ -17,13 +17,15 @@ config/icon="res://icon.svg"
 [autoload]
 
 Globals="*res://scenes/globals.tscn"
+EventBus="*res://scenes/event_bus.tscn"
 
 [display]
 
-window/size/viewport_width=320
-window/size/viewport_height=180
-window/size/window_width_override=1600
-window/size/window_height_override=900
+window/size/viewport_width=640
+window/size/viewport_height=360
+window/size/mode=4
+window/size/window_width_override=1280
+window/size/window_height_override=720
 window/stretch/mode="canvas_items"
 window/stretch/scale_mode="integer"
 
@@ -49,6 +51,11 @@ back={
 "events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":83,"physical_keycode":0,"key_label":0,"unicode":115,"location":0,"echo":false,"script":null)
 ]
 }
+shoot={
+"deadzone": 0.5,
+"events": [Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"button_mask":1,"position":Vector2(267, 19),"global_position":Vector2(276, 65),"factor":1.0,"button_index":1,"canceled":false,"pressed":true,"double_click":false,"script":null)
+]
+}
 
 [layer_names]
 
@@ -58,6 +65,7 @@ back={
 2d_physics/layer_5="Player hitbox"
 2d_physics/layer_6="Enemy hitbox"
 2d_physics/layer_9="enemy hurtbox"
+2d_physics/layer_10="kamikaze hurtbox"
 
 [rendering]
 

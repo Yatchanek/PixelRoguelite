@@ -6,11 +6,11 @@
 [ext_resource type="PackedScene" uid="uid://drd2m072phc4v" path="res://scenes/hitbox.tscn" id="4_h6job"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_bs7nj"]
-radius = 4.0
+radius = 8.0
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_mxbb2"]
 resource_local_to_scene = true
-size = Vector2(8, 8)
+size = Vector2(16, 16)
 
 [node name="Player" type="CharacterBody2D"]
 z_index = 3
@@ -19,18 +19,19 @@ collision_mask = 4
 script = ExtResource("1_7xbh1")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+visible = false
 shape = SubResource("CircleShape2D_bs7nj")
 
 [node name="Body" type="Sprite2D" parent="."]
-modulate = Color(0.0862745, 0.431373, 0.478431, 1)
+self_modulate = Color(0.493545, 0.493546, 0.493546, 1)
 texture = ExtResource("2_qwwgp")
 
 [node name="Turret" type="Sprite2D" parent="."]
 texture = ExtResource("3_cbyhj")
-offset = Vector2(1, 0)
+offset = Vector2(2, 0)
 
 [node name="Muzzle" type="Marker2D" parent="Turret"]
-position = Vector2(8, 0)
+position = Vector2(14, 0)
 
 [node name="ShootTimer" type="Timer" parent="."]
 wait_time = 0.2
@@ -39,7 +40,7 @@ one_shot = true
 [node name="Hitbox" parent="." node_paths=PackedStringArray("target") instance=ExtResource("4_h6job")]
 visible = false
 collision_layer = 16
-collision_mask = 256
+collision_mask = 768
 monitorable = false
 target = NodePath("..")
 

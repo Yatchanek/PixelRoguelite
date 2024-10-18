@@ -1,0 +1,78 @@
+[gd_scene load_steps=10 format=3 uid="uid://cnt47l2vm2pq3"]
+
+[ext_resource type="Script" path="res://scripts/big_enemy.gd" id="1_tb3bw"]
+[ext_resource type="Texture2D" uid="uid://duvu3n0k26rd7" path="res://graphics/big_enemy.png" id="2_pptje"]
+[ext_resource type="Texture2D" uid="uid://d0yxk2iefjl87" path="res://graphics/big_enemy_chasis.png" id="3_kdy4c"]
+[ext_resource type="Texture2D" uid="uid://d3q1xr7avirnp" path="res://graphics/big_enemy_sides.png" id="4_6hrjj"]
+[ext_resource type="PackedScene" uid="uid://drd2m072phc4v" path="res://scenes/hitbox.tscn" id="4_elatp"]
+[ext_resource type="PackedScene" uid="uid://cwshy400yx3qo" path="res://scenes/hurt_box.tscn" id="5_yrxkb"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_48w8c"]
+radius = 6.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_d8mox"]
+resource_local_to_scene = true
+size = Vector2(16, 16)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_xonui"]
+resource_local_to_scene = true
+size = Vector2(16, 16)
+
+[node name="BigEnemy" type="CharacterBody2D"]
+texture_filter = 1
+collision_layer = 2
+collision_mask = 6
+script = ExtResource("1_tb3bw")
+hp = 6
+speed = 72.0
+exp_value = 60
+power = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+visible = false
+shape = SubResource("CircleShape2D_48w8c")
+
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
+path_max_distance = 10.0
+avoidance_enabled = true
+radius = 30.0
+neighbor_distance = 128.0
+max_speed = 96.0
+
+[node name="Body" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("2_pptje")
+
+[node name="Chasis" type="Sprite2D" parent="Body"]
+texture = ExtResource("3_kdy4c")
+
+[node name="Sides" type="Sprite2D" parent="Body"]
+texture = ExtResource("4_6hrjj")
+
+[node name="ShootTimer" type="Timer" parent="."]
+one_shot = true
+
+[node name="Hitbox" parent="." node_paths=PackedStringArray("target") instance=ExtResource("4_elatp")]
+visible = false
+collision_layer = 32
+collision_mask = 512
+target = NodePath("..")
+
+[node name="CollisionShape2D" parent="Hitbox" index="0"]
+shape = SubResource("RectangleShape2D_d8mox")
+
+[node name="HurtBox" parent="." instance=ExtResource("5_yrxkb")]
+visible = false
+collision_layer = 256
+collision_mask = 0
+monitoring = false
+damage = 2
+
+[node name="CollisionShape2D" parent="HurtBox" index="0"]
+shape = SubResource("RectangleShape2D_xonui")
+
+[connection signal="velocity_computed" from="NavigationAgent2D" to="." method="_on_navigation_agent_2d_velocity_computed"]
+[connection signal="timeout" from="ShootTimer" to="." method="_on_shoot_timer_timeout"]
+
+[editable path="Hitbox"]
+[editable path="HurtBox"]
