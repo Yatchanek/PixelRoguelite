@@ -7,9 +7,10 @@ var missile_material : ParticleProcessMaterial = preload("res://missile.tres")
 
 var rng : RandomNumberGenerator
 
-const PLAYFIELD_WIDTH : int = 560
-const PLAYFIELD_HEIGHT : int = 280
+const PLAYFIELD_WIDTH : int = 512
+const PLAYFIELD_HEIGHT : int = 256
 const WALL_THICKNESS : int = 8
+const DOOR_HALF_WIDTH : int = 56
 const CELL_SIZE : int = 16
 
 var current_palette : int = 0

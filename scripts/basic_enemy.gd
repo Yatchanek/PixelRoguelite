@@ -29,10 +29,9 @@ func _ready() -> void:
 	set_physics_process(false)
 	set_process(false)
 	$Hitbox.deactivate()
-	
 	var tw : Tween = create_tween()
-	tw.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN_OUT)
-	tw.tween_property(body, "modulate:a", 1.0, 0.5)
+	tw.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
+	tw.tween_property(body, "modulate:a", 1.0, 1.0)
 	await tw.finished
 	$Hitbox.activate()
 	tw = create_tween()
@@ -45,8 +44,8 @@ func _ready() -> void:
 	shoot_timer.start(fire_interval)
 	current_state = State.MOVE
 	hp = min(1 + level, 3)
-	fire_interval = max(1.0 - 0.1 * level, 0.5)
-	speed = mini(128 + level * 16, 192)
+	fire_interval = max(1.3 - 0.1 * level, 0.5)
+	speed = mini(96 + level * 8, 192)
 
 func _process(_delta: float) -> void:
 	if current_state == State.MOVE:
@@ -112,6 +111,8 @@ func shoot():
 			
 	var bullet : Node2D = bullet_scene.instantiate()
 	bullet.rotation = global_rotation
+	bullet.speed = min(speed * 3.0, 512)
+	bullet.color = body.self_modulate
 	
 	bullet_fired.emit(bullet, global_position + global_transform.x * 12)
 	can_shoot = false
@@ -135,7 +136,7 @@ func apply_color_palette():
 func _on_navigation_agent_2d_velocity_computed(safe_velocity: Vector2) -> void:
 	if current_state != State.MOVE:
 		return
-	velocity = safe_velocity
+	velocity = lerp(velocity, safe_velocity, 0.5)
 	if safe_velocity != Vector2.ZERO:
 		rotation = velocity.angle()
 	elif is_instance_valid(target):

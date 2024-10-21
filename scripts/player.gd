@@ -95,6 +95,7 @@ func apply_color_palette():
 func take_damage(amount : int, _dir : Vector2):
 	hp -= amount
 	health_changed.emit(hp)
+	
 	if hp <= 0:
 		exploded.emit(global_position)
 		died.emit()

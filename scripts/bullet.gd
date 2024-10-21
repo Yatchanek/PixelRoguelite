@@ -5,9 +5,13 @@ extends Node2D
 @export var damage : int = 1
 @export var speed : int = 512
 
-@onready var body: Polygon2D = $Body
+var color : Color = Color.WHITE
+
+@onready var body: Sprite2D = $Body
 
 
+func _ready() -> void:
+	body.self_modulate = color
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:

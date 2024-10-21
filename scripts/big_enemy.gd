@@ -111,11 +111,14 @@ func shoot():
 	var bullet : Node2D = bullet_scene.instantiate()
 	bullet.rotation = global_rotation
 	bullet.damage = power
-	
+	bullet.speed = speed * 3.0
+	bullet.color = body.self_modulate	
 	bullet_fired.emit(bullet, global_position + global_transform.x * 16 + global_transform.y * 8)
 	bullet = bullet_scene.instantiate()
 	bullet.rotation = global_rotation
 	bullet.damage = power
+	bullet.speed = speed * 3.0
+	bullet.color = body.self_modulate	
 	bullet_fired.emit(bullet, global_position + global_transform.x * 16 - global_transform.y * 8)
 	
 	can_shoot = false

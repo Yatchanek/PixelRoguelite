@@ -38,7 +38,6 @@ wait_time = 0.2
 one_shot = true
 
 [node name="Hitbox" parent="." node_paths=PackedStringArray("target") instance=ExtResource("4_h6job")]
-visible = false
 collision_layer = 16
 collision_mask = 768
 monitorable = false

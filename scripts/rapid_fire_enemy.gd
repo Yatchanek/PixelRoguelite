@@ -45,8 +45,8 @@ func _ready() -> void:
 	shoot_timer.start(fire_interval)
 	current_state = State.MOVE
 	hp = min(2 + level, 5)
-	fire_interval = max(0.3 - 0.025 * level, 0.15)
-	speed = mini(128 + level * 16, 192)
+	fire_interval = max(0.2 - 0.025 * level, 0.05)
+	speed = mini(80 + level * 8, 192)
 
 func _process(_delta: float) -> void:
 	if current_state == State.MOVE:
@@ -91,32 +91,34 @@ func _physics_process(_delta: float) -> void:
 			shoot()	
 
 func shoot():
-	var query : PhysicsRayQueryParameters2D = PhysicsRayQueryParameters2D.create(global_position, global_position + global_transform.x * 640, 7)
-	var state : PhysicsDirectSpaceState2D = get_world_2d().direct_space_state
-	
-	var result : Dictionary = state.intersect_ray(query)	
-	if result and result.collider.collision_layer != 1:
-			return
-	
-	query = PhysicsRayQueryParameters2D.create(global_position - global_transform.y * 7, global_position - global_transform.y * 7 + global_transform.x * 640, 7)
-	
-	result = state.intersect_ray(query)	
-	if result and result.collider.collision_layer != 1:
-		return
+	if shots_fired == 0:
+		var query : PhysicsRayQueryParameters2D = PhysicsRayQueryParameters2D.create(global_position, global_position + global_transform.x * 640, 7)
+		var state : PhysicsDirectSpaceState2D = get_world_2d().direct_space_state
 		
-	query = PhysicsRayQueryParameters2D.create(global_position + global_transform.y * 7, global_position + global_transform.y * 7 + global_transform.x * 640, 7)
-	
-	result = state.intersect_ray(query)	
-	if result and result.collider.collision_layer != 1:
-		return
+		var result : Dictionary = state.intersect_ray(query)	
+		if result and result.collider.collision_layer != 1:
+				return
+		
+		query = PhysicsRayQueryParameters2D.create(global_position - global_transform.y * 7, global_position - global_transform.y * 7 + global_transform.x * 640, 7)
+		
+		result = state.intersect_ray(query)	
+		if result and result.collider.collision_layer != 1:
+			return
+			
+		query = PhysicsRayQueryParameters2D.create(global_position + global_transform.y * 7, global_position + global_transform.y * 7 + global_transform.x * 640, 7)
+		
+		result = state.intersect_ray(query)	
+		if result and result.collider.collision_layer != 1:
+			return
 			
 	var bullet : Node2D = bullet_scene.instantiate()
 	bullet.rotation = global_rotation
-	
+	bullet.speed = min(speed * 4.0, 512)
+	bullet.color = body.self_modulate	
 	bullet_fired.emit(bullet, global_position + global_transform.x * 12)
 	shots_fired += 1
 	if shots_fired == 3:
-		fire_interval = 2.0
+		fire_interval = 3.0
 	can_shoot = false
 	shoot_timer.start(fire_interval)
 
@@ -171,4 +173,4 @@ func _on_shoot_timer_timeout() -> void:
 	can_shoot = true
 	if shots_fired == 3:
 		shots_fired = 0
-		fire_interval = max(0.3 - 0.025 * level, 0.15)
+		fire_interval = max(0.2 - 0.025 * level, 0.05)

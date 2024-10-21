@@ -12,4 +12,4 @@
 
 [node name="Globals" type="Node"]
 script = ExtResource("1_5d332")
-palette_images = Array[Texture2D]([ExtResource("2_pl0k6"), ExtResource("3_bshta"), ExtResource("4_7xv2h"), ExtResource("5_udu2e"), ExtResource("6_hdoym"), ExtResource("7_k5h5i"), ExtResource("8_1y5pw"), ExtResource("9_6q21s")])
+palette_images = Array[Texture2D]([ExtResource("6_hdoym"), ExtResource("3_bshta"), ExtResource("4_7xv2h"), ExtResource("5_udu2e"), ExtResource("2_pl0k6"), ExtResource("7_k5h5i"), ExtResource("8_1y5pw"), ExtResource("9_6q21s")])

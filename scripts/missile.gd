@@ -1,7 +1,10 @@
 extends Node2D
+class_name Missile
 
 @onready var body: Sprite2D = $Body
 @onready var engine: GPUParticles2D = $Engine
+
+
 
 var target : Player
 var speed : int = 256
@@ -9,7 +12,7 @@ var level : int
 
 var velocity : Vector2
 
-var lifetime : float = 5
+var lifetime : float = 4
 
 signal exploded
 

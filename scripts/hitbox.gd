@@ -9,7 +9,10 @@ func _on_area_entered(area: Area2D) -> void:
 
 func _on_body_entered(body: Node2D) -> void:
 	if is_instance_valid(target) and body != target:
-		target.take_damage(body.power, Vector2.ZERO)
+		if body is StaticBody2D and target is Missile:
+			target.take_damage(999, Vector2.ZERO)
+		else:
+			target.take_damage(body.power, Vector2.ZERO)
 
 func receive_damage(amount : int, dir : Vector2):
 	if is_instance_valid(target):

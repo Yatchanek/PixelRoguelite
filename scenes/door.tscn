@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=3 uid="uid://bn3jrk0b1a0yn"]
+
+[ext_resource type="Script" path="res://scripts/door.gd" id="1_uufpo"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_03jas"]
+
+[node name="Door" type="Area2D"]
+collision_layer = 0
+monitorable = false
+script = ExtResource("1_uufpo")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_03jas")
+
+[node name="Visuals" type="Polygon2D" parent="."]
+modulate = Color(1, 1, 1, 0)
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

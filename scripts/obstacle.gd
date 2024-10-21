@@ -1,15 +1,32 @@
 extends StaticBody2D
 class_name Obstacle
 
-var shape : PackedVector2Array
 var power : int = 1
+
+var rotation_offset : int 
+
+var size : int
 
 @onready var body: Polygon2D = $Polygon2D
 
+
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	$Polygon2D.set_polygon(shape)
-	$CollisionPolygon2D.set_polygon(shape)
+	if rotation_offset % 2 == 0:
+		size = 128
+	else:
+		size = 64
+	
+	var vertices : PackedVector2Array = [
+	Vector2(0, -Globals.WALL_THICKNESS * 0.5),
+	Vector2(size + 4, -Globals.WALL_THICKNESS * 0.5),
+	Vector2(size + 4, Globals.WALL_THICKNESS * 0.5),
+	Vector2(0, Globals.WALL_THICKNESS * 0.5),
+]
+	vertices = Transform2D(rotation_offset * PI / 2, Vector2.ZERO) * vertices
+	$Polygon2D.set_polygon(vertices)
+	$CollisionPolygon2D.set_polygon(vertices)
 	apply_color_palette()
 
 func apply_color_palette():

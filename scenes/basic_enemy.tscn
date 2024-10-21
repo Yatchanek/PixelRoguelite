@@ -7,7 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://cwshy400yx3qo" path="res://scenes/hurt_box.tscn" id="4_eud2o"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_48w8c"]
-radius = 6.0
+radius = 7.0
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_d8mox"]
 resource_local_to_scene = true
@@ -25,10 +25,10 @@ script = ExtResource("1_e1a7r")
 speed = 128.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-visible = false
 shape = SubResource("CircleShape2D_48w8c")
 
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
+path_desired_distance = 4.0
 path_max_distance = 10.0
 avoidance_enabled = true
 radius = 20.0
@@ -39,6 +39,7 @@ max_speed = 128.0
 wait_time = 0.1
 
 [node name="Body" type="Sprite2D" parent="."]
+modulate = Color(1, 1, 1, 0)
 texture_filter = 1
 texture = ExtResource("2_xhwg0")
 
