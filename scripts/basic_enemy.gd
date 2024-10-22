@@ -27,13 +27,11 @@ enum State {
 func _ready() -> void:
 	apply_color_palette()
 	set_physics_process(false)
-	set_process(false)
-	$Hitbox.deactivate()
+	set_process(false)	
 	var tw : Tween = create_tween()
 	tw.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
 	tw.tween_property(body, "modulate:a", 1.0, 1.0)
 	await tw.finished
-	$Hitbox.activate()
 	tw = create_tween()
 	tw.tween_interval(0.15)
 	await tw.finished
@@ -46,13 +44,16 @@ func _ready() -> void:
 	hp = min(1 + level, 3)
 	fire_interval = max(1.3 - 0.1 * level, 0.5)
 	speed = mini(96 + level * 8, 192)
+	health_bar.max_value = hp
+	health_bar.value = hp
 
 func _process(_delta: float) -> void:
 	if current_state == State.MOVE:
 		tick += 1
 		if tick % 2 == 0 and target:
 			nav_agent.target_position = target.global_position
-		
+	
+	health_bar_pivot.global_rotation = 0	
 
 func _physics_process(_delta: float) -> void:
 	if current_state == State.KNOCKBACK:

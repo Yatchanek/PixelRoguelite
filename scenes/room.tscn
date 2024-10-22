@@ -1,77 +1,18 @@
-[gd_scene load_steps=7 format=3 uid="uid://dcryx3x5sypq"]
+[gd_scene load_steps=3 format=3 uid="uid://dcryx3x5sypq"]
 
 [ext_resource type="Script" path="res://scripts/room.gd" id="1_sifb4"]
 
-[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_adgi7"]
-normal = Vector2(0, 1)
-distance = -192.55
-
-[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_xv8b5"]
-normal = Vector2(-1, 0)
-distance = -320.0
-
-[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_46mbi"]
-distance = -250.02
-
-[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_o3lx8"]
-normal = Vector2(1, 0)
-distance = -157.54
-
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_vic26"]
-agent_radius = 16.0
+agent_radius = 12.0
 
 [node name="Room" type="Node2D"]
 z_index = 1
 script = ExtResource("1_sifb4")
 
-[node name="Walls" type="Line2D" parent="."]
+[node name="Walls" type="Node2D" parent="."]
 z_index = -1
-closed = true
-width = 4.0
-
-[node name="Borders" type="StaticBody2D" parent="."]
-visible = false
-collision_layer = 4
-
-[node name="TopBorder" type="CollisionShape2D" parent="Borders"]
-shape = SubResource("WorldBoundaryShape2D_adgi7")
-
-[node name="RightBorder" type="CollisionShape2D" parent="Borders"]
-shape = SubResource("WorldBoundaryShape2D_xv8b5")
-
-[node name="BottomBorder" type="CollisionShape2D" parent="Borders"]
-shape = SubResource("WorldBoundaryShape2D_46mbi")
-
-[node name="LeftBorder" type="CollisionShape2D" parent="Borders"]
-shape = SubResource("WorldBoundaryShape2D_o3lx8")
 
 [node name="Exits" type="Node2D" parent="."]
-
-[node name="ExitMarkers" type="Node2D" parent="."]
-z_index = 1
-
-[node name="TopMarker" type="Polygon2D" parent="ExitMarkers"]
-visible = false
-position = Vector2(160, -1)
-polygon = PackedVector2Array(-60, -4, 60, -4, 60, 4, -60, 4)
-
-[node name="RightMarker" type="Polygon2D" parent="ExitMarkers"]
-visible = false
-position = Vector2(321, 90)
-polygon = PackedVector2Array(-4, -60, 4, -60, 4, 60, -4, 60)
-
-[node name="BottomMarker" type="Polygon2D" parent="ExitMarkers"]
-visible = false
-position = Vector2(160, 181)
-polygon = PackedVector2Array(-60, -4, 60, -4, 60, 4, -60, 4)
-
-[node name="LeftMarker" type="Polygon2D" parent="ExitMarkers"]
-visible = false
-position = Vector2(-1, 90)
-polygon = PackedVector2Array(-4, -60, 4, -60, 4, 60, -4, 60)
-
-[node name="Doors" type="Node2D" parent="."]
-z_index = 2
 
 [node name="Enemies" type="Node2D" parent="."]
 

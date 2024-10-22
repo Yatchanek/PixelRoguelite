@@ -28,12 +28,10 @@ func _ready() -> void:
 	apply_color_palette()
 	set_physics_process(false)
 	set_process(false)
-	$Hitbox.deactivate()
 	var tw : Tween = create_tween()
 	tw.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN_OUT)
 	tw.tween_property(body, "modulate:a", 1.0, 0.5)
 	await tw.finished
-	$Hitbox.activate()
 	tw = create_tween()
 	tw.tween_interval(0.15)
 	await tw.finished
@@ -45,7 +43,8 @@ func _ready() -> void:
 	speed = mini(72 + level * 8, 112)
 	shoot_timer.start(fire_interval)
 	current_state = State.MOVE
-
+	health_bar.max_value = hp
+	health_bar.value = hp	
 
 
 func _process(_delta: float) -> void:
@@ -53,7 +52,8 @@ func _process(_delta: float) -> void:
 		tick += 1
 		if tick % 2 == 0 and target:
 			nav_agent.target_position = target.global_position
-		
+
+	health_bar_pivot.global_rotation = 0		
 
 func _physics_process(_delta: float) -> void:
 	if current_state == State.KNOCKBACK:

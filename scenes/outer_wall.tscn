@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://b85jkem4iiaty"]
+
+[ext_resource type="Script" path="res://scripts/outer_wall.gd" id="1_13tny"]
+
+[node name="OuterWall" type="Node2D"]
+script = ExtResource("1_13tny")
+
+[node name="Lines" type="Node2D" parent="."]

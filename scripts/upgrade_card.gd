@@ -9,6 +9,7 @@ var other_upgrades : Array[UpgradeData.Upgrades] = []
 var cards_in_row : int
 
 signal card_added(data : UpgradeData)
+signal last_card_added
 
 func _ready() -> void:
 	apply_color_palette()
@@ -18,6 +19,8 @@ func _ready() -> void:
 	
 	if get_index() < cards_in_row - 1:
 		card_added.emit(upgrade_equipped)
+	else:
+		last_card_added.emit()
 
 
 func apply_color_palette():

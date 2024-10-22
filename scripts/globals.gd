@@ -11,6 +11,7 @@ const PLAYFIELD_WIDTH : int = 512
 const PLAYFIELD_HEIGHT : int = 256
 const WALL_THICKNESS : int = 8
 const DOOR_HALF_WIDTH : int = 56
+const EXIT_HALF_WIDTH : int = 60
 const CELL_SIZE : int = 16
 
 var current_palette : int = 0
@@ -19,6 +20,7 @@ var color_palettes : Array[PackedColorArray] = [
 ]
 
 var player : Player
+var leveled_up : bool = false
 
 func _ready() -> void:
 	rng = RandomNumberGenerator.new()

@@ -117,7 +117,7 @@ func take_damage(amount : int, _dir : Vector2):
 func gain_exp(value):
 	experience += value
 	if experience >= exp_to_next_level:
-		EventBus.player_leveled_up.emit()
+		Globals.leveled_up = true
 		level += 1
 		exp_to_next_level += level * 100
 

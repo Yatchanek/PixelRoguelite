@@ -12,7 +12,7 @@ var level : int
 
 var velocity : Vector2
 
-var lifetime : float = 4
+var lifetime : float = 2.5
 
 signal exploded
 

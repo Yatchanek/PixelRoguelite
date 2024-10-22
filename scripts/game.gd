@@ -22,7 +22,7 @@ func _ready() -> void:
 
 func _on_player_leveled_up():
 	get_tree().paused = true
-	await get_tree().create_timer(1.0).timeout
+	await get_tree().create_timer(0.25).timeout
 	hud.show_upgrades()
 
 func _on_world_exp_value_changed(value: int) -> void:
@@ -40,6 +40,7 @@ func _on_world_room_changed(coords: Vector2) -> void:
 	hud.update_room(coords)
 
 func _on_upgrade_selected(_data : UpgradeData) -> void:
+	Globals.leveled_up = false
 	hud.hide_upgrades()
 	await get_tree().create_timer(1.0).timeout
 	get_tree().paused = false

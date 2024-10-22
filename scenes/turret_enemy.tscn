@@ -1,10 +1,11 @@
-[gd_scene load_steps=8 format=3 uid="uid://cm4rgjp8lldhs"]
+[gd_scene load_steps=9 format=3 uid="uid://cm4rgjp8lldhs"]
 
 [ext_resource type="Script" path="res://scripts/turret.gd" id="1_3ti4q"]
 [ext_resource type="Texture2D" uid="uid://ban6hmngjwmf0" path="res://graphics/turret_base.png" id="2_5b53m"]
 [ext_resource type="Texture2D" uid="uid://c4q5xwosebotj" path="res://graphics/turret_body.png" id="3_rnl7s"]
 [ext_resource type="PackedScene" uid="uid://drd2m072phc4v" path="res://scenes/hitbox.tscn" id="4_2cq4w"]
 [ext_resource type="Texture2D" uid="uid://cthxaj8b0lly6" path="res://graphics/turret_top.png" id="4_b1480"]
+[ext_resource type="Texture2D" uid="uid://d3otih1xwa7g2" path="res://graphics/progress_bar.png" id="6_1dh48"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_48w8c"]
 radius = 6.0
@@ -50,6 +51,28 @@ target = NodePath("..")
 
 [node name="CollisionShape2D" parent="Hitbox" index="0"]
 shape = SubResource("RectangleShape2D_d8mox")
+
+[node name="HealthBarPivot" type="Marker2D" parent="."]
+
+[node name="HealthBar" type="TextureProgressBar" parent="HealthBarPivot"]
+visible = false
+custom_minimum_size = Vector2(16, 4)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -8.0
+offset_top = -15.0
+offset_right = 8.0
+offset_bottom = -11.0
+grow_horizontal = 2
+grow_vertical = 2
+max_value = 1.0
+value = 1.0
+nine_patch_stretch = true
+texture_progress = ExtResource("6_1dh48")
+metadata/_edit_use_anchors_ = true
 
 [connection signal="timeout" from="ShootTimer" to="." method="_on_shoot_timer_timeout"]
 

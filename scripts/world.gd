@@ -14,8 +14,6 @@ var enemy_count : int = 0
 var current_room : Room
 var rooms_spawned : int = 0
 
-var leveled_up : bool
-
 var room_grid : Dictionary = {}
 
 var directions : Dictionary = {
@@ -32,6 +30,8 @@ var exit_mappings : Dictionary = {
 	Vector2i(-1, 0) : 0b1000
 }
 
+var room_pos : Vector2
+
 signal room_changed(coords : Vector2)
 signal player_health_changed(value : int)
 signal exp_value_changed(value : int)
@@ -39,10 +39,11 @@ signal exp_value_changed(value : int)
 		
 ## Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	room_pos = (get_viewport_rect().size - Vector2(Globals.PLAYFIELD_WIDTH, Globals.PLAYFIELD_HEIGHT)) * 0.5
 	change_room(Vector2i.ZERO, 0)
 	apply_color_palette()
 	EventBus.upgrade_card_pressed.connect(_on_upgrade_selected)
-	EventBus.player_leveled_up.connect(_on_player_leveled_up)
+	player.position = get_viewport_rect().size * 0.5
 	
 func apply_color_palette():
 	veil.color = Globals.color_palettes[Globals.current_palette][7]
@@ -54,9 +55,7 @@ func change_room(previous_room_coords : Vector2i, exit_index : int):
 	var tw : Tween = create_tween()
 	tw.tween_property(veil, "modulate:a", 1.0, 0.25)
 	await tw.finished
-	if leveled_up:
-		leveled_up = false
-		EventBus.upgrade_time.emit()
+
 	if current_room:
 		current_room.queue_free()
 		
@@ -75,7 +74,8 @@ func change_room(previous_room_coords : Vector2i, exit_index : int):
 			3:
 				player.position.x = get_viewport_rect().size.x * 0.5 + Globals.PLAYFIELD_WIDTH * 0.5 - Globals.CELL_SIZE * 2
 	
-
+		player.velocity = Vector2.ZERO
+		
 	if room_grid.size() == 0:
 		rooms_spawned += 1
 		new_room = create_new_room(Vector2i.ZERO)
@@ -91,8 +91,10 @@ func change_room(previous_room_coords : Vector2i, exit_index : int):
 	new_room.enemy_destroyed.connect(_on_enemy_destroyed)
 	
 
-	new_room.position = get_viewport_rect().size * 0.5
+	new_room.position = room_pos
 	new_room.total_rooms = rooms_spawned
+
+	new_room.player = player
 
 	room_grid[new_room.room_data.coords] = new_room.room_data
 	current_room = new_room
@@ -141,7 +143,7 @@ func create_new_room(coords : Vector2i) -> Room:
 		
 	var room_data : RoomData = create_room_data(coords, exit_layout, current_time, current_time)
 	new_room.room_data = room_data
-	new_room.player = player
+	
 	
 
 	
@@ -221,6 +223,3 @@ func _on_upgrade_selected(data: UpgradeData):
 		player.bullet_speed += data.amount
 	if data.current_type == UpgradeData.Upgrades.BULLET_DAMAGE:
 		player.power += data.amount
-
-func _on_player_leveled_up():
-	leveled_up = true

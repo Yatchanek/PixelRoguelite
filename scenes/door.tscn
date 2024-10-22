@@ -1,8 +1,10 @@
-[gd_scene load_steps=3 format=3 uid="uid://bn3jrk0b1a0yn"]
+[gd_scene load_steps=4 format=3 uid="uid://bn3jrk0b1a0yn"]
 
 [ext_resource type="Script" path="res://scripts/door.gd" id="1_uufpo"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_03jas"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_h8d0r"]
 
 [node name="Door" type="Area2D"]
 collision_layer = 0
@@ -14,5 +16,13 @@ shape = SubResource("RectangleShape2D_03jas")
 
 [node name="Visuals" type="Polygon2D" parent="."]
 modulate = Color(1, 1, 1, 0)
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+collision_layer = 4
+collision_mask = 3
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+shape = SubResource("RectangleShape2D_h8d0r")
+disabled = true
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]

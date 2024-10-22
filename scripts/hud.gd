@@ -52,14 +52,32 @@ func add_card():
 	card.cards_in_row = 3
 	card.other_upgrades = proposed_upgrades
 	card.card_added.connect(_on_card_added)
+	card.last_card_added.connect(_on_last_card_added)
 	upgrade_row.call_deferred("add_child", card)
 	
 func _on_card_added(data : UpgradeData):
 	proposed_upgrades.append(data.current_type)
 	add_card()
 
+func _on_last_card_added() -> void:
+	var tw : Tween = create_tween()
+	tw.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_BOUNCE)
+	tw.set_parallel()
+	var idx : int = 0
+	for card in upgrade_row.get_children():
+		tw.tween_property(card, "position:y", 320, 1.0).set_delay(idx * 0.25)
+		idx += 1
+
 func hide_upgrades():
 	proposed_upgrades = []
+	var tw : Tween = create_tween()
+	tw.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+	tw.set_parallel()
+	var idx : int = 0
+	for card in upgrade_row.get_children():
+		tw.tween_property(card, "position:y", 0, 1.0).set_delay(idx * 0.25)
+		idx += 1
+	await tw.finished
 	for card in upgrade_row.get_children():
 		card.queue_free()
 	upgrade_row.hide()

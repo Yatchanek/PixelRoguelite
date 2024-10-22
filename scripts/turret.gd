@@ -35,7 +35,8 @@ func _ready() -> void:
 	fire_interval = max(1.3 - 0.1 * level, 0.8)
 	shoot_timer.start(fire_interval)
 	current_muzzle = 1
-	
+	health_bar.max_value = hp
+	health_bar.value = hp		
 
 
 func _process(_delta: float) -> void:
