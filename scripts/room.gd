@@ -183,13 +183,13 @@ func _on_timer_timeout() -> void:
 			var accepted : bool = false
 			var attempts : int = 0
 			while !accepted:
-				if attempts > 5:
+				if attempts > 10:
 					timer.start(0.25)
 					break
 				var intersects : bool = false
 				var candidate_coords : Vector2i = Vector2i(randi_range(0, 7), randi_range(0, 3))
-				#prints(candidate_coords, get_coords(to_local(player.global_position)))
-				if temporarily_occupied.has(candidate_coords) or permanently_occupied.has(candidate_coords) or is_too_close(candidate_coords, get_coords(to_local(player.global_position))):
+
+				if temporarily_occupied.has(candidate_coords) or permanently_occupied.has(candidate_coords) or get_manhattan_distance(candidate_coords, get_coords(to_local(player.global_position))) < 3:
 					attempts += 1
 				else:
 					accepted = true
@@ -245,6 +245,10 @@ func spawn_enemy(coords : Vector2i):
 
 func get_coords(pos : Vector2) -> Vector2i:
 	return(Vector2i(int(pos.x / 64), int(pos.y / 64)))		
+
+
+func get_manhattan_distance(coords_a : Vector2i, coords_b : Vector2i) -> int:
+	return abs(coords_a.x - coords_b.x) + abs(coords_a.y - coords_b.y)
 
 func is_too_close(coords_a : Vector2i, coords_b : Vector2i) -> bool:
 	return abs(coords_a.x - coords_b.x) < 3 or abs(coords_a.y - coords_b.y) < 2

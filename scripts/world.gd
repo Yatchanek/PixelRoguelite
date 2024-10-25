@@ -14,8 +14,6 @@ var enemy_count : int = 0
 var current_room : Room
 var rooms_spawned : int = 0
 
-var room_grid : Dictionary = {}
-
 var directions : Dictionary = {
 	0 : Vector2i(0, -1),
 	1 : Vector2i(1, 0),
@@ -63,7 +61,7 @@ func change_room(previous_room_coords : Vector2i, exit_index : int):
 	
 	await get_tree().process_frame
 	
-	if room_grid.size() > 0:
+	if Globals.room_grid.size() > 0:
 		match exit_index:
 			0:
 				player.position.y = get_viewport_rect().size.y * 0.5 + Globals.PLAYFIELD_HEIGHT * 0.5 - Globals.CELL_SIZE * 2
@@ -76,16 +74,18 @@ func change_room(previous_room_coords : Vector2i, exit_index : int):
 	
 		player.velocity = Vector2.ZERO
 		
-	if room_grid.size() == 0:
+	if Globals.room_grid.size() == 0:
 		rooms_spawned += 1
 		new_room = create_new_room(Vector2i.ZERO)
-	elif !room_grid.has(previous_room_coords + directions[exit_index]):
+		Globals.room_grid[new_room.room_data.coords] = new_room.room_data
+	elif !Globals.room_grid.has(previous_room_coords + directions[exit_index]):
 		rooms_spawned += 1
 		var coords : Vector2i = previous_room_coords + directions[exit_index]
 		new_room = create_new_room(coords)
+		Globals.room_grid[new_room.room_data.coords] = new_room.room_data
 	else:
 		new_room = room_scene.instantiate()
-		new_room.room_data = room_grid[previous_room_coords + directions[exit_index]]
+		new_room.room_data = Globals.room_grid[previous_room_coords + directions[exit_index]]
 
 	new_room.room_exited.connect(_on_room_exited)
 	new_room.enemy_destroyed.connect(_on_enemy_destroyed)
@@ -96,7 +96,7 @@ func change_room(previous_room_coords : Vector2i, exit_index : int):
 
 	new_room.player = player
 
-	room_grid[new_room.room_data.coords] = new_room.room_data
+	
 	current_room = new_room
 	
 	call_deferred("add_child", new_room)
@@ -108,7 +108,7 @@ func change_room(previous_room_coords : Vector2i, exit_index : int):
 	await tw.finished
 	player.dead = false
 	player.activate_collision()
-	room_changed.emit(current_room.room_data.coords)
+	EventBus.room_changed.emit(current_room.room_data.coords)
 
 func create_room_data(coords : Vector2i, layout : int, first_visited : int, last_visited : int) -> RoomData:
 	var data : RoomData = RoomData.new()
@@ -124,7 +124,7 @@ func create_room_data(coords : Vector2i, layout : int, first_visited : int, last
 func count_empty_neighbours(coords : Vector2i):
 	var empty_neighbour_count : int = 0
 	for dir in 4:
-		if !room_grid.has(coords + directions[dir]):
+		if !Globals.room_grid.has(coords + directions[dir]):
 			empty_neighbour_count += 1
 		
 	return empty_neighbour_count
@@ -143,9 +143,6 @@ func create_new_room(coords : Vector2i) -> Room:
 		
 	var room_data : RoomData = create_room_data(coords, exit_layout, current_time, current_time)
 	new_room.room_data = room_data
-	
-	
-
 	
 	return new_room
 	
@@ -170,10 +167,10 @@ func choose_exit_layout(coords : Vector2i) -> int:
 		
 		for j in range(0, 4):
 			var neighbour_coords : Vector2i = coords + directions[j]
-			if !room_grid.has(neighbour_coords):
+			if !Globals.room_grid.has(neighbour_coords):
 				continue	
 			else:
-				if i & exit_mappings[directions[j]] != 0 and room_grid[neighbour_coords].layout_type & exit_mappings[-directions[j]] != 0:
+				if i & exit_mappings[directions[j]] != 0 and Globals.room_grid[neighbour_coords].layout_type & exit_mappings[-directions[j]] != 0:
 					accepted = true						
 		if accepted:
 			possible_layouts.append(i)
@@ -182,7 +179,7 @@ func choose_exit_layout(coords : Vector2i) -> int:
 	return layout
 	
 func _on_room_exited(room_coords: Vector2i, exit_index : int):
-	room_grid[room_coords].last_visited = Time.get_ticks_msec()
+	Globals.room_grid[room_coords].last_visited = Time.get_ticks_msec()
 	change_room(room_coords, exit_index)
 
 func _on_enemy_destroyed(exp_value : int):

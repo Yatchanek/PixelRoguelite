@@ -8,6 +8,7 @@ class_name HUD
 @onready var hp_bar: TextureProgressBar = %HPBar
 @onready var coords_label: Label = %CoordsLabel
 @onready var upgrade_row: HBoxContainer = $Control/UpgradeRow
+@onready var minimap: MiniMap = $Control/Minimap
 
 var proposed_upgrades : Array[UpgradeData.Upgrades] = []
 
@@ -26,7 +27,7 @@ func update_max_health(value : int):
 func update_exp(amount : int):
 	xp_amount_label.text = str(amount)
 
-func update_room(coords : Vector2):
+func update_room(coords : Vector2i):
 	coords_label.text = str(coords)
 
 func apply_color_palette():
@@ -40,7 +41,8 @@ func apply_color_palette():
 	
 	xp_label.label_settings.font_color = Globals.color_palettes[Globals.current_palette][3] 
 	
-	hp_bar.tint_progress = Globals.color_palettes[Globals.current_palette][2] 
+	hp_bar.tint_progress = Globals.color_palettes[Globals.current_palette][2]
+	minimap.apply_color_palette()
 	
 func show_upgrades():
 	upgrade_row.show()
@@ -81,3 +83,6 @@ func hide_upgrades():
 	for card in upgrade_row.get_children():
 		card.queue_free()
 	upgrade_row.hide()
+
+func toggle_minimap():
+	minimap.toggle()

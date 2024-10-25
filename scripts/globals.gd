@@ -14,6 +14,8 @@ const DOOR_HALF_WIDTH : int = 56
 const EXIT_HALF_WIDTH : int = 60
 const CELL_SIZE : int = 16
 
+var room_grid : Dictionary = {}
+
 var current_palette : int = 0
 
 var color_palettes : Array[PackedColorArray] = [

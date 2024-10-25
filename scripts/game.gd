@@ -14,11 +14,14 @@ func _unhandled_input(event: InputEvent) -> void:
 			world.current_room.change_color_palette()
 			Globals.adjust_explosion_colors()
 			hud.apply_color_palette()
+		if event.pressed and event.keycode == KEY_M:
+			hud.toggle_minimap()
 
 func _ready() -> void:
 	EventBus.upgrade_time.connect(_on_player_leveled_up)
 	EventBus.player_max_health_changed.connect(_on_max_health_changed)
 	EventBus.upgrade_card_pressed.connect(_on_upgrade_selected)
+	EventBus.room_changed.connect(_on_room_changed)
 
 func _on_player_leveled_up():
 	get_tree().paused = true
@@ -36,7 +39,7 @@ func _on_max_health_changed(value : int) -> void:
 	hud.update_max_health(value)
 
 
-func _on_world_room_changed(coords: Vector2) -> void:
+func _on_room_changed(coords: Vector2i) -> void:
 	hud.update_room(coords)
 
 func _on_upgrade_selected(_data : UpgradeData) -> void:

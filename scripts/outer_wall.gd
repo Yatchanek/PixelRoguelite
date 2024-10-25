@@ -76,6 +76,8 @@ func _ready() -> void:
 func apply_color_palette():
 	for line : Line2D in lines.get_children():
 		line.default_color =  Globals.color_palettes[Globals.current_palette][5]
+	if is_instance_valid(door):
+		door.apply_color_palette()
 	
 func activate_door():
 	if has_door:

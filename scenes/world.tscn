@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://ddylky5tp6bpd"]
+[gd_scene load_steps=13 format=3 uid="uid://ddylky5tp6bpd"]
 
 [ext_resource type="Script" path="res://scripts/world.gd" id="1_k8agj"]
 [ext_resource type="PackedScene" uid="uid://60nvyx6hcw6k" path="res://scenes/player.tscn" id="1_p7l7c"]
@@ -7,6 +7,7 @@
 [ext_resource type="Script" path="res://scripts/hud.gd" id="4_l11xs"]
 [ext_resource type="Texture2D" uid="uid://d3otih1xwa7g2" path="res://graphics/progress_bar.png" id="6_e2n24"]
 [ext_resource type="FontFile" uid="uid://wnb2movo6eli" path="res://fonts/m6x11 Daniel LInssen.ttf" id="6_in5tj"]
+[ext_resource type="PackedScene" uid="uid://s65dq4a3p8hf" path="res://scenes/minimap.tscn" id="8_p1qqq"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ft2ng"]
 shader = ExtResource("3_smk6s")
@@ -226,6 +227,10 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 theme_override_constants/separation = 16
+
+[node name="Minimap" parent="Hud/Control" instance=ExtResource("8_p1qqq")]
+visible = false
+layout_mode = 1
 
 [connection signal="exp_value_changed" from="World" to="." method="_on_world_exp_value_changed"]
 [connection signal="player_health_changed" from="World" to="." method="_on_world_player_health_changed"]
