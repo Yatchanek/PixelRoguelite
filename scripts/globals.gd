@@ -2,7 +2,6 @@ extends Node
 
 @export var palette_images : Array[Texture2D] = []
 
-var explosion_material : ParticleProcessMaterial = preload("res://explosion.tres")
 var missile_material : ParticleProcessMaterial = preload("res://missile.tres")
 
 var rng : RandomNumberGenerator
@@ -24,10 +23,14 @@ var color_palettes : Array[PackedColorArray] = [
 var player : Player
 var leveled_up : bool = false
 
+var artifact_coords : Dictionary = {}
+var artifacts_collected : Array[int] = []
+
 func _ready() -> void:
 	rng = RandomNumberGenerator.new()
 	create_color_palettes()
-
+	reset()
+	
 func create_color_palettes():
 	for image : Texture2D in palette_images:
 		var img : Image = image.get_image()
@@ -42,8 +45,27 @@ func adjust_explosion_colors():
 	for i in 8:
 		gradient.add_point(i * 0.143, color_palettes[current_palette][i])
 		
-	explosion_material.color_initial_ramp.gradient = gradient
 	missile_material.color_initial_ramp.gradient = gradient
+
+func get_coords_in_distance_range(min_dist : int, max_dist : int) -> Vector2i:
+	return Vector2i(
+		randi_range(min_dist, max_dist) * pow(-1, randi() % 2),
+		randi_range(min_dist, max_dist) * pow(-1, randi() % 2),
+	)
 		
 func _on_player_ready(_player : Player):
 	player = _player
+
+func reset():
+	leveled_up = false
+	room_grid = {}
+	artifact_coords = {}
+	artifacts_collected = []
+	
+	var min_dist : int = 1
+	for i in 7:
+		var coords : Vector2i = get_coords_in_distance_range(min_dist + i, min_dist + 1 + i)
+		artifact_coords[coords] = i
+
+	#artifacts_collected.resize(7)
+	#artifacts_collected.fill(false)	

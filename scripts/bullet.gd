@@ -13,6 +13,7 @@ var color : Color = Color.WHITE
 func _ready() -> void:
 	body.self_modulate = color
 
+	
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	body.rotation += 3 * TAU * delta

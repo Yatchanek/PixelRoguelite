@@ -93,6 +93,8 @@ func apply_color_palette():
 	turret.self_modulate = Globals.color_palettes[Globals.current_palette][2]
 
 func take_damage(amount : int, _dir : Vector2):
+	if dead: 
+		return
 	hp -= amount
 	health_changed.emit(hp)
 	
@@ -105,9 +107,11 @@ func take_damage(amount : int, _dir : Vector2):
 		$CollisionShape2D.set_deferred("disabled", true)
 		
 		await get_tree().create_timer(2.0).timeout
-		
+		Globals.leveled_up = false
 		get_tree().reload_current_scene()
+		
 	else:
+		SoundManager.play_effect(SoundManager.Effects.HIT)
 		var tw : Tween = create_tween()
 		tw.tween_property(body, "modulate", Color.RED, 0.1)
 		tw.tween_property(body, "modulate", Color.WHITE, 0.1)
@@ -139,6 +143,7 @@ func shoot():
 	bullet_fired.emit(bullet, muzzle.global_position)
 	can_shoot = false
 	shoot_timer.start(fire_rate)
+	SoundManager.play_effect(SoundManager.Effects.PLAYER_SHOOT)
 
 func _on_shoot_timer_timeout() -> void:
 	can_shoot = true

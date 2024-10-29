@@ -1,16 +1,17 @@
-[gd_scene load_steps=13 format=3 uid="uid://ddylky5tp6bpd"]
+[gd_scene load_steps=14 format=3 uid="uid://ddylky5tp6bpd"]
 
-[ext_resource type="Script" path="res://scripts/world.gd" id="1_k8agj"]
-[ext_resource type="PackedScene" uid="uid://60nvyx6hcw6k" path="res://scenes/player.tscn" id="1_p7l7c"]
-[ext_resource type="Script" path="res://scripts/game.gd" id="1_u0rsy"]
-[ext_resource type="Shader" path="res://crt.gdshader" id="3_smk6s"]
-[ext_resource type="Script" path="res://scripts/hud.gd" id="4_l11xs"]
-[ext_resource type="Texture2D" uid="uid://d3otih1xwa7g2" path="res://graphics/progress_bar.png" id="6_e2n24"]
-[ext_resource type="FontFile" uid="uid://wnb2movo6eli" path="res://fonts/m6x11 Daniel LInssen.ttf" id="6_in5tj"]
-[ext_resource type="PackedScene" uid="uid://s65dq4a3p8hf" path="res://scenes/minimap.tscn" id="8_p1qqq"]
+[ext_resource type="Script" path="res://scripts/game.gd" id="1_w3yxl"]
+[ext_resource type="Script" path="res://scripts/world.gd" id="2_4ply8"]
+[ext_resource type="PackedScene" uid="uid://60nvyx6hcw6k" path="res://scenes/player.tscn" id="3_wtd56"]
+[ext_resource type="Shader" path="res://crt.gdshader" id="4_ely7h"]
+[ext_resource type="Script" path="res://scripts/hud.gd" id="5_rohpp"]
+[ext_resource type="FontFile" uid="uid://wnb2movo6eli" path="res://fonts/m6x11 Daniel LInssen.ttf" id="6_7g8h5"]
+[ext_resource type="Texture2D" uid="uid://d3otih1xwa7g2" path="res://graphics/progress_bar.png" id="7_yuboa"]
+[ext_resource type="PackedScene" uid="uid://s65dq4a3p8hf" path="res://scenes/minimap.tscn" id="8_0353o"]
+[ext_resource type="Texture2D" uid="uid://ban6hmngjwmf0" path="res://graphics/turret_base.png" id="9_un4mb"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ft2ng"]
-shader = ExtResource("3_smk6s")
+shader = ExtResource("4_ely7h")
 shader_parameter/crt_curve = 0.0
 shader_parameter/crt_scan_line_color = 0.478
 shader_parameter/crt_aperture_grille_rate = 0.562
@@ -25,7 +26,7 @@ border_width_right = 1
 border_width_bottom = 1
 
 [sub_resource type="LabelSettings" id="LabelSettings_xoy25"]
-font = ExtResource("6_in5tj")
+font = ExtResource("6_7g8h5")
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_imcsv"]
 border_width_left = 1
@@ -35,7 +36,7 @@ border_width_bottom = 1
 
 [node name="Game" type="Node"]
 process_mode = 3
-script = ExtResource("1_u0rsy")
+script = ExtResource("1_w3yxl")
 
 [node name="Veil" type="CanvasLayer" parent="."]
 layer = 5
@@ -66,9 +67,9 @@ color = Color(0.12549, 0.0823529, 0.2, 1)
 [node name="World" type="Node2D" parent="."]
 process_mode = 1
 texture_filter = 1
-script = ExtResource("1_k8agj")
+script = ExtResource("2_4ply8")
 
-[node name="Player" parent="World" instance=ExtResource("1_p7l7c")]
+[node name="Player" parent="World" instance=ExtResource("3_wtd56")]
 position = Vector2(160, 90)
 collision_mask = 5
 
@@ -88,7 +89,7 @@ mouse_filter = 2
 [node name="Hud" type="CanvasLayer" parent="."]
 process_mode = 3
 layer = 5
-script = ExtResource("4_l11xs")
+script = ExtResource("5_rohpp")
 
 [node name="Control" type="Control" parent="Hud"]
 texture_filter = 1
@@ -162,9 +163,9 @@ uppercase = true
 [node name="HPBar" type="TextureProgressBar" parent="Hud/Control/TopBar/MarginContainer/UpperBar/HBoxContainer2"]
 unique_name_in_owner = true
 layout_mode = 2
-max_value = 5.0
+max_value = 50.0
 value = 5.0
-texture_progress = ExtResource("6_e2n24")
+texture_progress = ExtResource("7_yuboa")
 
 [node name="BottomBar" type="PanelContainer" parent="Hud/Control"]
 unique_name_in_owner = true
@@ -228,13 +229,68 @@ grow_vertical = 2
 mouse_filter = 2
 theme_override_constants/separation = 16
 
-[node name="Minimap" parent="Hud/Control" instance=ExtResource("8_p1qqq")]
+[node name="Minimap" parent="Hud/Control" instance=ExtResource("8_0353o")]
 visible = false
 layout_mode = 1
 
+[node name="MarginContainer" type="MarginContainer" parent="Hud/Control"]
+custom_minimum_size = Vector2(48, 0)
+layout_mode = 1
+anchors_preset = 9
+anchor_bottom = 1.0
+offset_right = 48.0
+grow_vertical = 2
+
+[node name="ArtifactContainer" type="VBoxContainer" parent="Hud/Control/MarginContainer"]
+texture_filter = 1
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="TextureRect" type="TextureRect" parent="Hud/Control/MarginContainer/ArtifactContainer"]
+self_modulate = Color(0.20871, 0.20871, 0.20871, 1)
+custom_minimum_size = Vector2(16, 16)
+layout_mode = 2
+texture = ExtResource("9_un4mb")
+
+[node name="TextureRect2" type="TextureRect" parent="Hud/Control/MarginContainer/ArtifactContainer"]
+self_modulate = Color(0.20871, 0.20871, 0.20871, 1)
+custom_minimum_size = Vector2(16, 16)
+layout_mode = 2
+texture = ExtResource("9_un4mb")
+
+[node name="TextureRect3" type="TextureRect" parent="Hud/Control/MarginContainer/ArtifactContainer"]
+self_modulate = Color(0.20871, 0.20871, 0.20871, 1)
+custom_minimum_size = Vector2(16, 16)
+layout_mode = 2
+texture = ExtResource("9_un4mb")
+
+[node name="TextureRect4" type="TextureRect" parent="Hud/Control/MarginContainer/ArtifactContainer"]
+self_modulate = Color(0.20871, 0.20871, 0.20871, 1)
+custom_minimum_size = Vector2(16, 16)
+layout_mode = 2
+texture = ExtResource("9_un4mb")
+
+[node name="TextureRect5" type="TextureRect" parent="Hud/Control/MarginContainer/ArtifactContainer"]
+self_modulate = Color(0.20871, 0.20871, 0.20871, 1)
+custom_minimum_size = Vector2(16, 16)
+layout_mode = 2
+texture = ExtResource("9_un4mb")
+
+[node name="TextureRect6" type="TextureRect" parent="Hud/Control/MarginContainer/ArtifactContainer"]
+self_modulate = Color(0.20871, 0.20871, 0.20871, 1)
+custom_minimum_size = Vector2(16, 16)
+layout_mode = 2
+texture = ExtResource("9_un4mb")
+
+[node name="TextureRect7" type="TextureRect" parent="Hud/Control/MarginContainer/ArtifactContainer"]
+self_modulate = Color(0.20871, 0.20871, 0.20871, 1)
+custom_minimum_size = Vector2(16, 16)
+layout_mode = 2
+texture = ExtResource("9_un4mb")
+
 [connection signal="exp_value_changed" from="World" to="." method="_on_world_exp_value_changed"]
 [connection signal="player_health_changed" from="World" to="." method="_on_world_player_health_changed"]
-[connection signal="room_changed" from="World" to="." method="_on_world_room_changed"]
 [connection signal="bullet_fired" from="World/Player" to="World" method="_on_bullet_fired"]
 [connection signal="died" from="World/Player" to="World" method="_on_player_died"]
 [connection signal="exploded" from="World/Player" to="World" method="_on_explosion"]

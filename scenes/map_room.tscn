@@ -11,7 +11,9 @@ region = Rect2(32, 0, 32, 32)
 [node name="MapRoom" type="TextureRect"]
 texture_filter = 1
 offset_right = 32.0
-offset_bottom = 16.0
+offset_bottom = 32.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
 texture = SubResource("AtlasTexture_4v5ag")
 expand_mode = 2
 script = ExtResource("2_25jfy")

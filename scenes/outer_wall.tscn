@@ -2,7 +2,9 @@
 
 [ext_resource type="Script" path="res://scripts/outer_wall.gd" id="1_13tny"]
 
-[node name="OuterWall" type="Node2D"]
+[node name="OuterWall" type="StaticBody2D"]
+collision_layer = 4
+collision_mask = 3
 script = ExtResource("1_13tny")
 
 [node name="Lines" type="Node2D" parent="."]

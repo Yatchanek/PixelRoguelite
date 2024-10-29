@@ -15,12 +15,13 @@ const kamikaze_enemy_scene = preload("res://scenes/kamikaze_enemy.tscn")
 const turret_enemy_scene = preload("res://scenes/turret_enemy.tscn")
 const missile_enemy_scene = preload("res://scenes/missile_enemy.tscn")
 const rapid_fire_enemy_scene = preload("res://scenes/rapid_fire_enemy.tscn")
+const boss_scene = preload("res://scenes/boss.tscn")
+const boss_2_scene = preload("res://scenes/boss_2.tscn")
 const big_enemy_scene = preload("res://scenes/big_enemy.tscn")
 const explosion_scene = preload("res://scenes/explosion.tscn")
 const obstacle_scene = preload("res://scenes/obstacle.tscn")
 const indicator_scene = preload("res://scenes/indicator.tscn")
-
-var exit_layout : int
+const artifact_scene = preload("res://scenes/artifact.tscn")
 
 var corners : Array[Vector2] = [
 		Vector2(0, 0),
@@ -46,7 +47,7 @@ var position_offsets : Array = [
 
 var player : Player
 
-var respawn_interval : int = 60
+var respawn_interval : int = 120
 var pickup_respawn_interval : int = 300
 var enemy_spawn_interval : float = 1.0
 
@@ -55,7 +56,7 @@ var enemies_spawned : int = 0
 var enemies_killed : int = 0
 var last_spawn_postion : Vector2 = Vector2.ZERO
 
-var total_rooms : int
+var depth : int
 var level : int
 
 var room_data : RoomData
@@ -63,6 +64,8 @@ var room_data : RoomData
 var base_pos = Vector2i(32, 32)
 var temporarily_occupied : Array[Vector2i] = []
 var permanently_occupied : Array[Vector2i] = []
+
+var enemies_array : Array[Enemy] = []
 
 signal room_exited(coords : Vector2, exit_index : int)
 signal enemy_destroyed(exp_value : int)
@@ -74,27 +77,32 @@ func _ready() -> void:
 	else:
 		Globals.rng.seed = room_data.rng_seed
 
-	
-	max_enemies = min(randi_range(2, 4 + 2 * level), 20)
-	
 	var time_since_last_visit : int = Time.get_ticks_msec() - room_data.last_visited
-	
-	if room_data.last_visited == room_data.first_visited or time_since_last_visit > respawn_interval * 1000:
-		activate_doors()
-		timer.start(randf_range(2.0, 3.0))
-	else:
-		var time_left_to_respawn = respawn_interval * 1000 - time_since_last_visit
-		enemies_spawned = max_enemies
-		timer.start(time_left_to_respawn * 0.001)
-	
-	level = floori(total_rooms / 10)
+	max_enemies = min(randi_range(2, 4 + 2 * level), 20)
 	enemy_spawn_interval = max(1.0 - 0.05 * level, 0.2)
-		
+	
+	if !Globals.artifact_coords.has(room_data.coords):
+		if room_data.last_visited == room_data.first_visited or time_since_last_visit > respawn_interval * 1000:
+			activate_doors()
+			timer.start(randf_range(enemy_spawn_interval, enemy_spawn_interval * 2.0))
+		else:
+			var time_left_to_respawn = respawn_interval * 1000 - time_since_last_visit
+			enemies_spawned = max_enemies
+			timer.start(time_left_to_respawn * 0.001)
+	
+	elif !room_data.boss_defeated:
+		activate_doors()
+		spawn_boss()
+	
+	depth = Utils.get_depth(room_data.coords)
+	level = depth / 5
+	
 	configure_room()
 
-	if !room_data.coords == Vector2i.ZERO:
-
+	if !room_data.coords == Vector2i.ZERO and !Globals.artifact_coords.has(room_data.coords):
 		create_obstacles()
+
+	
 	await get_tree().process_frame
 	create_navigation_polygon()
 	
@@ -150,6 +158,18 @@ func get_obstacle_rotation_offset(x : int, y : int) -> int:
 	
 	return rotation_offset
 
+func place_artifact(pos : Vector2):
+	var artifact : Artifact = artifact_scene.instantiate()
+	artifact.coords = room_data.coords
+	artifact.number = Globals.artifact_coords[room_data.coords]
+	artifact.collected.connect(_on_artifact_collected)
+	artifact.position = pos
+	
+	call_deferred("add_child", artifact)
+	
+func _on_artifact_collected():
+	room_data.artifact_collected = true
+
 func activate_doors():
 	if !is_inside_tree():
 		return
@@ -186,10 +206,14 @@ func _on_timer_timeout() -> void:
 				if attempts > 10:
 					timer.start(0.25)
 					break
-				var intersects : bool = false
-				var candidate_coords : Vector2i = Vector2i(randi_range(0, 7), randi_range(0, 3))
-
-				if temporarily_occupied.has(candidate_coords) or permanently_occupied.has(candidate_coords) or get_manhattan_distance(candidate_coords, get_coords(to_local(player.global_position))) < 3:
+				var candidate_coords : Vector2i = Utils.get_random_coords()
+				
+				for enemy : Enemy in enemies_array:
+					if (base_pos + candidate_coords * 64).distance_squared_to(enemy.position) < 1024:
+						attempts += 1
+						continue
+				
+				if temporarily_occupied.has(candidate_coords) or permanently_occupied.has(candidate_coords) or Utils.get_manhattan_distance(candidate_coords, Utils.get_coords(to_local(player.global_position))) < 3:
 					attempts += 1
 				else:
 					accepted = true
@@ -206,6 +230,28 @@ func spawn_indicator(coords : Vector2i):
 	indicator.tree_exited.connect(spawn_enemy.bind(coords))
 	call_deferred("add_child", indicator)
 
+
+func spawn_boss():
+	await get_tree().create_timer(enemy_spawn_interval).timeout
+	
+	if is_inside_tree():
+		var boss : Boss = [boss_scene, boss_2_scene].pick_random().instantiate()
+		
+		var accepted : bool = false
+		var candidate_coords : Vector2i
+		while !accepted:
+			candidate_coords = Utils.get_random_coords()
+			if Utils.get_manhattan_distance(candidate_coords, Utils.get_coords(to_local(player.global_position))) < 3:
+				continue
+			else:
+				accepted = true
+		
+		boss.position = base_pos + candidate_coords * 64
+		boss.bullet_fired.connect(_on_bullet_fired)
+		boss.missile_fired.connect(_on_missile_fired)
+		boss.exploded.connect(_on_explosion)
+		boss.destroyed.connect(_on_boss_destroyed)
+		enemies.call_deferred("add_child", boss)
 
 func spawn_enemy(coords : Vector2i):	
 	if !is_inside_tree():
@@ -240,31 +286,23 @@ func spawn_enemy(coords : Vector2i):
 		permanently_occupied.append(coords)
 		
 	enemy.exploded.connect(_on_explosion)
-	enemy.tree_exited.connect(_on_enemy_destroyed.bind(enemy.exp_value))		
+	enemy.destroyed.connect(_on_enemy_destroyed)		
 	enemies.call_deferred("add_child", enemy)
-
-func get_coords(pos : Vector2) -> Vector2i:
-	return(Vector2i(int(pos.x / 64), int(pos.y / 64)))		
-
-
-func get_manhattan_distance(coords_a : Vector2i, coords_b : Vector2i) -> int:
-	return abs(coords_a.x - coords_b.x) + abs(coords_a.y - coords_b.y)
-
-func is_too_close(coords_a : Vector2i, coords_b : Vector2i) -> bool:
-	return abs(coords_a.x - coords_b.x) < 3 or abs(coords_a.y - coords_b.y) < 2
-
-func _on_explosion(pos : Vector2):
+	enemies_array.append(enemy)
+	
+func _on_explosion(explosion : Explosion, pos : Vector2):
 	if !is_inside_tree():
 		return
-	var explosion : GPUParticles2D = explosion_scene.instantiate()
-	explosion.position = to_local(pos)
-	explosion.emitting = true
-	
-	call_deferred("add_child", explosion)
+
+	else:
+		explosion.position = to_local(pos)
+		call_deferred("add_child", explosion)
 
 
 func _on_bullet_fired(bullet: Node2D, pos: Vector2) -> void:
 	bullet.position = to_local(pos)
+	if bullet is RectangleGrenade:
+		bullet.fragment_fired.connect(_on_bullet_fired)
 	call_deferred("add_child", bullet)
 	
 func _on_missile_fired(missile: Node2D, pos: Vector2) -> void:
@@ -273,12 +311,18 @@ func _on_missile_fired(missile: Node2D, pos: Vector2) -> void:
 	missile.exploded.connect(_on_explosion)
 	call_deferred("add_child", missile)
 
-func _on_enemy_destroyed(exp_amount : int):
+func _on_boss_destroyed(enemy : Enemy):
+	enemy_destroyed.emit(200)
+	room_data.boss_defeated = true
+	place_artifact(enemy.position)
+	deactivate_doors()
+
+func _on_enemy_destroyed(enemy : Enemy):
 	if is_inside_tree():
 		enemies_killed += 1
-		enemy_destroyed.emit(exp_amount)
+		enemy_destroyed.emit(enemy.exp_value)
+		enemies_array.erase(enemy)
 		if enemies_killed == max_enemies:
-	
+
 			deactivate_doors()
 			timer.start(respawn_interval)
-		

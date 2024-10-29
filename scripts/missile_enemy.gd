@@ -95,16 +95,14 @@ func shoot():
 	var state : PhysicsDirectSpaceState2D = get_world_2d().direct_space_state
 	
 	var result : Dictionary = state.intersect_ray(query)	
-	if result and result.collider.collision_layer != 1:
-			return
-			
-	var missile : Node2D = missile_scene.instantiate()
-	missile.rotation = global_rotation
-	missile.level = level
-	
-	missile_fired.emit(missile, global_position + global_transform.x * 18)
-	can_shoot = false
-	shoot_timer.start(fire_interval)
+	if result and result.collider.collision_layer == 1:	
+		var missile : Node2D = missile_scene.instantiate()
+		missile.rotation = global_rotation
+		missile.level = level
+		
+		missile_fired.emit(missile, global_position + global_transform.x * 18)
+		can_shoot = false
+		shoot_timer.start(fire_interval)
 
 
 func check_linesight() -> bool:
@@ -118,8 +116,10 @@ func check_linesight() -> bool:
 	return false
 
 func apply_color_palette():
-	body.self_modulate = Globals.color_palettes[Globals.current_palette][2]
-	chasis.self_modulate = Globals.color_palettes[Globals.current_palette][3]
+	primary_color = Globals.color_palettes[Globals.current_palette][2]
+	secondary_color = Globals.color_palettes[Globals.current_palette][3]
+	body.self_modulate = primary_color
+	chasis.self_modulate = secondary_color
 
 func _on_navigation_agent_2d_velocity_computed(safe_velocity: Vector2) -> void:
 	if current_state != State.MOVE:

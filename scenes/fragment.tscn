@@ -1,0 +1,28 @@
+[gd_scene load_steps=5 format=3 uid="uid://cqvc5cuiefrbb"]
+
+[ext_resource type="Script" path="res://scripts/fragment.gd" id="1_2c3ek"]
+[ext_resource type="PackedScene" uid="uid://cwshy400yx3qo" path="res://scenes/hurt_box.tscn" id="2_fkoyr"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_5dpjk"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ghuew"]
+resource_local_to_scene = true
+size = Vector2(6, 6)
+
+[node name="Fragment" type="Node2D"]
+script = ExtResource("1_2c3ek")
+
+[node name="Body" type="Polygon2D" parent="."]
+texture_filter = 1
+material = SubResource("ShaderMaterial_5dpjk")
+polygon = PackedVector2Array(-3, -3, 3, -3, 3, 3, -3, 3)
+
+[node name="HurtBox" parent="." instance=ExtResource("2_fkoyr")]
+collision_layer = 256
+collision_mask = 0
+damage = 2
+
+[node name="CollisionShape2D" parent="HurtBox" index="0"]
+shape = SubResource("RectangleShape2D_ghuew")
+
+[editable path="HurtBox"]

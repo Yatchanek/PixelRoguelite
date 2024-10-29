@@ -1,9 +1,10 @@
-[gd_scene load_steps=7 format=3 uid="uid://60nvyx6hcw6k"]
+[gd_scene load_steps=8 format=3 uid="uid://60nvyx6hcw6k"]
 
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_7xbh1"]
 [ext_resource type="Texture2D" uid="uid://g22icpq7aoi7" path="res://graphics/player_body.png" id="2_qwwgp"]
 [ext_resource type="Texture2D" uid="uid://di8e5pfsvxv7u" path="res://graphics/player_turret.png" id="3_cbyhj"]
 [ext_resource type="PackedScene" uid="uid://drd2m072phc4v" path="res://scenes/hitbox.tscn" id="4_h6job"]
+[ext_resource type="AudioStream" uid="uid://dhnr8wnf2b0ru" path="res://sounds/shoot_by_little_robot_sound_factory.ogg" id="5_manoi"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_bs7nj"]
 radius = 8.0
@@ -45,6 +46,9 @@ target = NodePath("..")
 
 [node name="CollisionShape2D" parent="Hitbox" index="0"]
 shape = SubResource("RectangleShape2D_mxbb2")
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("5_manoi")
 
 [connection signal="timeout" from="ShootTimer" to="." method="_on_shoot_timer_timeout"]
 

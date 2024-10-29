@@ -5,3 +5,4 @@ signal player_leveled_up
 signal player_max_health_changed(amount : int)
 signal upgrade_time
 signal room_changed(room_coords : Vector2i)
+signal artifact_collected(number : int)

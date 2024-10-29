@@ -61,8 +61,10 @@ func _physics_process(delta: float) -> void:
 
 
 func apply_color_palette():
-	body.self_modulate = Globals.color_palettes[Globals.current_palette][3]
-	chasis.self_modulate = Globals.color_palettes[Globals.current_palette][4]
+	primary_color = Globals.color_palettes[Globals.current_palette][3]
+	secondary_color = Globals.color_palettes[Globals.current_palette][4]
+	body.self_modulate = primary_color
+	chasis.self_modulate = secondary_color
 
 func _on_navigation_agent_2d_velocity_computed(safe_velocity: Vector2) -> void:
 	if current_state != State.MOVE:

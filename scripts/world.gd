@@ -12,7 +12,6 @@ const room_scene = preload("res://scenes/room.tscn")
 
 var enemy_count : int = 0
 var current_room : Room
-var rooms_spawned : int = 0
 
 var directions : Dictionary = {
 	0 : Vector2i(0, -1),
@@ -30,7 +29,6 @@ var exit_mappings : Dictionary = {
 
 var room_pos : Vector2
 
-signal room_changed(coords : Vector2)
 signal player_health_changed(value : int)
 signal exp_value_changed(value : int)
 
@@ -75,11 +73,9 @@ func change_room(previous_room_coords : Vector2i, exit_index : int):
 		player.velocity = Vector2.ZERO
 		
 	if Globals.room_grid.size() == 0:
-		rooms_spawned += 1
 		new_room = create_new_room(Vector2i.ZERO)
 		Globals.room_grid[new_room.room_data.coords] = new_room.room_data
 	elif !Globals.room_grid.has(previous_room_coords + directions[exit_index]):
-		rooms_spawned += 1
 		var coords : Vector2i = previous_room_coords + directions[exit_index]
 		new_room = create_new_room(coords)
 		Globals.room_grid[new_room.room_data.coords] = new_room.room_data
@@ -92,7 +88,6 @@ func change_room(previous_room_coords : Vector2i, exit_index : int):
 	
 
 	new_room.position = room_pos
-	new_room.total_rooms = rooms_spawned
 
 	new_room.player = player
 
@@ -136,8 +131,7 @@ func create_new_room(coords : Vector2i) -> Room:
 	
 	if coords == Vector2i.ZERO:
 		exit_layout = [3, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15].pick_random()
-		
-		
+
 	else:
 		exit_layout = choose_exit_layout(coords)
 		
@@ -154,27 +148,32 @@ func choose_exit_layout(coords : Vector2i) -> int:
 	var possible_layouts : Array[int] = []
 	var empty_neighbours_count = count_empty_neighbours(coords)
 
-	var layout_candidates : Array[int] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
-	if empty_neighbours_count == 3:
+	var layout_candidates : Array[int]
+	
+	if empty_neighbours_count == 3 or empty_neighbours_count == 1:
 		layout_candidates = [3, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15]
 
 	elif empty_neighbours_count == 2:
 		layout_candidates = [7, 11, 13, 14, 15]
+		
+	else:
+		layout_candidates = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
 
-
-	for i in layout_candidates:
+	for i in layout_candidates.size():
 		var accepted : bool = false
 		
-		for j in range(0, 4):
-			var neighbour_coords : Vector2i = coords + directions[j]
-			if !Globals.room_grid.has(neighbour_coords):
-				continue	
-			else:
-				if i & exit_mappings[directions[j]] != 0 and Globals.room_grid[neighbour_coords].layout_type & exit_mappings[-directions[j]] != 0:
-					accepted = true						
-		if accepted:
-			possible_layouts.append(i)
+		for dir in exit_mappings.keys():
+			var neighbour_coords : Vector2i = coords + dir
+			if Globals.room_grid.has(neighbour_coords):
+				if (layout_candidates[i] & exit_mappings[dir]) /  exit_mappings[dir] == (Globals.room_grid[neighbour_coords].layout_type & exit_mappings[-dir]) / exit_mappings[-dir]: 
+					accepted = true
+				else:
+					accepted = false
+					break
 				
+		if accepted:
+			possible_layouts.append(layout_candidates[i])
+		
 	layout = possible_layouts.pick_random()	
 	return layout
 	

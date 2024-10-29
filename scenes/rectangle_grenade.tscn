@@ -1,0 +1,53 @@
+[gd_scene load_steps=7 format=3 uid="uid://jkhf1e1t514r"]
+
+[ext_resource type="Script" path="res://scripts/rectangle_grenade.gd" id="1_eyeqy"]
+[ext_resource type="PackedScene" uid="uid://cwshy400yx3qo" path="res://scenes/hurt_box.tscn" id="2_x7lu1"]
+[ext_resource type="PackedScene" uid="uid://drd2m072phc4v" path="res://scenes/hitbox.tscn" id="3_gsrfh"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_x8fu8"]
+resource_local_to_scene = true
+size = Vector2(14, 14)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_mi5ek"]
+resource_local_to_scene = true
+size = Vector2(14, 14)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_pn1pi"]
+size = Vector2(14, 14)
+
+[node name="RectangleGrenade" type="CharacterBody2D"]
+collision_layer = 8
+collision_mask = 4
+script = ExtResource("1_eyeqy")
+
+[node name="Body" type="Polygon2D" parent="."]
+polygon = PackedVector2Array(-7, -7, 7, -7, 7, 7, -7, 7)
+
+[node name="Body2" type="Polygon2D" parent="Body"]
+color = Color(0.867003, 0.00031362, 0.797875, 1)
+polygon = PackedVector2Array(-5, -5, 5, -5, 5, 5, -5, 5)
+
+[node name="Body3" type="Polygon2D" parent="Body/Body2"]
+polygon = PackedVector2Array(-2, -2, 2, -2, 2, 2, -2, 2)
+
+[node name="HurtBox" parent="." instance=ExtResource("2_x7lu1")]
+modulate = Color(1, 1, 1, 0)
+collision_layer = 256
+damage = 5
+
+[node name="CollisionShape2D" parent="HurtBox" index="0"]
+shape = SubResource("RectangleShape2D_x8fu8")
+
+[node name="Hitbox" parent="." node_paths=PackedStringArray("target") instance=ExtResource("3_gsrfh")]
+collision_layer = 32
+collision_mask = 513
+target = NodePath("..")
+
+[node name="CollisionShape2D" parent="Hitbox" index="0"]
+shape = SubResource("RectangleShape2D_mi5ek")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_pn1pi")
+
+[editable path="HurtBox"]
+[editable path="Hitbox"]

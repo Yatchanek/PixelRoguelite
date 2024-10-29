@@ -51,7 +51,7 @@ func _process(_delta: float) -> void:
 		if tick % 2 == 0 and target:
 			nav_agent.target_position = target.global_position
 		
-func _physics_process(delta: float) -> void:
+func _physics_process(_delta: float) -> void:
 	if current_state == State.KNOCKBACK:
 		velocity = lerp(velocity, Vector2.ZERO, 0.1)
 		if velocity.length_squared() < 25:

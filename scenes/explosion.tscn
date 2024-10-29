@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://cxudcded5ykg4"]
+[gd_scene load_steps=3 format=3 uid="uid://cxudcded5ykg4"]
 
 [ext_resource type="Material" uid="uid://bue4xq2qhgq08" path="res://explosion.tres" id="1_114y6"]
+[ext_resource type="Script" path="res://scripts/explosion.gd" id="2_8oaue"]
 
 [node name="Explosion" type="GPUParticles2D"]
 emitting = false
@@ -9,3 +10,4 @@ process_material = ExtResource("1_114y6")
 lifetime = 0.9
 one_shot = true
 explosiveness = 0.8
+script = ExtResource("2_8oaue")

@@ -1,11 +1,14 @@
-[gd_scene load_steps=3 format=3 uid="uid://ddhi6d468v6ln"]
+[gd_scene load_steps=4 format=3 uid="uid://ddhi6d468v6ln"]
 
 [ext_resource type="Script" path="res://scripts/bullet.gd" id="1_aett4"]
 [ext_resource type="Texture2D" uid="uid://c38oghibobssv" path="res://graphics/bullet.png" id="2_b466m"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_5dpjk"]
 
 [node name="Bullet" type="Node2D"]
 script = ExtResource("1_aett4")
 
 [node name="Body" type="Sprite2D" parent="."]
 texture_filter = 1
+material = SubResource("ShaderMaterial_5dpjk")
 texture = ExtResource("2_b466m")

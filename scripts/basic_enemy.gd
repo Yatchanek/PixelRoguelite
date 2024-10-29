@@ -65,12 +65,9 @@ func _physics_process(_delta: float) -> void:
 	else:	
 		if nav_agent.is_navigation_finished() or !target:
 			velocity = lerp(velocity, Vector2.ZERO, 0.1)
-			move_and_slide()
-			if can_shoot and global_transform.x.dot(global_position.direction_to(target.global_position)) > 0.99:
-				shoot()	
-			return
+
 		
-		if global_position.distance_squared_to(target.global_position) > 2500:
+		elif global_position.distance_squared_to(target.global_position) > 2500:
 			var intended_velocity : Vector2 = global_position.direction_to(nav_agent.get_next_path_position()) * speed
 			nav_agent.set_velocity(intended_velocity)
 	#
@@ -87,7 +84,7 @@ func _physics_process(_delta: float) -> void:
 			nav_agent.set_velocity(intended_velocity)
 
 
-		if can_shoot and global_transform.x.dot(global_position.direction_to(target.global_position)) > 0.99:
+		if can_shoot and global_transform.x.dot(global_position.direction_to(target.global_position)) > 0.98:
 			shoot()	
 
 func shoot():
@@ -95,29 +92,17 @@ func shoot():
 	var state : PhysicsDirectSpaceState2D = get_world_2d().direct_space_state
 	
 	var result : Dictionary = state.intersect_ray(query)	
-	if result and result.collider.collision_layer != 1:
-			return
-	
-	query = PhysicsRayQueryParameters2D.create(global_position - global_transform.y * 7, global_position - global_transform.y * 7 + global_transform.x * 640, 7)
-	
-	result = state.intersect_ray(query)	
-	if result and result.collider.collision_layer != 1:
-		return
-		
-	query = PhysicsRayQueryParameters2D.create(global_position + global_transform.y * 7, global_position + global_transform.y * 7 + global_transform.x * 640, 7)
-	
-	result = state.intersect_ray(query)	
-	if result and result.collider.collision_layer != 1:
-		return
+	if result and result.collider.collision_layer == 1:
 			
-	var bullet : Node2D = bullet_scene.instantiate()
-	bullet.rotation = global_rotation
-	bullet.speed = min(speed * 3.0, 512)
-	bullet.color = body.self_modulate
-	
-	bullet_fired.emit(bullet, global_position + global_transform.x * 12)
-	can_shoot = false
-	shoot_timer.start(fire_interval)
+		var bullet : Node2D = bullet_scene.instantiate()
+		bullet.rotation = global_rotation
+		bullet.speed = min(speed * 3.0, 512)
+		bullet.color = body.self_modulate
+		
+		bullet_fired.emit(bullet, global_position + global_transform.x * 12)
+		can_shoot = false
+		shoot_timer.start(fire_interval)
+		SoundManager.play_effect(SoundManager.Effects.ENEMY_SHOOT)
 
 
 func check_linesight() -> bool:
@@ -131,8 +116,10 @@ func check_linesight() -> bool:
 	return false
 
 func apply_color_palette():
-	body.self_modulate = Globals.color_palettes[Globals.current_palette][2]
-	chasis.self_modulate = Globals.color_palettes[Globals.current_palette][3]
+	primary_color = Globals.color_palettes[Globals.current_palette][2]
+	secondary_color = Globals.color_palettes[Globals.current_palette][3]
+	body.self_modulate = primary_color
+	chasis.self_modulate = secondary_color
 
 func _on_navigation_agent_2d_velocity_computed(safe_velocity: Vector2) -> void:
 	if current_state != State.MOVE:
@@ -152,8 +139,8 @@ func knockback(dir : Vector2):
 	tw.tween_property(body, "self_modulate", Color.WHITE, 0.1)
 	tw.parallel().tween_property(chasis, "self_modulate", Color.WHITE, 0.1)
 	tw.tween_interval(0.1)
-	tw.tween_property(body, "self_modulate", Globals.color_palettes[Globals.current_palette][2], 0.1)
-	tw.parallel().tween_property(chasis, "self_modulate", Globals.color_palettes[Globals.current_palette][3], 0.1)
+	tw.tween_property(body, "self_modulate", primary_color, 0.1)
+	tw.parallel().tween_property(chasis, "self_modulate", secondary_color, 0.1)
 	
 	velocity = dir * speed * 1.25
 	current_state = State.KNOCKBACK

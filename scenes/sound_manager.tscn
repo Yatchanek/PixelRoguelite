@@ -1,0 +1,25 @@
+[gd_scene load_steps=6 format=3 uid="uid://bdpxgjmayljm6"]
+
+[ext_resource type="Script" path="res://scripts/sound_manager.gd" id="1_sy5cd"]
+[ext_resource type="AudioStream" uid="uid://dhnr8wnf2b0ru" path="res://sounds/shoot_by_little_robot_sound_factory.ogg" id="2_dn0vs"]
+[ext_resource type="AudioStream" uid="uid://cqpik766a2fhp" path="res://sounds/shoot_by_shades.ogg" id="3_721wc"]
+[ext_resource type="AudioStream" uid="uid://benilu5tidf" path="res://sounds/hit_by_little_robot_sound_factory.ogg" id="4_2gigp"]
+[ext_resource type="AudioStream" uid="uid://b48fowkskjfl1" path="res://sounds/explosion_by_shades.ogg" id="5_8ufop"]
+
+[node name="SoundManager" type="Node"]
+script = ExtResource("1_sy5cd")
+sound_effects = Array[AudioStream]([ExtResource("2_dn0vs"), ExtResource("3_721wc"), ExtResource("4_2gigp"), ExtResource("5_8ufop")])
+
+[node name="EffectChannels" type="Node" parent="."]
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="EffectChannels"]
+
+[node name="AudioStreamPlayer2" type="AudioStreamPlayer" parent="EffectChannels"]
+
+[node name="AudioStreamPlayer3" type="AudioStreamPlayer" parent="EffectChannels"]
+
+[node name="AudioStreamPlayer4" type="AudioStreamPlayer" parent="EffectChannels"]
+
+[node name="AudioStreamPlayer5" type="AudioStreamPlayer" parent="EffectChannels"]
+
+[node name="AudioStreamPlayer6" type="AudioStreamPlayer" parent="EffectChannels"]

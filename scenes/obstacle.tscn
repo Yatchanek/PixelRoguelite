@@ -1,6 +1,8 @@
-[gd_scene load_steps=2 format=3 uid="uid://vcvrgrshhnv6"]
+[gd_scene load_steps=3 format=3 uid="uid://vcvrgrshhnv6"]
 
 [ext_resource type="Script" path="res://scripts/obstacle.gd" id="1_wtgxw"]
+
+[sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_anwj6"]
 
 [node name="Obstacle" type="StaticBody2D"]
 collision_layer = 4
@@ -11,4 +13,6 @@ script = ExtResource("1_wtgxw")
 
 [node name="Polygon2D" type="Polygon2D" parent="."]
 color = Color(0.0862745, 0.431373, 0.478431, 1)
-polygon = PackedVector2Array(-2, -30, 2, -30, 2, 30, -2, 30)
+
+[node name="LightOccluder" type="LightOccluder2D" parent="."]
+occluder = SubResource("OccluderPolygon2D_anwj6")

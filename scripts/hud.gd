@@ -9,6 +9,7 @@ class_name HUD
 @onready var coords_label: Label = %CoordsLabel
 @onready var upgrade_row: HBoxContainer = $Control/UpgradeRow
 @onready var minimap: MiniMap = $Control/Minimap
+@onready var artifact_container: VBoxContainer = $Control/MarginContainer/ArtifactContainer
 
 var proposed_upgrades : Array[UpgradeData.Upgrades] = []
 
@@ -17,6 +18,7 @@ var card_scene : PackedScene = preload("res://scenes/upgrade_card.tscn")
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	apply_color_palette()
+	EventBus.artifact_collected.connect(show_artifact)
 
 func update_health(value : int):
 	hp_bar.value = value
@@ -42,7 +44,14 @@ func apply_color_palette():
 	xp_label.label_settings.font_color = Globals.color_palettes[Globals.current_palette][3] 
 	
 	hp_bar.tint_progress = Globals.color_palettes[Globals.current_palette][2]
+	
+	for i : int in Globals.artifacts_collected:
+		artifact_container.get_child(i).self_modulate = Globals.color_palettes[Globals.current_palette][0]
+	
 	minimap.apply_color_palette()
+
+func show_artifact(idx : int):
+	artifact_container.get_child(idx).self_modulate = Globals.color_palettes[Globals.current_palette][0]
 	
 func show_upgrades():
 	upgrade_row.show()

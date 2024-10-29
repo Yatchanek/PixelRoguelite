@@ -2,13 +2,17 @@ extends TextureRect
 class_name MapRoom
 
 
-var map_scale : Vector2 = Vector2.ONE
+var cell_size = Vector2(32, 32)
 var room_idx : int = 0
 
 func _ready() -> void:
-	custom_minimum_size = Vector2(32 * map_scale.x, 32 * map_scale.y)
+	custom_minimum_size = cell_size
+	size = cell_size
 	texture.region.position.x = room_idx * 32
 
-func update():
-	custom_minimum_size = Vector2(32 * map_scale.x, 32 * map_scale.y)
+func update_texture():
 	texture.region.position.x = room_idx * 32	
+
+func update_size():
+	custom_minimum_size = cell_size
+	size = cell_size
