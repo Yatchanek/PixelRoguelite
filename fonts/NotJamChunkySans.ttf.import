@@ -2,13 +2,13 @@
 
 importer="font_data_dynamic"
 type="FontFile"
-uid="uid://fow4km3krvac"
-path="res://.godot/imported/EightBit Atari-Regular.ttf-e9fabdc651c83ba1f67722eb2f601993.fontdata"
+uid="uid://bs4wn8lq821l5"
+path="res://.godot/imported/NotJamChunkySans.ttf-99b8b83120ae29770d177c4202c6ff94.fontdata"
 
 [deps]
 
-source_file="res://fonts/EightBit Atari-Regular.ttf"
-dest_files=["res://.godot/imported/EightBit Atari-Regular.ttf-e9fabdc651c83ba1f67722eb2f601993.fontdata"]
+source_file="res://fonts/NotJamChunkySans.ttf"
+dest_files=["res://.godot/imported/NotJamChunkySans.ttf-99b8b83120ae29770d177c4202c6ff94.fontdata"]
 
 [params]
 

@@ -40,7 +40,7 @@ one_shot = true
 
 [node name="Hitbox" parent="." node_paths=PackedStringArray("target") instance=ExtResource("4_h6job")]
 collision_layer = 16
-collision_mask = 768
+collision_mask = 1792
 monitorable = false
 target = NodePath("..")
 
@@ -51,5 +51,7 @@ shape = SubResource("RectangleShape2D_mxbb2")
 stream = ExtResource("5_manoi")
 
 [connection signal="timeout" from="ShootTimer" to="." method="_on_shoot_timer_timeout"]
+[connection signal="area_entered" from="Hitbox" to="." method="_on_hitbox_area_entered"]
+[connection signal="area_exited" from="Hitbox" to="." method="_on_hitbox_area_exited"]
 
 [editable path="Hitbox"]

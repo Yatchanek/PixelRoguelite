@@ -23,8 +23,8 @@ var color_palettes : Array[PackedColorArray] = [
 var player : Player
 var leveled_up : bool = false
 
-var artifact_coords : Dictionary = {}
-var artifacts_collected : Array[int] = []
+var gate_key_coords : Dictionary = {}
+var keys_collected : Array[int] = []
 
 func _ready() -> void:
 	rng = RandomNumberGenerator.new()
@@ -59,13 +59,10 @@ func _on_player_ready(_player : Player):
 func reset():
 	leveled_up = false
 	room_grid = {}
-	artifact_coords = {}
-	artifacts_collected = []
+	gate_key_coords = {}
+	keys_collected = []
 	
 	var min_dist : int = 1
 	for i in 7:
 		var coords : Vector2i = get_coords_in_distance_range(min_dist + i, min_dist + 1 + i)
-		artifact_coords[coords] = i
-
-	#artifacts_collected.resize(7)
-	#artifacts_collected.fill(false)	
+		gate_key_coords[coords] = i

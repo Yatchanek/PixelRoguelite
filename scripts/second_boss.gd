@@ -39,6 +39,7 @@ signal missile_fired(missile : Node2D, pos : Vector2)
 
 
 func _ready() -> void:
+	setup()
 	apply_color_palette()
 	create_body()
 	set_physics_process(false)
@@ -52,15 +53,10 @@ func _ready() -> void:
 	set_process(true)
 
 	current_state = State.MOVE
-	hp = min(30 + 5 * level, 60)
-	speed = mini(64 + level * 8, 96)
-	
-	health_bar.max_value = hp
-	health_bar.value = hp
+
 	
 	rotation_dir = pow(-1, randi() % 2)
 	rotation_speed = randf_range(PI * 1.5, TAU)	
-	
 	timer.start(1.0)
 	shoot_timer.start(fire_interval)
 
@@ -167,12 +163,9 @@ func knockback(dir : Vector2):
 		var tw : Tween = create_tween()
 		tw.set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_EXPO)
 		tw.tween_property(rect, "default_color", Color.WHITE, 0.1)
-	#tw.parallel().tween_property(chasis, "self_modulate", Color.WHITE, 0.1)
 		tw.tween_interval(0.1)
 		tw.tween_property(rect, "default_color", prev_color, 0.1)
-	#tw.tween_property(body, "self_modulate",primary_color, 0.1)
-	#tw.parallel().tween_property(chasis, "self_modulate", secondary_color, 0.1)
-	#tw.parallel().tween_property(sides, "self_modulate", tertiary_color, 0.1)
+
 
 	velocity = dir * speed * 1.25
 	current_state = State.KNOCKBACK
@@ -180,9 +173,6 @@ func knockback(dir : Vector2):
 
 func _on_shoot_timer_timeout() -> void:
 	can_shoot = true
-
-func _exit_tree() -> void:
-	destroyed.emit(self)
 
 func _on_timer_timeout() -> void:
 	flip_parts()

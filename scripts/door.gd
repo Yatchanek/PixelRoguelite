@@ -4,7 +4,6 @@ class_name Door
 @onready var visuals: Polygon2D = $Visuals
 @onready var door_collision_shape: CollisionShape2D = $DoorArea/CollisionShape2D
 @onready var static_collision_shape: CollisionShape2D = $CollisionShape2D
-@onready var door_area: Area2D = $DoorArea
 
 var idx : int
 var power : int = 999

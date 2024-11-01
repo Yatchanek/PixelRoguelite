@@ -18,13 +18,17 @@ var autofire : bool = false
 
 var experience : int = 0
 var level : int = 1
-var exp_to_next_level : int = 100
+var exp_to_next_level : int = 300
 
 var can_shoot : bool = true
 
 var dead : bool = false
 
 var rotation_speed : float = 0
+
+var elapsed_time : float = 0
+
+var damaging_area : HurtBox
 
 signal bullet_fired(bullet : Node2D, pos : Vector2)
 signal health_changed(value : int)
@@ -49,12 +53,17 @@ func _ready() -> void:
 	health_changed.emit(hp)
 	player_ready.emit(self)
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
 	var dir_to_mouse : Vector2 = turret.global_position.direction_to(get_global_mouse_position())
 	var target_transform : Transform2D = turret.global_transform.looking_at(turret.global_position + dir_to_mouse)
 		
 	turret.global_transform = turret.global_transform.interpolate_with(target_transform, 0.15)
 	
+	if damaging_area:
+		elapsed_time += delta
+		if elapsed_time > 0.5:
+			take_damage(damaging_area.damage, Vector2.ZERO)
+			elapsed_time = 0.0
 
 func get_input() -> Vector2:
 	var move_dir : Vector2 = Vector2(Input.get_axis("left", "right"), Input.get_axis("forward", "back")).normalized()
@@ -107,7 +116,7 @@ func take_damage(amount : int, _dir : Vector2):
 		$CollisionShape2D.set_deferred("disabled", true)
 		
 		await get_tree().create_timer(2.0).timeout
-		Globals.leveled_up = false
+		Globals.reset()
 		get_tree().reload_current_scene()
 		
 	else:
@@ -123,7 +132,7 @@ func gain_exp(value):
 	if experience >= exp_to_next_level:
 		Globals.leveled_up = true
 		level += 1
-		exp_to_next_level += level * 100
+		exp_to_next_level += level * 300
 
 func deactivate_collision():
 	$CollisionShape2D.set_deferred("disabled", true)
@@ -147,3 +156,12 @@ func shoot():
 
 func _on_shoot_timer_timeout() -> void:
 	can_shoot = true
+
+
+func _on_hitbox_area_entered(area: Area2D) -> void:
+	damaging_area = area
+
+
+func _on_hitbox_area_exited(area: Area2D) -> void:
+	damaging_area = null
+	elapsed_time = 0.0

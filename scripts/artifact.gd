@@ -1,14 +1,19 @@
 extends Area2D
-class_name Artifact
+class_name GateKey
+
+@onready var body: Sprite2D = $Body
 
 var coords : Vector2i
 var number : int
 
 signal collected
 
+func _ready() -> void:
+	body.region_rect.position.x = number * 16
+
 func _on_body_entered(body: Node2D) -> void:
-	EventBus.artifact_collected.emit(number)
-	Globals.artifacts_collected.append(number)
+	EventBus.gate_key_collected.emit(number)
+	Globals.keys_collected.append(number)
 	collected.emit()
-	Globals.artifact_coords.erase(coords)
+	Globals.gate_key_coords.erase(coords)
 	queue_free()

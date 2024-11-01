@@ -26,6 +26,8 @@ enum State {
 
 
 func _ready() -> void:
+	setup()
+	
 	apply_color_palette()
 	set_physics_process(false)
 	set_process(false)	
@@ -41,16 +43,12 @@ func _ready() -> void:
 	
 	shoot_timer.start(fire_interval)
 	current_state = State.MOVE
-	hp = min(2 + level, 5)
-	fire_interval = max(0.2 - 0.025 * level, 0.05)
-	speed = mini(80 + level * 8, 192)
-	health_bar.max_value = hp
-	health_bar.value = hp	
+
 	
 func _process(_delta: float) -> void:
 	if current_state == State.MOVE:
 		tick += 1
-		if tick % 2 == 0 and target:
+		if tick % 5 == 0 and target:
 			nav_agent.target_position = target.global_position
 	
 	health_bar_pivot.global_rotation = 0		
@@ -91,24 +89,23 @@ func _physics_process(_delta: float) -> void:
 			shoot()	
 
 func shoot():
-	if shots_fired == 0:
-		var query : PhysicsRayQueryParameters2D = PhysicsRayQueryParameters2D.create(global_position, global_position + global_transform.x * 640, 7)
-		var state : PhysicsDirectSpaceState2D = get_world_2d().direct_space_state
+	var query : PhysicsRayQueryParameters2D = PhysicsRayQueryParameters2D.create(global_position, global_position + global_transform.x * 640, 7)
+	var state : PhysicsDirectSpaceState2D = get_world_2d().direct_space_state
 		
-		var result : Dictionary = state.intersect_ray(query)	
-		if result and result.collider.collision_layer == 1:
-			
-			var bullet : Node2D = bullet_scene.instantiate()
-			bullet.rotation = global_rotation
-			bullet.speed = min(speed * 4.0, 512)
-			bullet.color = body.self_modulate	
-			bullet_fired.emit(bullet, global_position + global_transform.x * 12)
-			shots_fired += 1
-			if shots_fired == 3:
-				fire_interval = 3.0
-			can_shoot = false
-			shoot_timer.start(fire_interval)
-			SoundManager.play_effect(SoundManager.Effects.ENEMY_SHOOT)
+	var result : Dictionary = state.intersect_ray(query)	
+	if result and result.collider.collision_layer == 1:
+		
+		var bullet : Node2D = bullet_scene.instantiate()
+		bullet.rotation = global_rotation
+		bullet.speed = min(speed * 4.0, 512)
+		bullet.color = body.self_modulate	
+		bullet_fired.emit(bullet, global_position + global_transform.x * 12)
+		shots_fired += 1
+		if shots_fired == 3:
+			fire_interval = 3.0
+		can_shoot = false
+		shoot_timer.start(fire_interval)
+		SoundManager.play_effect(SoundManager.Effects.ENEMY_SHOOT)
 
 
 
@@ -164,4 +161,4 @@ func _on_shoot_timer_timeout() -> void:
 	can_shoot = true
 	if shots_fired == 3:
 		shots_fired = 0
-		fire_interval = max(0.2 - 0.025 * level, 0.05)
+		fire_interval = max(base_fire_interval - fire_interval_per_level * level, min_fire_interval)

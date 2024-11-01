@@ -23,11 +23,16 @@ texture_filter = 1
 collision_layer = 2
 collision_mask = 7
 script = ExtResource("1_xr4ya")
-hp = 2
-speed = 72.0
 exp_value = 25
 power = 2
-fire_interval = 1.5
+base_fire_interval = 1.5
+base_hp = 2
+max_hp = 8
+base_speed = 72
+speed_per_level = 8
+base_power = 2
+power_per_level = 0.25
+max_power = 6
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 visible = false

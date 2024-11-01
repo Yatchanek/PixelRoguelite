@@ -8,8 +8,9 @@ var last_visited : int
 var obstacle_count : int
 var max_enemies : int
 var rng_seed : int
-var artifact_collected : bool = false
+var gate_key_collected : bool = false
 var boss_defeated : bool = false
+var depth : int
 
 func print_data():
 	prints(

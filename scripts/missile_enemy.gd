@@ -25,6 +25,8 @@ enum State {
 
 
 func _ready() -> void:
+	setup()
+
 	apply_color_palette()
 	set_physics_process(false)
 	set_process(false)
@@ -37,20 +39,14 @@ func _ready() -> void:
 	await tw.finished
 	set_physics_process(true)
 	set_process(true)
-	timer.start()
-	hp = min(2 + level, 5)
-	fire_interval = max(1.5 - 0.1 * level, 1.0)
-	speed = mini(72 + level * 8, 112)
-	shoot_timer.start(fire_interval)
 	current_state = State.MOVE
-	health_bar.max_value = hp
-	health_bar.value = hp	
+	shoot_timer.start(fire_interval)
 
 
 func _process(_delta: float) -> void:
 	if current_state == State.MOVE:
 		tick += 1
-		if tick % 2 == 0 and target:
+		if tick % 5 == 0 and target:
 			nav_agent.target_position = target.global_position
 
 	health_bar_pivot.global_rotation = 0		
@@ -98,7 +94,7 @@ func shoot():
 	if result and result.collider.collision_layer == 1:	
 		var missile : Node2D = missile_scene.instantiate()
 		missile.rotation = global_rotation
-		missile.level = level
+		missile.power = power * 2
 		
 		missile_fired.emit(missile, global_position + global_transform.x * 18)
 		can_shoot = false

@@ -48,15 +48,6 @@ func _physics_process(delta: float) -> void:
 		await get_tree().create_timer(0.25).timeout
 		explode()
 
-func create_random_rect() -> PackedVector2Array:
-	var points : PackedVector2Array = []
-	var size : Vector2 = Vector2(randi_range(12, 28), randi_range(6, 16))
-	points.append(Vector2.ZERO)
-	points.append(Vector2(size.x, 0))
-	points.append(size)
-	points.append(Vector2(0, size.y))
-	return points
-
 func explode(spawn_fragments : bool = true):
 	var explosion : Explosion = explosion_scene.instantiate()
 	explosion.initialize(Vector2.ZERO, colors)

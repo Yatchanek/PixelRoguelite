@@ -25,6 +25,8 @@ enum State {
 
 
 func _ready() -> void:
+	setup()
+	
 	apply_color_palette()
 	set_physics_process(false)
 	set_process(false)	
@@ -41,16 +43,12 @@ func _ready() -> void:
 	
 	shoot_timer.start(fire_interval)
 	current_state = State.MOVE
-	hp = min(1 + level, 3)
-	fire_interval = max(1.3 - 0.1 * level, 0.5)
-	speed = mini(96 + level * 8, 192)
-	health_bar.max_value = hp
-	health_bar.value = hp
+
 
 func _process(_delta: float) -> void:
 	if current_state == State.MOVE:
 		tick += 1
-		if tick % 2 == 0 and target:
+		if tick % 5 == 0 and target:
 			nav_agent.target_position = target.global_position
 	
 	health_bar_pivot.global_rotation = 0	
@@ -92,13 +90,12 @@ func shoot():
 	var state : PhysicsDirectSpaceState2D = get_world_2d().direct_space_state
 	
 	var result : Dictionary = state.intersect_ray(query)	
-	if result and result.collider.collision_layer == 1:
-			
+	if result and result.collider.collision_layer == 1:			
 		var bullet : Node2D = bullet_scene.instantiate()
 		bullet.rotation = global_rotation
 		bullet.speed = min(speed * 3.0, 512)
 		bullet.color = body.self_modulate
-		
+		bullet.damage = power
 		bullet_fired.emit(bullet, global_position + global_transform.x * 12)
 		can_shoot = false
 		shoot_timer.start(fire_interval)

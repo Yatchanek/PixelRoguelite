@@ -39,8 +39,8 @@ func _on_max_health_changed(value : int) -> void:
 	hud.update_max_health(value)
 
 
-func _on_room_changed(coords: Vector2i) -> void:
-	hud.update_room(coords)
+func _on_room_changed(room_data : RoomData) -> void:
+	hud.update_room(room_data)
 
 func _on_upgrade_selected(_data : UpgradeData) -> void:
 	Globals.leveled_up = false

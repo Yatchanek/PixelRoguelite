@@ -35,7 +35,7 @@ signal exp_value_changed(value : int)
 		
 ## Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	room_pos = (get_viewport_rect().size - Vector2(Globals.PLAYFIELD_WIDTH, Globals.PLAYFIELD_HEIGHT)) * 0.5
+	room_pos = (get_viewport_rect().size - Vector2(Globals.PLAYFIELD_WIDTH, Globals.PLAYFIELD_HEIGHT)) * 0.5 + Vector2.DOWN * 20
 	change_room(Vector2i.ZERO, 0)
 	apply_color_palette()
 	EventBus.upgrade_card_pressed.connect(_on_upgrade_selected)
@@ -103,7 +103,7 @@ func change_room(previous_room_coords : Vector2i, exit_index : int):
 	await tw.finished
 	player.dead = false
 	player.activate_collision()
-	EventBus.room_changed.emit(current_room.room_data.coords)
+	EventBus.room_changed.emit(current_room.room_data)
 
 func create_room_data(coords : Vector2i, layout : int, first_visited : int, last_visited : int) -> RoomData:
 	var data : RoomData = RoomData.new()
@@ -164,13 +164,14 @@ func choose_exit_layout(coords : Vector2i) -> int:
 		
 		for dir in exit_mappings.keys():
 			var neighbour_coords : Vector2i = coords + dir
-			if Globals.room_grid.has(neighbour_coords):
-				if (layout_candidates[i] & exit_mappings[dir]) /  exit_mappings[dir] == (Globals.room_grid[neighbour_coords].layout_type & exit_mappings[-dir]) / exit_mappings[-dir]: 
-					accepted = true
-				else:
-					accepted = false
-					break
-				
+			if !Globals.room_grid.has(neighbour_coords):
+				continue
+			if (layout_candidates[i] & exit_mappings[dir]) /  exit_mappings[dir] == (Globals.room_grid[neighbour_coords].layout_type & exit_mappings[-dir]) / exit_mappings[-dir]: 
+				accepted = true
+			else:
+				accepted = false
+				break
+			
 		if accepted:
 			possible_layouts.append(layout_candidates[i])
 		
@@ -183,7 +184,7 @@ func _on_room_exited(room_coords: Vector2i, exit_index : int):
 
 func _on_enemy_destroyed(exp_value : int):
 	player.gain_exp(exp_value)
-	exp_value_changed.emit(player.experience)
+	#exp_value_changed.emit(player.experience)
 
 
 func _on_player_health_changed(value : int):

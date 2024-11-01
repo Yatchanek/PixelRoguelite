@@ -2,13 +2,13 @@
 
 importer="font_data_dynamic"
 type="FontFile"
-uid="uid://b1gb0tbd7wehn"
-path="res://.godot/imported/FieldGuide.ttf-8c37e307866997a9c59539add239861d.fontdata"
+uid="uid://csfvq7e5h2qcg"
+path="res://.godot/imported/mago2.ttf-0b602c0fc6d6ef802325fb7ec9a27dd2.fontdata"
 
 [deps]
 
-source_file="res://fonts/FieldGuide.ttf"
-dest_files=["res://.godot/imported/FieldGuide.ttf-8c37e307866997a9c59539add239861d.fontdata"]
+source_file="res://fonts/mago2.ttf"
+dest_files=["res://.godot/imported/mago2.ttf-0b602c0fc6d6ef802325fb7ec9a27dd2.fontdata"]
 
 [params]
 

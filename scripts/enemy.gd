@@ -6,14 +6,28 @@ const directional_explosion_scene : PackedScene = preload("res://scenes/directio
 @onready var health_bar: TextureProgressBar = $HealthBarPivot/HealthBar
 @onready var health_bar_pivot: Marker2D = $HealthBarPivot
 
-@export var hp : int = 1
-@export var speed : float = 64
+var hp : int = 1
+var speed : float = 64
+var fire_interval : float = 1.0
 @export var target : CharacterBody2D
 @export var exp_value : int = 10
 @export var power : int = 1
-@export var fire_interval : float = 1.0
+@export var base_fire_interval : float = 1.0
+@export var fire_interval_per_level : float = 0.1
+@export var min_fire_interval : float = 0.1
+@export var base_hp : int = 1
+@export var max_hp : int = 1
+@export var hp_per_level : int = 1
+@export var base_speed : int = 64
+@export var max_speed : int = 128
+@export var speed_per_level : int = 1
+@export var base_power : int = 1
+@export var power_per_level : float = 1
+@export var max_power : int = 1
+
 
 var level : int
+var dead : bool = false
 
 var primary_color : Color
 var secondary_color : Color
@@ -22,13 +36,23 @@ var tertiary_color : Color
 signal exploded(explosion : Explosion, pos : Vector2)
 signal destroyed(enemy : Enemy)
 
+func setup():
+	hp = min(base_hp + hp_per_level * level, max_hp)
+	health_bar.max_value = hp
+	health_bar.value = hp
+	speed = min(base_speed + speed_per_level * level, max_speed)
+	power = min(power + int(power_per_level * level), max_power)
+	fire_interval = max(base_fire_interval - fire_interval_per_level * level, min_fire_interval)
+
 func take_damage(amount : int, dir : Vector2):
+	if dead:
+		return
 	hp -= amount
 	if hp <= 0:
+		dead = true
 		explode(dir)
 		destroyed.emit(self)
 		queue_free()
-		SoundManager.play_effect(SoundManager.Effects.EXPLOSION)
 	else:
 		SoundManager.play_effect(SoundManager.Effects.HIT)
 		health_bar.show()

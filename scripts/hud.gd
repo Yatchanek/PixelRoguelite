@@ -2,14 +2,13 @@ extends CanvasLayer
 class_name HUD
 
 @onready var top_bar: PanelContainer = %TopBar
-@onready var bottom_bar: PanelContainer = %BottomBar
-@onready var xp_label: Label = %XPLabel
-@onready var xp_amount_label: Label = %XPAmountLabel
+@onready var danger_label: Label = %DangerLabel
+@onready var danger_amount_label: Label = %DangerAmountLabel
 @onready var hp_bar: TextureProgressBar = %HPBar
 @onready var coords_label: Label = %CoordsLabel
 @onready var upgrade_row: HBoxContainer = $Control/UpgradeRow
 @onready var minimap: MiniMap = $Control/Minimap
-@onready var artifact_container: VBoxContainer = $Control/MarginContainer/ArtifactContainer
+@onready var keys_container: HBoxContainer = %KeysContainer
 
 var proposed_upgrades : Array[UpgradeData.Upgrades] = []
 
@@ -18,7 +17,7 @@ var card_scene : PackedScene = preload("res://scenes/upgrade_card.tscn")
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	apply_color_palette()
-	EventBus.artifact_collected.connect(show_artifact)
+	EventBus.gate_key_collected.connect(show_gate_key)
 
 func update_health(value : int):
 	hp_bar.value = value
@@ -26,32 +25,38 @@ func update_health(value : int):
 func update_max_health(value : int):
 	hp_bar.max_value = value
 
-func update_exp(amount : int):
-	xp_amount_label.text = str(amount)
+func update_danger(amount : int):
+	danger_amount_label.text = str(amount)
 
-func update_room(coords : Vector2i):
-	coords_label.text = str(coords)
+#func update_exp(amount : int):
+	#xp_amount_label.text = str(amount)
+
+func update_room(room_data : RoomData):
+	coords_label.text = str(room_data.coords)
+	danger_amount_label.text = str(floor(room_data.depth / 2.0))
 
 func apply_color_palette():
 	var stylebox : StyleBoxFlat = StyleBoxFlat.new()
-	#stylebox.border_color = Globals.color_palettes[Globals.current_palette][5]
-	#stylebox.set_border_width_all(1)
+	stylebox.border_color = Globals.color_palettes[Globals.current_palette][5]
+	stylebox.set_border_width_all(1)
 	stylebox.bg_color = Globals.color_palettes[Globals.current_palette][6]
 	
 	top_bar.add_theme_stylebox_override("panel", stylebox)
-	bottom_bar.add_theme_stylebox_override("panel", stylebox)
 	
-	xp_label.label_settings.font_color = Globals.color_palettes[Globals.current_palette][3] 
+	coords_label.label_settings.font_color = Globals.color_palettes[Globals.current_palette][3] 
 	
-	hp_bar.tint_progress = Globals.color_palettes[Globals.current_palette][2]
+	hp_bar.tint_progress = Globals.color_palettes[Globals.current_palette][3]
 	
-	for i : int in Globals.artifacts_collected:
-		artifact_container.get_child(i).self_modulate = Globals.color_palettes[Globals.current_palette][0]
+	for key in keys_container.get_children():
+		key.self_modulate = Globals.color_palettes[Globals.current_palette][7]
+	
+	for i : int in Globals.keys_collected:
+		keys_container.get_child(i).self_modulate = Globals.color_palettes[Globals.current_palette][0]
 	
 	minimap.apply_color_palette()
 
-func show_artifact(idx : int):
-	artifact_container.get_child(idx).self_modulate = Globals.color_palettes[Globals.current_palette][0]
+func show_gate_key(idx : int):
+	keys_container.get_child(idx).self_modulate = Globals.color_palettes[Globals.current_palette][0]
 	
 func show_upgrades():
 	upgrade_row.show()

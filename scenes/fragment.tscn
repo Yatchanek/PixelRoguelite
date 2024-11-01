@@ -10,6 +10,7 @@ resource_local_to_scene = true
 size = Vector2(6, 6)
 
 [node name="Fragment" type="Node2D"]
+z_index = -1
 script = ExtResource("1_2c3ek")
 
 [node name="Body" type="Polygon2D" parent="."]
@@ -18,7 +19,7 @@ material = SubResource("ShaderMaterial_5dpjk")
 polygon = PackedVector2Array(-3, -3, 3, -3, 3, 3, -3, 3)
 
 [node name="HurtBox" parent="." instance=ExtResource("2_fkoyr")]
-collision_layer = 256
+collision_layer = 1024
 collision_mask = 0
 damage = 2
 

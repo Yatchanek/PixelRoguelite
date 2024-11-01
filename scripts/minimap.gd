@@ -16,7 +16,7 @@ var pos_offset : Vector2
 
 const room_scene = preload("res://scenes/map_room.tscn")
 
-var artifacts_discovered : Array[Vector2i] = []
+var gate_keys_discovered : Array[Vector2i] = []
 
 var num_cols : int
 var num_rows : int
@@ -46,8 +46,8 @@ func _draw() -> void:
 			cell_size.x * 0.5 + player_map_coords.x * cell_size.x, 
 			cell_size.y * 0.5 + player_map_coords.y * cell_size.y) - 4 * map_scale, 8 * map_scale), Globals.color_palettes[Globals.current_palette][3])
 		
-	for coords : Vector2i in artifacts_discovered:
-		if !Globals.artifact_coords.has(coords):
+	for coords : Vector2i in gate_keys_discovered:
+		if !Globals.gate_key_coords.has(coords):
 			continue
 		var map_coords = world_to_map(coords)
 		if coords_on_screen(map_coords):
@@ -181,17 +181,17 @@ func coords_on_screen(coords : Vector2i) -> bool:
 		return false
 	return true
 
-func _on_room_changed(room_coords : Vector2i):
-	player_coords = room_coords
+func _on_room_changed(room_data : RoomData):
+	player_coords = room_data.coords
 	if visible:
 		redraw_map()
 	else:
-		center_coords = room_coords
+		center_coords = room_data.coords
 
 func toggle():
 	center_coords = player_coords
 	if !visible:
-		check_for_artifacts()
+		check_for_gate_keys()
 		redraw_map()
 		get_tree().paused = true
 		set_process_unhandled_input(true)
@@ -202,8 +202,8 @@ func toggle():
 	reset()
 	visible = !visible
 
-func check_for_artifacts():
-	for artifact_coords : Vector2i in Globals.artifact_coords.keys():
-		if Utils.is_within_range(artifact_coords, player_coords, 3):
-			if !artifacts_discovered.has(artifact_coords):
-				artifacts_discovered.append(artifact_coords)
+func check_for_gate_keys():
+	for gate_key_coords : Vector2i in Globals.gate_key_coords.keys():
+		if Utils.is_within_range(gate_key_coords, player_coords, 3):
+			if !gate_keys_discovered.has(gate_key_coords):
+				gate_keys_discovered.append(gate_key_coords)

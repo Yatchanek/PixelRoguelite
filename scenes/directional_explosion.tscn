@@ -30,6 +30,9 @@ scale_min = 2.0
 scale_max = 5.0
 color_ramp = SubResource("GradientTexture1D_k832a")
 color_initial_ramp = SubResource("GradientTexture1D_kqieq")
+collision_mode = 1
+collision_friction = 0.2
+collision_bounce = 0.5
 collision_use_scale = true
 
 [node name="DirectionalExplosion" type="GPUParticles2D"]

@@ -8,20 +8,21 @@ class_name Room
 @onready var walls: Node2D = $Walls
 @onready var obstacles: Node2D = $NavigationRegion2D/Obstacles
 
-const door_scene = preload("res://scenes/door.tscn")
-const outer_wall_scene = preload("res://scenes/outer_wall.tscn")
-const basic_enemy_scene = preload("res://scenes/basic_enemy.tscn")
-const kamikaze_enemy_scene = preload("res://scenes/kamikaze_enemy.tscn")
-const turret_enemy_scene = preload("res://scenes/turret_enemy.tscn")
-const missile_enemy_scene = preload("res://scenes/missile_enemy.tscn")
-const rapid_fire_enemy_scene = preload("res://scenes/rapid_fire_enemy.tscn")
-const boss_scene = preload("res://scenes/boss.tscn")
-const boss_2_scene = preload("res://scenes/boss_2.tscn")
-const big_enemy_scene = preload("res://scenes/big_enemy.tscn")
-const explosion_scene = preload("res://scenes/explosion.tscn")
-const obstacle_scene = preload("res://scenes/obstacle.tscn")
-const indicator_scene = preload("res://scenes/indicator.tscn")
-const artifact_scene = preload("res://scenes/artifact.tscn")
+@export var door_scene : PackedScene
+@export var outer_wall_scene : PackedScene
+@export var basic_enemy_scene : PackedScene
+@export var kamikaze_enemy_scene : PackedScene
+@export var turret_enemy_scene : PackedScene
+@export var missile_enemy_scene : PackedScene
+@export var rapid_fire_enemy_scene : PackedScene
+@export var boss_scene : PackedScene
+@export var boss_2_scene : PackedScene
+@export var boss_3_scene : PackedScene
+@export var big_enemy_scene : PackedScene
+@export var explosion_scene : PackedScene
+@export var obstacle_scene : PackedScene
+@export var indicator_scene : PackedScene
+@export var gate_key_scene : PackedScene
 
 var corners : Array[Vector2] = [
 		Vector2(0, 0),
@@ -56,7 +57,6 @@ var enemies_spawned : int = 0
 var enemies_killed : int = 0
 var last_spawn_postion : Vector2 = Vector2.ZERO
 
-var depth : int
 var level : int
 
 var room_data : RoomData
@@ -81,7 +81,7 @@ func _ready() -> void:
 	max_enemies = min(randi_range(2, 4 + 2 * level), 20)
 	enemy_spawn_interval = max(1.0 - 0.05 * level, 0.2)
 	
-	if !Globals.artifact_coords.has(room_data.coords):
+	if !Globals.gate_key_coords.has(room_data.coords):
 		if room_data.last_visited == room_data.first_visited or time_since_last_visit > respawn_interval * 1000:
 			activate_doors()
 			timer.start(randf_range(enemy_spawn_interval, enemy_spawn_interval * 2.0))
@@ -94,12 +94,12 @@ func _ready() -> void:
 		activate_doors()
 		spawn_boss()
 	
-	depth = Utils.get_depth(room_data.coords)
-	level = depth / 5
+	room_data.depth = Utils.get_depth(room_data.coords)
+	level = floor(room_data.depth / 3.0)
 	
 	configure_room()
 
-	if !room_data.coords == Vector2i.ZERO and !Globals.artifact_coords.has(room_data.coords):
+	if !room_data.coords == Vector2i.ZERO and !Globals.gate_key_coords.has(room_data.coords):
 		create_obstacles()
 
 	
@@ -158,17 +158,17 @@ func get_obstacle_rotation_offset(x : int, y : int) -> int:
 	
 	return rotation_offset
 
-func place_artifact(pos : Vector2):
-	var artifact : Artifact = artifact_scene.instantiate()
-	artifact.coords = room_data.coords
-	artifact.number = Globals.artifact_coords[room_data.coords]
-	artifact.collected.connect(_on_artifact_collected)
-	artifact.position = pos
+func place_gate_key(pos : Vector2):
+	var gate_key : GateKey = gate_key_scene.instantiate()
+	gate_key.coords = room_data.coords
+	gate_key.number = Globals.gate_key_coords[room_data.coords]
+	gate_key.collected.connect(_on_gate_key_collected)
+	gate_key.position = pos
 	
-	call_deferred("add_child", artifact)
+	call_deferred("add_child", gate_key)
 	
-func _on_artifact_collected():
-	room_data.artifact_collected = true
+func _on_gate_key_collected():
+	room_data.gate_key_collected = true
 
 func activate_doors():
 	if !is_inside_tree():
@@ -235,7 +235,7 @@ func spawn_boss():
 	await get_tree().create_timer(enemy_spawn_interval).timeout
 	
 	if is_inside_tree():
-		var boss : Boss = [boss_scene, boss_2_scene].pick_random().instantiate()
+		var boss : Boss = boss_3_scene.instantiate()
 		
 		var accepted : bool = false
 		var candidate_coords : Vector2i
@@ -303,6 +303,9 @@ func _on_bullet_fired(bullet: Node2D, pos: Vector2) -> void:
 	bullet.position = to_local(pos)
 	if bullet is RectangleGrenade:
 		bullet.fragment_fired.connect(_on_bullet_fired)
+	elif bullet is Mine:
+		bullet.exploded.connect(_on_explosion)
+		bullet.fragment_fired.connect(_on_bullet_fired)
 	call_deferred("add_child", bullet)
 	
 func _on_missile_fired(missile: Node2D, pos: Vector2) -> void:
@@ -314,7 +317,7 @@ func _on_missile_fired(missile: Node2D, pos: Vector2) -> void:
 func _on_boss_destroyed(enemy : Enemy):
 	enemy_destroyed.emit(200)
 	room_data.boss_defeated = true
-	place_artifact(enemy.position)
+	place_gate_key(enemy.position)
 	deactivate_doors()
 
 func _on_enemy_destroyed(enemy : Enemy):

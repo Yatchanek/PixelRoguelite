@@ -40,6 +40,10 @@ signal missile_fired(missile : Node2D, pos : Vector2)
 
 
 func _ready() -> void:
+	setup()
+	
+	rotation_dir = pow(-1, randi() % 2)
+	rotation_speed = randf_range(PI * 1.5, TAU)	
 	apply_color_palette()
 	place_muzzles()
 	
@@ -54,14 +58,7 @@ func _ready() -> void:
 	set_process(true)
 
 	current_state = State.MOVE
-	hp = min(30 + 5 * level, 60)
-	speed = mini(64 + level * 8, 96)
-	
-	health_bar.max_value = hp
-	health_bar.value = hp
-	
-	rotation_dir = pow(-1, randi() % 2)
-	rotation_speed = randf_range(PI * 1.5, TAU)	
+
 	
 	switch_attack_mode()
 	
@@ -250,9 +247,6 @@ func knockback(dir : Vector2):
 
 func _on_shoot_timer_timeout() -> void:
 	can_shoot = true
-
-func _exit_tree() -> void:
-	destroyed.emit(self)
 
 
 func _on_timer_timeout() -> void:

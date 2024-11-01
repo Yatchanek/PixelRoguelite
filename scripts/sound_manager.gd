@@ -8,7 +8,8 @@ enum Effects {
 	PLAYER_SHOOT,
 	ENEMY_SHOOT,
 	HIT,
-	EXPLOSION
+	EXPLOSION,
+	BEEP
 }
 
 # Called when the node enters the scene tree for the first time.

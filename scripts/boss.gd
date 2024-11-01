@@ -8,5 +8,5 @@ func explode(dir : Vector2):
 		var explosion : Explosion = explosion_scene.instantiate()
 		var colors : Array[Color] = [primary_color, secondary_color, tertiary_color]
 			
-		explosion.initialize(dir, colors, i)
-		exploded.emit(explosion, global_position + Vector2.RIGHT.rotated(randf_range(0, TAU) * randf_range(-16, 16)))
+		explosion.initialize(dir, colors, i * 0.15)
+		exploded.emit(explosion, global_position + Vector2.RIGHT.rotated(randf_range(0, TAU)) * randf_range(-16, 16))
