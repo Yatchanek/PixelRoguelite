@@ -13,7 +13,7 @@ const bullet_scene : PackedScene = preload("res://scenes/bullet.tscn")
 const mine_scene : PackedScene = preload("res://scenes/mine.tscn")
 
 var elapsed_time : float = 0.0
-var can_shoot : bool = true
+
 
 var tick : int = 0
 
@@ -54,6 +54,7 @@ func _ready() -> void:
 	set_process(true)
 
 	current_state = State.IDLE
+	shoot_timer.start(fire_interval)
 	timer.start(randf_range(0.2, 0.4))
 
 func _process(delta: float) -> void:		

@@ -1,23 +1,13 @@
-[gd_scene load_steps=22 format=3 uid="uid://ddylky5tp6bpd"]
+[gd_scene load_steps=21 format=3 uid="uid://ddylky5tp6bpd"]
 
 [ext_resource type="Script" path="res://scripts/game.gd" id="1_w3yxl"]
 [ext_resource type="Script" path="res://scripts/world.gd" id="2_4ply8"]
 [ext_resource type="PackedScene" uid="uid://60nvyx6hcw6k" path="res://scenes/player.tscn" id="3_wtd56"]
-[ext_resource type="Shader" path="res://crt.gdshader" id="4_ely7h"]
 [ext_resource type="Script" path="res://scripts/hud.gd" id="5_rohpp"]
 [ext_resource type="FontFile" uid="uid://bs4wn8lq821l5" path="res://fonts/NotJamChunkySans.ttf" id="6_yc8th"]
 [ext_resource type="Texture2D" uid="uid://d3otih1xwa7g2" path="res://graphics/progress_bar.png" id="7_yuboa"]
 [ext_resource type="PackedScene" uid="uid://s65dq4a3p8hf" path="res://scenes/minimap.tscn" id="8_0353o"]
 [ext_resource type="Texture2D" uid="uid://882ajyq5akwp" path="res://graphics/keys.png" id="8_ga3uy"]
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_ft2ng"]
-shader = ExtResource("4_ely7h")
-shader_parameter/crt_curve = 0.0
-shader_parameter/crt_scan_line_color = 0.478
-shader_parameter/crt_aperture_grille_rate = 0.562
-shader_parameter/crt_blur = 1.0
-shader_parameter/crt_white_noise_rate = 0.0
-shader_parameter/crt_brightness = 1.7
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pyc1a"]
 border_width_left = 1
@@ -67,6 +57,12 @@ region = Rect2(112, 0, 16, 16)
 atlas = ExtResource("8_ga3uy")
 region = Rect2(128, 0, 16, 16)
 
+[sub_resource type="Environment" id="Environment_pad1q"]
+ambient_light_color = Color(0.836122, 0.0505156, 0.0286081, 1)
+glow_intensity = 8.0
+glow_bloom = 1.0
+glow_hdr_threshold = 0.92
+
 [node name="Game" type="Node"]
 process_mode = 3
 script = ExtResource("1_w3yxl")
@@ -105,19 +101,6 @@ script = ExtResource("2_4ply8")
 [node name="Player" parent="World" instance=ExtResource("3_wtd56")]
 position = Vector2(160, 90)
 collision_mask = 5
-
-[node name="Enemies" type="Node2D" parent="World"]
-
-[node name="CRTOverlay" type="ColorRect" parent="."]
-visible = false
-z_index = 7
-material = SubResource("ShaderMaterial_ft2ng")
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
 
 [node name="Hud" type="CanvasLayer" parent="."]
 process_mode = 3
@@ -351,6 +334,9 @@ theme_override_constants/separation = 16
 [node name="Minimap" parent="Hud/Control" instance=ExtResource("8_0353o")]
 visible = false
 layout_mode = 1
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_pad1q")
 
 [connection signal="exp_value_changed" from="World" to="." method="_on_world_exp_value_changed"]
 [connection signal="player_health_changed" from="World" to="." method="_on_world_player_health_changed"]

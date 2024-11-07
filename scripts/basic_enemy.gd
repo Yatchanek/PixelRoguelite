@@ -10,7 +10,6 @@ class_name BasicEnemy
 const bullet_scene : PackedScene = preload("res://scenes/bullet.tscn")
 
 var elapsed_time : float = 0.0
-var can_shoot : bool = true
 
 signal bullet_fired(bullet : Node2D, pos : Vector2)
 
@@ -100,7 +99,7 @@ func shoot():
 		can_shoot = false
 		shoot_timer.start(fire_interval)
 		SoundManager.play_effect(SoundManager.Effects.ENEMY_SHOOT)
-
+	
 
 func check_linesight() -> bool:
 	var query : PhysicsRayQueryParameters2D = PhysicsRayQueryParameters2D.create(global_position, global_position + global_position.direction_to(target.global_position)  * 32, 4)

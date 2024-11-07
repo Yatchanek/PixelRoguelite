@@ -1,14 +1,9 @@
-[gd_scene load_steps=11 format=3 uid="uid://d1xi0pomqm0m"]
+[gd_scene load_steps=12 format=3 uid="uid://d1xi0pomqm0m"]
 
+[ext_resource type="Texture2D" uid="uid://dpn2cvamafnrj" path="res://graphics/card_body.png" id="1_catbv"]
 [ext_resource type="Script" path="res://scripts/upgrade_card.gd" id="1_iqs6v"]
-[ext_resource type="FontFile" uid="uid://wnb2movo6eli" path="res://fonts/m6x11 Daniel LInssen.ttf" id="1_odrpe"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wh3xy"]
-bg_color = Color(0.0177324, 0.0177324, 0.0177324, 1)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
+[ext_resource type="Texture2D" uid="uid://dy5qca30umj4h" path="res://graphics/card_border.png" id="3_bcb5n"]
+[ext_resource type="FontFile" uid="uid://bs4wn8lq821l5" path="res://fonts/NotJamChunkySans.ttf" id="4_myq5a"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_qe658"]
 
@@ -23,16 +18,31 @@ border_width_bottom = 2
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_dan6o"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_6tq4s"]
-font = ExtResource("1_odrpe")
+font = ExtResource("4_myq5a")
+font_size = 12
 
-[node name="UpgradeCard" type="PanelContainer"]
+[node name="UpgradeCard" type="TextureRect"]
 process_mode = 3
+self_modulate = Color(0, 0, 0, 1)
+texture_filter = 1
 custom_minimum_size = Vector2(112, 160)
-theme_override_styles/panel = SubResource("StyleBoxFlat_wh3xy")
+offset_right = 112.0
+offset_bottom = 160.0
+texture = ExtResource("1_catbv")
 script = ExtResource("1_iqs6v")
+
+[node name="Border" type="TextureRect" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("3_bcb5n")
 
 [node name="Button" type="Button" parent="."]
 layout_mode = 2
+offset_left = 4.0
+offset_top = 4.0
+offset_right = 108.0
+offset_bottom = 156.0
 mouse_default_cursor_shape = 2
 theme_override_styles/focus = SubResource("StyleBoxEmpty_qe658")
 theme_override_styles/hover_pressed_mirrored = SubResource("StyleBoxEmpty_fmt5r")
@@ -43,21 +53,16 @@ theme_override_styles/normal = SubResource("StyleBoxEmpty_dan6o")
 
 [node name="Label" type="Label" parent="Button"]
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -20.0
-offset_top = -11.0
-offset_right = 20.0
-offset_bottom = 3.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-text = "speed 
+text = "firerate
 +16"
 label_settings = SubResource("LabelSettings_6tq4s")
 horizontal_alignment = 1
+vertical_alignment = 1
 uppercase = true
 
 [connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]

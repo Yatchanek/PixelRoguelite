@@ -1,17 +1,56 @@
-[gd_scene load_steps=8 format=3 uid="uid://60nvyx6hcw6k"]
+[gd_scene load_steps=15 format=3 uid="uid://60nvyx6hcw6k"]
 
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_7xbh1"]
-[ext_resource type="Texture2D" uid="uid://g22icpq7aoi7" path="res://graphics/player_body.png" id="2_qwwgp"]
-[ext_resource type="Texture2D" uid="uid://di8e5pfsvxv7u" path="res://graphics/player_turret.png" id="3_cbyhj"]
+[ext_resource type="Texture2D" uid="uid://ofk8cf2mnah6" path="res://graphics/player_bottom.png" id="2_gg0ql"]
+[ext_resource type="Texture2D" uid="uid://c3sufm7rnlufh" path="res://graphics/player_top.png" id="3_rufsf"]
 [ext_resource type="PackedScene" uid="uid://drd2m072phc4v" path="res://scenes/hitbox.tscn" id="4_h6job"]
+[ext_resource type="Texture2D" uid="uid://b3dftb67jjxgm" path="res://graphics/player_legs.png" id="4_je2jt"]
 [ext_resource type="AudioStream" uid="uid://dhnr8wnf2b0ru" path="res://sounds/shoot_by_little_robot_sound_factory.ogg" id="5_manoi"]
+[ext_resource type="Texture2D" uid="uid://ckwvg67w2r0rt" path="res://graphics/boss_cannon.png" id="7_dxmpv"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_bs7nj"]
 radius = 8.0
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_y62jc"]
+atlas = ExtResource("4_je2jt")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_chmui"]
+atlas = ExtResource("4_je2jt")
+region = Rect2(16, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kdmah"]
+atlas = ExtResource("4_je2jt")
+region = Rect2(32, 0, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_n1qyi"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_y62jc")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 0.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_chmui")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kdmah")
+}],
+"loop": true,
+"name": &"walk",
+"speed": 5.0
+}]
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_mxbb2"]
 resource_local_to_scene = true
 size = Vector2(16, 16)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_26t0u"]
+size = Vector2(8, 8)
 
 [node name="Player" type="CharacterBody2D"]
 z_index = 3
@@ -23,22 +62,23 @@ script = ExtResource("1_7xbh1")
 visible = false
 shape = SubResource("CircleShape2D_bs7nj")
 
-[node name="Body" type="Sprite2D" parent="."]
-self_modulate = Color(0.493545, 0.493546, 0.493546, 1)
-texture = ExtResource("2_qwwgp")
-
-[node name="Turret" type="Sprite2D" parent="."]
-texture = ExtResource("3_cbyhj")
-offset = Vector2(2, 0)
-
-[node name="Muzzle" type="Marker2D" parent="Turret"]
-position = Vector2(14, 0)
-
 [node name="ShootTimer" type="Timer" parent="."]
 wait_time = 0.2
 one_shot = true
 
+[node name="LowerBody" type="Sprite2D" parent="."]
+texture = ExtResource("2_gg0ql")
+
+[node name="UpperBody" type="Sprite2D" parent="LowerBody"]
+texture = ExtResource("3_rufsf")
+
+[node name="Legs" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_n1qyi")
+animation = &"walk"
+autoplay = "idle"
+
 [node name="Hitbox" parent="." node_paths=PackedStringArray("target") instance=ExtResource("4_h6job")]
+visible = false
 collision_layer = 16
 collision_mask = 1792
 monitorable = false
@@ -49,6 +89,21 @@ shape = SubResource("RectangleShape2D_mxbb2")
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("5_manoi")
+
+[node name="TurretPivot" type="Marker2D" parent="."]
+
+[node name="Turret" type="Sprite2D" parent="TurretPivot"]
+position = Vector2(18, 0)
+texture = ExtResource("7_dxmpv")
+offset = Vector2(2, 0)
+
+[node name="Muzzle" type="Marker2D" parent="TurretPivot/Turret"]
+position = Vector2(8, 0)
+
+[node name="TurretCollision" type="CollisionShape2D" parent="."]
+visible = false
+position = Vector2(16, 0)
+shape = SubResource("RectangleShape2D_26t0u")
 
 [connection signal="timeout" from="ShootTimer" to="." method="_on_shoot_timer_timeout"]
 [connection signal="area_entered" from="Hitbox" to="." method="_on_hitbox_area_entered"]

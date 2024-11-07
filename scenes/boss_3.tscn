@@ -54,8 +54,8 @@ base_fire_interval = 0.25
 fire_interval_per_level = 0.025
 min_fire_interval = 0.15
 base_hp = 80
-max_hp = 10
-hp_per_level = 120
+max_hp = 120
+hp_per_level = 10
 base_speed = 192
 max_speed = 256
 speed_per_level = 16
@@ -73,7 +73,7 @@ one_shot = true
 texture_filter = 1
 sprite_frames = SubResource("SpriteFrames_47qf6")
 animation = &"move"
-frame_progress = 0.705837
+frame_progress = 0.463071
 
 [node name="Chasis" type="Sprite2D" parent="Body"]
 texture = ExtResource("3_j2x55")

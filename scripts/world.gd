@@ -2,7 +2,6 @@ extends Node2D
 
 
 @onready var player: Player = $Player
-@onready var enemies: Node2D = $Enemies
 @onready var veil: ColorRect = $"../Veil/Veil"
 @onready var background: ColorRect = $"../Background/Background"
 
@@ -62,13 +61,13 @@ func change_room(previous_room_coords : Vector2i, exit_index : int):
 	if Globals.room_grid.size() > 0:
 		match exit_index:
 			0:
-				player.position.y = get_viewport_rect().size.y * 0.5 + Globals.PLAYFIELD_HEIGHT * 0.5 - Globals.CELL_SIZE * 2
+				player.position.y = get_viewport_rect().size.y * 0.5 + Globals.PLAYFIELD_HEIGHT * 0.5 - Globals.CELL_SIZE + 20
 			1:
-				player.position.x = get_viewport_rect().size.x * 0.5 - Globals.PLAYFIELD_WIDTH * 0.5 + Globals.CELL_SIZE * 2
+				player.position.x = get_viewport_rect().size.x * 0.5 - Globals.PLAYFIELD_WIDTH * 0.5 + Globals.CELL_SIZE
 			2:
-				player.position.y = get_viewport_rect().size.y * 0.5 - Globals.PLAYFIELD_HEIGHT * 0.5 + Globals.CELL_SIZE * 2
+				player.position.y = get_viewport_rect().size.y * 0.5 - Globals.PLAYFIELD_HEIGHT * 0.5 + Globals.CELL_SIZE + 20
 			3:
-				player.position.x = get_viewport_rect().size.x * 0.5 + Globals.PLAYFIELD_WIDTH * 0.5 - Globals.CELL_SIZE * 2
+				player.position.x = get_viewport_rect().size.x * 0.5 + Globals.PLAYFIELD_WIDTH * 0.5 - Globals.CELL_SIZE
 	
 		player.velocity = Vector2.ZERO
 		
@@ -94,6 +93,7 @@ func change_room(previous_room_coords : Vector2i, exit_index : int):
 	
 	current_room = new_room
 	
+	await get_tree().process_frame
 	call_deferred("add_child", new_room)
 	
 	tw = create_tween()
@@ -190,12 +190,10 @@ func _on_enemy_destroyed(exp_value : int):
 func _on_player_health_changed(value : int):
 	player_health_changed.emit(value)
 
-func _on_player_died():
-	for enemy in enemies.get_children():
-		enemy.target = null
 
 func _on_explosion(pos : Vector2):
 	var explosion : GPUParticles2D = explosion_scene.instantiate()
+	explosion.initialize(Vector2.ZERO, [player.primary_color, player.secondary_color, player.tertiary_color])
 	explosion.position = current_room.to_local(pos)
 	explosion.emitting = true
 	
@@ -209,6 +207,7 @@ func _on_bullet_fired(bullet: Node2D, pos: Vector2) -> void:
 func _on_upgrade_selected(data: UpgradeData):
 	if data.current_type == UpgradeData.Upgrades.SPEED:
 		player.speed += data.amount
+		player.rotation_threshold = ceil(11 / (player.speed / 160))
 	if data.current_type == UpgradeData.Upgrades.FIRERATE:
 		player.fire_rate -= data.amount
 	if data.current_type == UpgradeData.Upgrades.HITPOINTS:

@@ -5,6 +5,7 @@
 [sub_resource type="Gradient" id="Gradient_3ilt3"]
 
 [sub_resource type="GradientTexture1D" id="GradientTexture1D_kqieq"]
+resource_local_to_scene = true
 gradient = SubResource("Gradient_3ilt3")
 
 [sub_resource type="Gradient" id="Gradient_tev4w"]

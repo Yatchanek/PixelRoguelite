@@ -1,0 +1,26 @@
+[gd_scene load_steps=3 format=3 uid="uid://cvrp2kgtwvffx"]
+
+[ext_resource type="Shader" path="res://crt.gdshader" id="1_cv1nd"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_3xe0o"]
+shader = ExtResource("1_cv1nd")
+shader_parameter/crt_curve = 0.005
+shader_parameter/crt_scan_line_color = 0.478
+shader_parameter/crt_aperture_grille_rate = 0.562
+shader_parameter/crt_blur = 1.0
+shader_parameter/crt_white_noise_rate = 0.0
+shader_parameter/crt_brightness = 1.7
+
+[node name="CrtOverlay" type="CanvasLayer"]
+layer = 10
+visible = false
+
+[node name="CRTOverlay" type="ColorRect" parent="."]
+z_index = 7
+material = SubResource("ShaderMaterial_3xe0o")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2

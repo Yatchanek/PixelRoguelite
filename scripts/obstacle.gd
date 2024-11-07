@@ -36,4 +36,4 @@ func _ready() -> void:
 	rotation = rotation_offset * PI / 2
 
 func apply_color_palette():
-	body.color = Globals.color_palettes[Globals.current_palette][5]
+	body.self_modulate = Globals.color_palettes[Globals.current_palette][5]

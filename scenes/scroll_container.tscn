@@ -1,0 +1,45 @@
+[gd_scene load_steps=7 format=3 uid="uid://cn06464q7npnt"]
+
+[ext_resource type="Texture2D" uid="uid://dftewbwm5o40c" path="res://graphics/color_palettes/secam-1x.png" id="1_cb8b1"]
+[ext_resource type="Script" path="res://scripts/wrapping_scroll_container.gd" id="2_mi3q8"]
+[ext_resource type="Texture2D" uid="uid://cij1x85oaiilt" path="res://graphics/color_palettes/berry-nebula-1x.png" id="3_6lhm4"]
+[ext_resource type="Texture2D" uid="uid://ba7qd4tqi3j2t" path="res://graphics/color_palettes/citrink-1x.png" id="4_38lhv"]
+[ext_resource type="Texture2D" uid="uid://gpi6qq3gocse" path="res://graphics/color_palettes/gothic-bit-1x.png" id="5_7noee"]
+[ext_resource type="Texture2D" uid="uid://b1ml5ji1mp1am" path="res://graphics/color_palettes/mahyellaw-22-1x.png" id="6_48hbg"]
+
+[node name="ScrollContainer" type="ScrollContainer"]
+texture_filter = 1
+offset_right = 141.0
+offset_bottom = 150.0
+script = ExtResource("2_mi3q8")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 32
+
+[node name="TextureRect" type="TextureRect" parent="VBoxContainer"]
+custom_minimum_size = Vector2(128, 16)
+layout_mode = 2
+texture = ExtResource("1_cb8b1")
+
+[node name="TextureRect2" type="TextureRect" parent="VBoxContainer"]
+custom_minimum_size = Vector2(128, 16)
+layout_mode = 2
+texture = ExtResource("3_6lhm4")
+
+[node name="TextureRect3" type="TextureRect" parent="VBoxContainer"]
+custom_minimum_size = Vector2(128, 16)
+layout_mode = 2
+texture = ExtResource("4_38lhv")
+
+[node name="TextureRect4" type="TextureRect" parent="VBoxContainer"]
+custom_minimum_size = Vector2(128, 16)
+layout_mode = 2
+texture = ExtResource("5_7noee")
+
+[node name="TextureRect5" type="TextureRect" parent="VBoxContainer"]
+custom_minimum_size = Vector2(128, 16)
+layout_mode = 2
+texture = ExtResource("6_48hbg")
+
+[connection signal="gui_input" from="." to="." method="_on_gui_input"]

@@ -51,3 +51,4 @@ func deactivate():
 
 func _on_body_entered(_body: Node2D) -> void:
 	entered.emit()
+	print("Door entered")

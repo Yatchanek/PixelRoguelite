@@ -9,7 +9,7 @@ class_name RapidFireEnemy
 const bullet_scene : PackedScene = preload("res://scenes/bullet.tscn")
 
 var elapsed_time : float = 0.0
-var can_shoot : bool = true
+
 
 signal bullet_fired(bullet : Node2D, pos : Vector2)
 
@@ -40,10 +40,8 @@ func _ready() -> void:
 	await tw.finished
 	set_physics_process(true)
 	set_process(true)
-	
-	shoot_timer.start(fire_interval)
 	current_state = State.MOVE
-
+	shoot_timer.start(fire_interval)
 	
 func _process(_delta: float) -> void:
 	if current_state == State.MOVE:

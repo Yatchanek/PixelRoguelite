@@ -1,0 +1,19 @@
+[gd_scene load_steps=3 format=3 uid="uid://c0a2i7onvluxn"]
+
+[ext_resource type="Script" path="res://scripts/laser.gd" id="1_hujm0"]
+[ext_resource type="Texture2D" uid="uid://ceogro3x3yhep" path="res://graphics/circle.png" id="2_6bmla"]
+
+[node name="Laser" type="Node2D"]
+texture_filter = 1
+script = ExtResource("1_hujm0")
+
+[node name="Beam" type="Line2D" parent="."]
+width = 6.0
+end_cap_mode = 2
+
+[node name="InnerBeam" type="Line2D" parent="Beam"]
+width = 3.0
+
+[node name="Charge" type="Sprite2D" parent="."]
+scale = Vector2(1e-05, 1e-05)
+texture = ExtResource("2_6bmla")

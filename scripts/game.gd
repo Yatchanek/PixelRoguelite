@@ -20,7 +20,7 @@ func _ready() -> void:
 	EventBus.player_max_health_changed.connect(_on_max_health_changed)
 	EventBus.upgrade_card_pressed.connect(_on_upgrade_selected)
 	EventBus.room_changed.connect(_on_room_changed)
-	
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	Input.set_custom_mouse_cursor(load("res://graphics/cursor.png"), Input.CURSOR_ARROW, Vector2(16, 16))
 
 func _on_player_leveled_up():

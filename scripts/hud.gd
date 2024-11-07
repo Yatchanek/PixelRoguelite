@@ -33,7 +33,7 @@ func update_danger(amount : int):
 
 func update_room(room_data : RoomData):
 	coords_label.text = str(room_data.coords)
-	danger_amount_label.text = str(floor(room_data.depth / 2.0))
+	danger_amount_label.text = str(floor(Utils.get_depth(room_data.coords) / 3.0))
 
 func apply_color_palette():
 	var stylebox : StyleBoxFlat = StyleBoxFlat.new()

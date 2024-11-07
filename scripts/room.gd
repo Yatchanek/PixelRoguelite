@@ -15,10 +15,11 @@ class_name Room
 @export var turret_enemy_scene : PackedScene
 @export var missile_enemy_scene : PackedScene
 @export var rapid_fire_enemy_scene : PackedScene
+@export var laser_enemy_scene : PackedScene
 @export var boss_scene : PackedScene
 @export var boss_2_scene : PackedScene
 @export var boss_3_scene : PackedScene
-@export var big_enemy_scene : PackedScene
+
 @export var explosion_scene : PackedScene
 @export var obstacle_scene : PackedScene
 @export var indicator_scene : PackedScene
@@ -94,9 +95,10 @@ func _ready() -> void:
 		activate_doors()
 		spawn_boss()
 	
-	room_data.depth = Utils.get_depth(room_data.coords)
-	level = floor(room_data.depth / 3.0)
+	var depth : int = Utils.get_depth(room_data.coords)
 	
+	level = floor(depth / 3.0)
+	prints(depth, level)
 	configure_room()
 
 	if !room_data.coords == Vector2i.ZERO and !Globals.gate_key_coords.has(room_data.coords):
@@ -115,7 +117,8 @@ func create_navigation_polygon():
 
 	$NavigationRegion2D.navigation_polygon.add_outline(points)
 	$NavigationRegion2D.bake_navigation_polygon()
-
+	#await get_tree().process_frame
+	#obstacles.reparent(self)
 
 func change_color_palette():
 	apply_color_palette()
@@ -235,7 +238,7 @@ func spawn_boss():
 	await get_tree().create_timer(enemy_spawn_interval).timeout
 	
 	if is_inside_tree():
-		var boss : Boss = boss_3_scene.instantiate()
+		var boss : Boss = boss_scene.instantiate()
 		
 		var accepted : bool = false
 		var candidate_coords : Vector2i
@@ -259,18 +262,18 @@ func spawn_enemy(coords : Vector2i):
 		
 	var enemy : Enemy
 	var chance : float = randf()
-	if chance < 0.85:
+	if chance < 0.80:
 		enemy = basic_enemy_scene.instantiate() as BasicEnemy
-	elif chance < 0.88:
-		enemy = missile_enemy_scene.instantiate() as MissileEnemy 
-	elif chance < 0.0:
-		enemy = turret_enemy_scene.instantiate() as TurretEnemy
-	elif chance < 0.95:
-		enemy = rapid_fire_enemy_scene.instantiate() as RapidFireEnemy
-	elif chance < 1.01:
-		enemy = kamikaze_enemy_scene.instantiate() as KamikazeEnemy
+	#elif chance < 0.0:
+		#enemy = missile_enemy_scene.instantiate() as MissileEnemy 
+	#elif chance < 0.0:
+		#enemy = turret_enemy_scene.instantiate() as TurretEnemy
+	#elif chance < 0.0:
+		#enemy = rapid_fire_enemy_scene.instantiate() as RapidFireEnemy
+	#elif chance < 0.0:
+		#enemy = kamikaze_enemy_scene.instantiate() as KamikazeEnemy
 	else:
-		enemy = big_enemy_scene.instantiate() as BigEnemy
+		enemy = laser_enemy_scene.instantiate() as LaserEnemy
 	
 	enemy.position = base_pos + coords * 64
 	enemy.target = player

@@ -1,7 +1,8 @@
-extends PanelContainer
+extends TextureRect
 class_name UpgradeCard
 
 @onready var label: Label = $Button/Label
+@onready var border: TextureRect = $Border
 
 var upgrade_equipped : UpgradeData
 var other_upgrades : Array[UpgradeData.Upgrades] = []
@@ -24,11 +25,9 @@ func _ready() -> void:
 
 
 func apply_color_palette():
-	var stylebox : StyleBoxFlat = StyleBoxFlat.new()
-	stylebox.bg_color = Globals.color_palettes[Globals.current_palette][6]
-	stylebox.border_color =  Globals.color_palettes[Globals.current_palette][2]
-	stylebox.set_border_width_all(2)
-	add_theme_stylebox_override("panel", stylebox)
+	self_modulate = Globals.color_palettes[Globals.current_palette][6]
+	border.self_modulate = Globals.color_palettes[Globals.current_palette][4]
+
 	
 	label.label_settings.font_color = Globals.color_palettes[Globals.current_palette][3] 
 

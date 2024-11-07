@@ -13,7 +13,6 @@ const bullet_scene : PackedScene = preload("res://scenes/bullet.tscn")
 const missile_scene : PackedScene = preload("res://scenes/missile.tscn")
 
 var elapsed_time : float = 0.0
-var can_shoot : bool = true
 
 var tick : int = 0
 

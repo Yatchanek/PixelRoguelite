@@ -9,7 +9,6 @@ class_name TurretEnemy
 const bullet_scene : PackedScene = preload("res://scenes/bullet.tscn")
 
 var elapsed_time : float = 0.0
-var can_shoot : bool = false
 
 signal bullet_fired(bullet : Node2D, pos : Vector2)
 

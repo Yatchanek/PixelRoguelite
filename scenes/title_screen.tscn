@@ -1,0 +1,767 @@
+[gd_scene load_steps=62 format=3 uid="uid://blgcf5t6qthui"]
+
+[ext_resource type="FontFile" uid="uid://bs4wn8lq821l5" path="res://fonts/NotJamChunkySans.ttf" id="2_8u3cf"]
+[ext_resource type="Script" path="res://scripts/title_screen_ui.gd" id="2_x1msa"]
+[ext_resource type="Texture2D" uid="uid://cospqxfvb0xvx" path="res://graphics/close.png" id="3_u2ysa"]
+[ext_resource type="Script" path="res://scripts/title_screen_game_demo.gd" id="3_y3qm4"]
+[ext_resource type="Texture2D" uid="uid://cij1x85oaiilt" path="res://graphics/color_palettes/berry-nebula-1x.png" id="4_8par5"]
+[ext_resource type="Texture2D" uid="uid://1nqasxfkf5b6" path="res://graphics/button_checked.png" id="6_e45ct"]
+[ext_resource type="Texture2D" uid="uid://beajwkgtma0om" path="res://graphics/button_unchecked.png" id="7_3kbh8"]
+[ext_resource type="Texture2D" uid="uid://dvbgse6rvr74r" path="res://graphics/grabber.png" id="8_d2vhc"]
+[ext_resource type="Script" path="res://scripts/wrapping_scroll_container.gd" id="8_w7r0r"]
+[ext_resource type="Texture2D" uid="uid://t8ckmrjn0o6v" path="res://graphics/pointing_hand_small_outer.png" id="10_jdfys"]
+[ext_resource type="Texture2D" uid="uid://0ssdwvll1a56" path="res://graphics/pointing_hand_small_inner.png" id="11_py0tw"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_t7wdc"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_8fgp0"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_iyahn"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_mlaoo"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_fscce"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_lohuj"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_r1xic"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_rpuf2"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_bkxkg"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_3st6p"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_jh6wt"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_ln24y"]
+font = ExtResource("2_8u3cf")
+font_size = 36
+outline_size = 8
+outline_color = Color(0.169245, 0.169245, 0.169245, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_3wh1c"]
+font = ExtResource("2_8u3cf")
+font_size = 36
+outline_size = 8
+outline_color = Color(0.169245, 0.169245, 0.169245, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_qxidk"]
+font = ExtResource("2_8u3cf")
+font_size = 36
+outline_size = 8
+outline_color = Color(0.169245, 0.169245, 0.169245, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_apjwr"]
+font = ExtResource("2_8u3cf")
+font_size = 18
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_25mjt"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_1kfs4"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_mpj3t"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_f2ig3"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_2p6nd"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_2ks84"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_g7i7d"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_mmhlx"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_iwtba"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_igq8w"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_5gle7"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_m4y44"]
+font = ExtResource("2_8u3cf")
+font_size = 12
+
+[sub_resource type="LabelSettings" id="LabelSettings_hw7km"]
+font = ExtResource("2_8u3cf")
+font_size = 12
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_gcvmh"]
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_lqpwo"]
+grow_begin = 0.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_15v7m"]
+bg_color = Color(0.762404, 0.762404, 0.762403, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_28c4v"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_30d6v"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_bndev"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_81447"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_06c7j"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_1hom0"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_1l8kd"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_06n4j"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_x2q4i"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_qj8h7"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_u0i8n"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_5g320"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_ewwig"]
+font = ExtResource("2_8u3cf")
+font_size = 12
+
+[sub_resource type="LabelSettings" id="LabelSettings_3mwhm"]
+font = ExtResource("2_8u3cf")
+font_size = 12
+
+[sub_resource type="NavigationPolygon" id="NavigationPolygon_kswp7"]
+
+[sub_resource type="Animation" id="Animation_spklm"]
+resource_name = "OpenOptions"
+step = 0.1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("UI/Control/MarginContainer:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [Vector2(1e-05, 1e-05), Vector2(0.1, 0.1), Vector2(0.2, 0.2), Vector2(0.3, 0.3), Vector2(0.4, 0.4), Vector2(0.5, 0.5), Vector2(0.6, 0.6), Vector2(0.7, 0.7), Vector2(0.8, 0.8), Vector2(0.9, 0.9), Vector2(1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_dhjma"]
+resource_name = "OpenPalettes"
+step = 0.1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("UI/Control/ColorPalettes:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [Vector2(1e-05, 1e-05), Vector2(0.1, 0.1), Vector2(0.2, 0.2), Vector2(0.3, 0.3), Vector2(0.4, 0.4), Vector2(0.5, 0.5), Vector2(0.6, 0.6), Vector2(0.7, 0.7), Vector2(0.8, 0.8), Vector2(0.9, 0.9), Vector2(1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_vaefi"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("UI/Control/MarginContainer:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(1e-05, 1e-05)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_brsjj"]
+_data = {
+"OpenOptions": SubResource("Animation_spklm"),
+"OpenPalettes": SubResource("Animation_dhjma"),
+"RESET": SubResource("Animation_vaefi")
+}
+
+[node name="TitleScreen" type="Node2D"]
+texture_filter = 1
+script = ExtResource("2_x1msa")
+
+[node name="Background" type="CanvasLayer" parent="."]
+layer = -1
+
+[node name="Background" type="ColorRect" parent="Background"]
+z_index = -2
+texture_filter = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.12549, 0.0823529, 0.2, 1)
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="Control" type="Control" parent="UI"]
+texture_filter = 1
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/Control"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -154.0
+offset_top = -20.0
+offset_right = 152.0
+offset_bottom = 156.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/separation = 16
+
+[node name="StartGame" type="Button" parent="UI/Control/VBoxContainer" groups=["InteractableUI", "MainButtons"]]
+custom_minimum_size = Vector2(256, 48)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_styles/focus = SubResource("StyleBoxEmpty_t7wdc")
+theme_override_styles/disabled_mirrored = SubResource("StyleBoxEmpty_8fgp0")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_iyahn")
+theme_override_styles/hover_pressed_mirrored = SubResource("StyleBoxEmpty_mlaoo")
+theme_override_styles/hover_pressed = SubResource("StyleBoxEmpty_fscce")
+theme_override_styles/hover_mirrored = SubResource("StyleBoxEmpty_lohuj")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_r1xic")
+theme_override_styles/pressed_mirrored = SubResource("StyleBoxEmpty_rpuf2")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_bkxkg")
+theme_override_styles/normal_mirrored = SubResource("StyleBoxEmpty_3st6p")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_jh6wt")
+
+[node name="StartGameLabel" type="Label" parent="UI/Control/VBoxContainer/StartGame" groups=["MainButtonLabels"]]
+custom_minimum_size = Vector2(256, 48)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "NEW GAME"
+label_settings = SubResource("LabelSettings_ln24y")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Options" type="Button" parent="UI/Control/VBoxContainer" groups=["InteractableUI", "MainButtons"]]
+custom_minimum_size = Vector2(256, 48)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_styles/focus = SubResource("StyleBoxEmpty_t7wdc")
+theme_override_styles/disabled_mirrored = SubResource("StyleBoxEmpty_8fgp0")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_iyahn")
+theme_override_styles/hover_pressed_mirrored = SubResource("StyleBoxEmpty_mlaoo")
+theme_override_styles/hover_pressed = SubResource("StyleBoxEmpty_fscce")
+theme_override_styles/hover_mirrored = SubResource("StyleBoxEmpty_lohuj")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_r1xic")
+theme_override_styles/pressed_mirrored = SubResource("StyleBoxEmpty_rpuf2")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_bkxkg")
+theme_override_styles/normal_mirrored = SubResource("StyleBoxEmpty_3st6p")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_jh6wt")
+
+[node name="OptionsLabel" type="Label" parent="UI/Control/VBoxContainer/Options" groups=["MainButtonLabels"]]
+custom_minimum_size = Vector2(256, 48)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "OPTIONS"
+label_settings = SubResource("LabelSettings_3wh1c")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Quit" type="Button" parent="UI/Control/VBoxContainer" groups=["InteractableUI", "MainButtons"]]
+custom_minimum_size = Vector2(256, 48)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_styles/focus = SubResource("StyleBoxEmpty_t7wdc")
+theme_override_styles/disabled_mirrored = SubResource("StyleBoxEmpty_8fgp0")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_iyahn")
+theme_override_styles/hover_pressed_mirrored = SubResource("StyleBoxEmpty_mlaoo")
+theme_override_styles/hover_pressed = SubResource("StyleBoxEmpty_fscce")
+theme_override_styles/hover_mirrored = SubResource("StyleBoxEmpty_lohuj")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_r1xic")
+theme_override_styles/pressed_mirrored = SubResource("StyleBoxEmpty_rpuf2")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_bkxkg")
+theme_override_styles/normal_mirrored = SubResource("StyleBoxEmpty_3st6p")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_jh6wt")
+
+[node name="QuitLabel" type="Label" parent="UI/Control/VBoxContainer/Quit" groups=["MainButtonLabels"]]
+custom_minimum_size = Vector2(256, 48)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "QUIT"
+label_settings = SubResource("LabelSettings_qxidk")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="UI/Control"]
+custom_minimum_size = Vector2(512, 320)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -256.0
+offset_top = -160.0
+offset_right = 256.0
+offset_bottom = 160.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1e-05, 1e-05)
+pivot_offset = Vector2(256, 160)
+mouse_filter = 2
+
+[node name="Options" type="TabContainer" parent="UI/Control/MarginContainer"]
+custom_minimum_size = Vector2(512, 320)
+layout_mode = 2
+mouse_filter = 2
+theme_override_fonts/font = ExtResource("2_8u3cf")
+theme_override_font_sizes/font_size = 12
+current_tab = 1
+
+[node name="GAMEPLAY" type="PanelContainer" parent="UI/Control/MarginContainer/Options"]
+visible = false
+layout_mode = 2
+mouse_filter = 2
+metadata/_tab_index = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="UI/Control/MarginContainer/Options/GAMEPLAY"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="GRAPHICS" type="PanelContainer" parent="UI/Control/MarginContainer/Options"]
+layout_mode = 2
+mouse_filter = 2
+metadata/_tab_index = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="UI/Control/MarginContainer/Options/GRAPHICS"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/Control/MarginContainer/Options/GRAPHICS/MarginContainer"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 16
+
+[node name="HBoxContainer" type="HBoxContainer" parent="UI/Control/MarginContainer/Options/GRAPHICS/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Label" type="Label" parent="UI/Control/MarginContainer/Options/GRAPHICS/MarginContainer/VBoxContainer/HBoxContainer" groups=["MenuLabels"]]
+custom_minimum_size = Vector2(220, 0)
+layout_mode = 2
+text = "Color Palette"
+label_settings = SubResource("LabelSettings_apjwr")
+uppercase = true
+
+[node name="HBoxContainer" type="HBoxContainer" parent="UI/Control/MarginContainer/Options/GRAPHICS/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+theme_override_constants/separation = 16
+
+[node name="ColorPalette" type="TextureRect" parent="UI/Control/MarginContainer/Options/GRAPHICS/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(128, 16)
+layout_mode = 2
+size_flags_vertical = 0
+texture = ExtResource("4_8par5")
+
+[node name="ChangePaletteButon" type="Button" parent="UI/Control/MarginContainer/Options/GRAPHICS/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer" groups=["InteractableUI"]]
+custom_minimum_size = Vector2(72, 16)
+layout_mode = 2
+mouse_filter = 1
+theme_override_styles/focus = SubResource("StyleBoxEmpty_25mjt")
+theme_override_styles/disabled_mirrored = SubResource("StyleBoxEmpty_1kfs4")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_mpj3t")
+theme_override_styles/hover_pressed_mirrored = SubResource("StyleBoxEmpty_f2ig3")
+theme_override_styles/hover_pressed = SubResource("StyleBoxEmpty_2p6nd")
+theme_override_styles/hover_mirrored = SubResource("StyleBoxEmpty_2ks84")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_g7i7d")
+theme_override_styles/pressed_mirrored = SubResource("StyleBoxEmpty_mmhlx")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_iwtba")
+theme_override_styles/normal_mirrored = SubResource("StyleBoxEmpty_igq8w")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_5gle7")
+
+[node name="Label" type="Label" parent="UI/Control/MarginContainer/Options/GRAPHICS/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/ChangePaletteButon" groups=["MenuLabels"]]
+layout_mode = 0
+offset_right = 70.0
+offset_bottom = 16.0
+mouse_filter = 1
+text = "CHANGE"
+label_settings = SubResource("LabelSettings_m4y44")
+vertical_alignment = 1
+uppercase = true
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="UI/Control/MarginContainer/Options/GRAPHICS/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Label" type="Label" parent="UI/Control/MarginContainer/Options/GRAPHICS/MarginContainer/VBoxContainer/HBoxContainer2" groups=["MenuLabels"]]
+custom_minimum_size = Vector2(220, 0)
+layout_mode = 2
+text = "CRT Shader"
+label_settings = SubResource("LabelSettings_apjwr")
+uppercase = true
+
+[node name="CrtShaderCheckBox" type="CheckBox" parent="UI/Control/MarginContainer/Options/GRAPHICS/MarginContainer/VBoxContainer/HBoxContainer2" groups=["InteractableUI", "MenuCheckBoxes"]]
+layout_mode = 2
+size_flags_vertical = 0
+focus_mode = 0
+mouse_default_cursor_shape = 2
+theme_override_icons/checked = ExtResource("6_e45ct")
+theme_override_icons/unchecked = ExtResource("7_3kbh8")
+
+[node name="CRTOptions" type="VBoxContainer" parent="UI/Control/MarginContainer/Options/GRAPHICS/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="UI/Control/MarginContainer/Options/GRAPHICS/MarginContainer/VBoxContainer/CRTOptions"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="UI/Control/MarginContainer/Options/GRAPHICS/MarginContainer/VBoxContainer/CRTOptions/HBoxContainer" groups=["MenuLabels"]]
+layout_mode = 2
+text = "CRT curve"
+label_settings = SubResource("LabelSettings_hw7km")
+uppercase = true
+
+[node name="crt_curve" type="HSlider" parent="UI/Control/MarginContainer/Options/GRAPHICS/MarginContainer/VBoxContainer/CRTOptions/HBoxContainer" groups=["CRTSliders", "InteractableUI", "MenuSliders"]]
+unique_name_in_owner = true
+clip_contents = true
+custom_minimum_size = Vector2(128, 0)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_icons/grabber = ExtResource("8_d2vhc")
+theme_override_icons/grabber_highlight = ExtResource("8_d2vhc")
+theme_override_styles/slider = SubResource("StyleBoxLine_gcvmh")
+max_value = 1.0
+step = 0.005
+allow_greater = true
+allow_lesser = true
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="UI/Control/MarginContainer/Options/GRAPHICS/MarginContainer/VBoxContainer/CRTOptions"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="UI/Control/MarginContainer/Options/GRAPHICS/MarginContainer/VBoxContainer/CRTOptions/HBoxContainer2" groups=["MenuLabels"]]
+layout_mode = 2
+text = "CRT scanline color"
+label_settings = SubResource("LabelSettings_hw7km")
+uppercase = true
+
+[node name="crt_scan_line_color" type="HSlider" parent="UI/Control/MarginContainer/Options/GRAPHICS/MarginContainer/VBoxContainer/CRTOptions/HBoxContainer2" groups=["CRTSliders", "InteractableUI", "MenuSliders"]]
+unique_name_in_owner = true
+clip_contents = true
+custom_minimum_size = Vector2(128, 0)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_icons/grabber = ExtResource("8_d2vhc")
+theme_override_icons/grabber_highlight = ExtResource("8_d2vhc")
+theme_override_styles/slider = SubResource("StyleBoxLine_lqpwo")
+theme_override_styles/grabber_area = SubResource("StyleBoxFlat_15v7m")
+theme_override_styles/grabber_area_highlight = SubResource("StyleBoxFlat_28c4v")
+max_value = 1.0
+step = 0.05
+allow_greater = true
+allow_lesser = true
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="UI/Control/MarginContainer/Options/GRAPHICS/MarginContainer/VBoxContainer/CRTOptions"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="UI/Control/MarginContainer/Options/GRAPHICS/MarginContainer/VBoxContainer/CRTOptions/HBoxContainer3" groups=["MenuLabels"]]
+layout_mode = 2
+text = "CRT aperture grille"
+label_settings = SubResource("LabelSettings_hw7km")
+uppercase = true
+
+[node name="crt_aperture_grille_rate" type="HSlider" parent="UI/Control/MarginContainer/Options/GRAPHICS/MarginContainer/VBoxContainer/CRTOptions/HBoxContainer3" groups=["CRTSliders", "InteractableUI", "MenuSliders"]]
+unique_name_in_owner = true
+clip_contents = true
+custom_minimum_size = Vector2(128, 0)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_icons/grabber = ExtResource("8_d2vhc")
+theme_override_icons/grabber_highlight = ExtResource("8_d2vhc")
+theme_override_styles/slider = SubResource("StyleBoxLine_lqpwo")
+theme_override_styles/grabber_area = SubResource("StyleBoxFlat_15v7m")
+theme_override_styles/grabber_area_highlight = SubResource("StyleBoxFlat_28c4v")
+max_value = 1.0
+step = 0.05
+allow_greater = true
+allow_lesser = true
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="UI/Control/MarginContainer/Options/GRAPHICS/MarginContainer/VBoxContainer/CRTOptions"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="UI/Control/MarginContainer/Options/GRAPHICS/MarginContainer/VBoxContainer/CRTOptions/HBoxContainer4" groups=["MenuLabels"]]
+layout_mode = 2
+text = "CRT blur"
+label_settings = SubResource("LabelSettings_hw7km")
+uppercase = true
+
+[node name="crt_blur" type="HSlider" parent="UI/Control/MarginContainer/Options/GRAPHICS/MarginContainer/VBoxContainer/CRTOptions/HBoxContainer4" groups=["CRTSliders", "InteractableUI", "MenuSliders"]]
+unique_name_in_owner = true
+clip_contents = true
+custom_minimum_size = Vector2(128, 0)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_icons/grabber = ExtResource("8_d2vhc")
+theme_override_icons/grabber_highlight = ExtResource("8_d2vhc")
+theme_override_styles/slider = SubResource("StyleBoxLine_lqpwo")
+theme_override_styles/grabber_area = SubResource("StyleBoxFlat_15v7m")
+theme_override_styles/grabber_area_highlight = SubResource("StyleBoxFlat_28c4v")
+max_value = 1.0
+step = 0.05
+allow_greater = true
+allow_lesser = true
+
+[node name="HBoxContainer5" type="HBoxContainer" parent="UI/Control/MarginContainer/Options/GRAPHICS/MarginContainer/VBoxContainer/CRTOptions"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="UI/Control/MarginContainer/Options/GRAPHICS/MarginContainer/VBoxContainer/CRTOptions/HBoxContainer5" groups=["MenuLabels"]]
+layout_mode = 2
+text = "CRT white noise"
+label_settings = SubResource("LabelSettings_hw7km")
+uppercase = true
+
+[node name="crt_white_noise_rate" type="HSlider" parent="UI/Control/MarginContainer/Options/GRAPHICS/MarginContainer/VBoxContainer/CRTOptions/HBoxContainer5" groups=["CRTSliders", "InteractableUI", "MenuSliders"]]
+unique_name_in_owner = true
+clip_contents = true
+custom_minimum_size = Vector2(128, 0)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_icons/grabber = ExtResource("8_d2vhc")
+theme_override_icons/grabber_highlight = ExtResource("8_d2vhc")
+theme_override_styles/slider = SubResource("StyleBoxLine_lqpwo")
+theme_override_styles/grabber_area = SubResource("StyleBoxFlat_15v7m")
+theme_override_styles/grabber_area_highlight = SubResource("StyleBoxFlat_28c4v")
+max_value = 1.0
+step = 0.05
+allow_greater = true
+allow_lesser = true
+
+[node name="HBoxContainer6" type="HBoxContainer" parent="UI/Control/MarginContainer/Options/GRAPHICS/MarginContainer/VBoxContainer/CRTOptions"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="UI/Control/MarginContainer/Options/GRAPHICS/MarginContainer/VBoxContainer/CRTOptions/HBoxContainer6" groups=["MenuLabels"]]
+layout_mode = 2
+text = "CRT brightness"
+label_settings = SubResource("LabelSettings_hw7km")
+uppercase = true
+
+[node name="crt_brightness" type="HSlider" parent="UI/Control/MarginContainer/Options/GRAPHICS/MarginContainer/VBoxContainer/CRTOptions/HBoxContainer6" groups=["CRTSliders", "InteractableUI", "MenuSliders"]]
+unique_name_in_owner = true
+clip_contents = true
+custom_minimum_size = Vector2(128, 0)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_icons/grabber = ExtResource("8_d2vhc")
+theme_override_icons/grabber_highlight = ExtResource("8_d2vhc")
+theme_override_styles/slider = SubResource("StyleBoxLine_lqpwo")
+theme_override_styles/grabber_area = SubResource("StyleBoxFlat_15v7m")
+theme_override_styles/grabber_area_highlight = SubResource("StyleBoxFlat_28c4v")
+min_value = 1.0
+max_value = 2.0
+step = 0.05
+value = 1.7
+allow_greater = true
+allow_lesser = true
+
+[node name="SOUND" type="PanelContainer" parent="UI/Control/MarginContainer/Options"]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="UI/Control/MarginContainer/Options/SOUND"]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="CloseOptions" type="TextureButton" parent="UI/Control/MarginContainer" groups=["InteractableUI"]]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 0
+focus_mode = 0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("3_u2ysa")
+texture_pressed = ExtResource("3_u2ysa")
+texture_hover = ExtResource("3_u2ysa")
+
+[node name="ColorPalettes" type="PanelContainer" parent="UI/Control"]
+unique_name_in_owner = true
+texture_filter = 1
+custom_minimum_size = Vector2(256, 200)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -128.0
+offset_top = -120.0
+offset_right = 128.0
+offset_bottom = 128.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1e-05, 1e-05)
+pivot_offset = Vector2(128, 124)
+size_flags_horizontal = 4
+size_flags_vertical = 4
+mouse_filter = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="UI/Control/ColorPalettes"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/Control/ColorPalettes/MarginContainer"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 16
+
+[node name="WrappingScrollContainer" type="ScrollContainer" parent="UI/Control/ColorPalettes/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 176)
+layout_mode = 2
+horizontal_scroll_mode = 0
+script = ExtResource("8_w7r0r")
+
+[node name="PaletteButtonsContainer" type="VBoxContainer" parent="UI/Control/ColorPalettes/MarginContainer/VBoxContainer/WrappingScrollContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+theme_override_constants/separation = 16
+
+[node name="HBoxContainer" type="HBoxContainer" parent="UI/Control/ColorPalettes/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 2
+size_flags_vertical = 3
+alignment = 1
+
+[node name="ApplyPalette" type="Button" parent="UI/Control/ColorPalettes/MarginContainer/VBoxContainer/HBoxContainer" groups=["InteractableUI"]]
+custom_minimum_size = Vector2(92, 24)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 8
+mouse_filter = 1
+theme_override_styles/focus = SubResource("StyleBoxEmpty_30d6v")
+theme_override_styles/disabled_mirrored = SubResource("StyleBoxEmpty_bndev")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_81447")
+theme_override_styles/hover_pressed_mirrored = SubResource("StyleBoxEmpty_06c7j")
+theme_override_styles/hover_pressed = SubResource("StyleBoxEmpty_1hom0")
+theme_override_styles/hover_mirrored = SubResource("StyleBoxEmpty_1l8kd")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_06n4j")
+theme_override_styles/pressed_mirrored = SubResource("StyleBoxEmpty_x2q4i")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_qj8h7")
+theme_override_styles/normal_mirrored = SubResource("StyleBoxEmpty_u0i8n")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_5g320")
+
+[node name="Label" type="Label" parent="UI/Control/ColorPalettes/MarginContainer/VBoxContainer/HBoxContainer/ApplyPalette" groups=["MenuLabels"]]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+text = "APPLY"
+label_settings = SubResource("LabelSettings_ewwig")
+horizontal_alignment = 1
+vertical_alignment = 1
+uppercase = true
+
+[node name="Cancel" type="Button" parent="UI/Control/ColorPalettes/MarginContainer/VBoxContainer/HBoxContainer" groups=["InteractableUI"]]
+custom_minimum_size = Vector2(92, 24)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 8
+mouse_filter = 1
+theme_override_styles/focus = SubResource("StyleBoxEmpty_30d6v")
+theme_override_styles/disabled_mirrored = SubResource("StyleBoxEmpty_bndev")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_81447")
+theme_override_styles/hover_pressed_mirrored = SubResource("StyleBoxEmpty_06c7j")
+theme_override_styles/hover_pressed = SubResource("StyleBoxEmpty_1hom0")
+theme_override_styles/hover_mirrored = SubResource("StyleBoxEmpty_1l8kd")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_06n4j")
+theme_override_styles/pressed_mirrored = SubResource("StyleBoxEmpty_x2q4i")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_qj8h7")
+theme_override_styles/normal_mirrored = SubResource("StyleBoxEmpty_u0i8n")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_5g320")
+
+[node name="Label" type="Label" parent="UI/Control/ColorPalettes/MarginContainer/VBoxContainer/HBoxContainer/Cancel" groups=["MenuLabels"]]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+text = "CANCEL"
+label_settings = SubResource("LabelSettings_3mwhm")
+horizontal_alignment = 1
+vertical_alignment = 1
+uppercase = true
+
+[node name="Cursor" type="Sprite2D" parent="UI"]
+texture_filter = 1
+texture = ExtResource("10_jdfys")
+offset = Vector2(5, 21)
+
+[node name="CursorInner" type="Sprite2D" parent="UI/Cursor"]
+texture = ExtResource("11_py0tw")
+offset = Vector2(5, 21)
+
+[node name="GameDemo" type="Node2D" parent="."]
+script = ExtResource("3_y3qm4")
+
+[node name="NavigationRegion2D" type="NavigationRegion2D" parent="GameDemo"]
+navigation_polygon = SubResource("NavigationPolygon_kswp7")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_brsjj")
+}
+speed_scale = 4.0
+
+[connection signal="pressed" from="UI/Control/VBoxContainer/StartGame" to="." method="_on_start_game_pressed"]
+[connection signal="pressed" from="UI/Control/VBoxContainer/Options" to="." method="_on_options_pressed"]
+[connection signal="pressed" from="UI/Control/MarginContainer/Options/GRAPHICS/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/ChangePaletteButon" to="." method="_on_change_palette_buton_pressed"]
+[connection signal="toggled" from="UI/Control/MarginContainer/Options/GRAPHICS/MarginContainer/VBoxContainer/HBoxContainer2/CrtShaderCheckBox" to="." method="_on_crt_shader_check_box_toggled"]
+[connection signal="pressed" from="UI/Control/MarginContainer/CloseOptions" to="." method="_on_close_options_pressed"]
+[connection signal="gui_input" from="UI/Control/ColorPalettes/MarginContainer/VBoxContainer/WrappingScrollContainer" to="UI/Control/ColorPalettes/MarginContainer/VBoxContainer/WrappingScrollContainer" method="_on_gui_input"]
+[connection signal="pressed" from="UI/Control/ColorPalettes/MarginContainer/VBoxContainer/HBoxContainer/ApplyPalette" to="." method="_on_apply_palette_pressed"]
+[connection signal="pressed" from="UI/Control/ColorPalettes/MarginContainer/VBoxContainer/HBoxContainer/Cancel" to="." method="_on_cancel_pressed"]

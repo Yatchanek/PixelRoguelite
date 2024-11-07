@@ -25,13 +25,14 @@ var fire_interval : float = 1.0
 @export var power_per_level : float = 1
 @export var max_power : int = 1
 
-
 var level : int
 var dead : bool = false
 
+var can_shoot : bool = false
+
 var primary_color : Color
 var secondary_color : Color
-var tertiary_color : Color
+var tertiary_color : Color = Color(0, 0, 0, 0)
 
 signal exploded(explosion : Explosion, pos : Vector2)
 signal destroyed(enemy : Enemy)
@@ -66,6 +67,8 @@ func knockback(_dir : Vector2):
 func explode(dir : Vector2):
 	var explosion : DirectionalExplosion = directional_explosion_scene.instantiate()
 	var colors : Array[Color] = [primary_color, secondary_color]
+	if tertiary_color != Color(0, 0, 0, 0):
+		colors = [primary_color, secondary_color, tertiary_color]
 		
 	explosion.initialize(dir, colors)
 	exploded.emit(explosion, global_position)

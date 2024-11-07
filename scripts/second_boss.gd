@@ -12,7 +12,6 @@ const missile_scene : PackedScene = preload("res://scenes/missile.tscn")
 const grenade_scene : PackedScene = preload("res://scenes/rectangle_grenade.tscn")
 
 var elapsed_time : float = 0.0
-var can_shoot : bool = true
 
 var tick : int = 0
 
@@ -105,7 +104,7 @@ func _on_grenade_ready(grenade : RectangleGrenade):
 	var pos : Vector2 = grenade.global_position
 	remove_child(grenade)
 	bullet_fired.emit(grenade, pos)
-	grenade.velocity = pos.direction_to(Globals.player.global_position) * randi_range(192, 320)
+	grenade.velocity = pos.direction_to(Globals.player.global_position) * randi_range(192, 512)
 	grenade.set_physics_process(true)
 
 func create_body():

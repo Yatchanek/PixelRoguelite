@@ -1,10 +1,17 @@
 extends CharacterBody2D
 class_name Player
 
-@onready var turret: Sprite2D = $Turret
+@onready var lower_body: Sprite2D = $LowerBody
+@onready var upper_body: Sprite2D = $LowerBody/UpperBody
+@onready var legs: AnimatedSprite2D = $Legs
+
+@onready var turret_pivot: Marker2D = $TurretPivot
+
+@onready var turret: Sprite2D = $TurretPivot/Turret
 @onready var shoot_timer: Timer = $ShootTimer
-@onready var muzzle: Marker2D = $Turret/Muzzle
-@onready var body: Sprite2D = $Body
+@onready var muzzle: Marker2D = $TurretPivot/Turret/Muzzle
+@onready var turret_collision: CollisionShape2D = $TurretCollision
+
 
 const bullet_scene : PackedScene = preload("res://scenes/bullet.tscn")
 
@@ -17,16 +24,26 @@ var bullet_speed : int = 512
 var autofire : bool = false
 
 var experience : int = 0
-var level : int = 1
+var level : int = 0
 var exp_to_next_level : int = 300
 
 var can_shoot : bool = true
 
 var dead : bool = false
 
-var rotation_speed : float = 0
+var color_flip_cycle : int = 4
+
+var rotation_speed : int = 0
 
 var elapsed_time : float = 0
+
+var tick : int = 1
+
+var rotation_threshold : int = 11
+
+var primary_color : Color
+var secondary_color : Color
+var tertiary_color : Color
 
 var damaging_area : HurtBox
 
@@ -54,11 +71,14 @@ func _ready() -> void:
 	player_ready.emit(self)
 
 func _process(delta: float) -> void:
-	var dir_to_mouse : Vector2 = turret.global_position.direction_to(get_global_mouse_position())
-	var target_transform : Transform2D = turret.global_transform.looking_at(turret.global_position + dir_to_mouse)
-		
-	turret.global_transform = turret.global_transform.interpolate_with(target_transform, 0.15)
+	var dir_to_mouse : Vector2 = turret_pivot.global_position.direction_to(get_global_mouse_position())
+	var target_transform : Transform2D = turret_pivot.global_transform.looking_at(turret_pivot.global_position + dir_to_mouse)
 	
+	#turret_pivot.look_at(get_global_mouse_position())
+		
+	turret_pivot.global_transform = turret_pivot.global_transform.interpolate_with(target_transform, 0.75)
+	turret_collision.position = to_local(turret.global_position)
+
 	if damaging_area:
 		elapsed_time += delta
 		if elapsed_time > 0.5:
@@ -73,17 +93,16 @@ func get_input() -> Vector2:
 func _physics_process(delta: float) -> void:
 	if dead:
 		return
+	
 	var move_dir : Vector2 = get_input()
-	if move_dir.x > 0 or move_dir.y > 0:
-		rotation_speed = lerp(rotation_speed, TAU, 0.25)
- 
-	elif move_dir.x < 0 or move_dir.y < 0:
-		rotation_speed = lerp(rotation_speed, -TAU, 0.25)
+	if move_dir.x != 0.0 or move_dir.y != 0.0:
+		legs.play("walk")
+		
+	else:
+		legs.play("idle")
+
 	
-	elif move_dir.is_equal_approx(Vector2.ZERO):
-		rotation_speed = lerp(rotation_speed, 0.0, 0.5)
-	
-	body.rotation += rotation_speed * delta			
+	#body.rotation += rotation_speed * delta			
 	velocity = lerp(velocity, move_dir * speed, 0.2)
 
 	
@@ -98,8 +117,14 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 
 func apply_color_palette():
-	body.self_modulate = Globals.color_palettes[Globals.current_palette][4]
+	primary_color = Globals.color_palettes[Globals.current_palette][3]
+	secondary_color = Globals.color_palettes[Globals.current_palette][4]
+	tertiary_color = Globals.color_palettes[Globals.current_palette][1]
+	lower_body.self_modulate = primary_color
+	upper_body.self_modulate = secondary_color
+	legs.self_modulate = tertiary_color
 	turret.self_modulate = Globals.color_palettes[Globals.current_palette][2]
+	
 
 func take_damage(amount : int, _dir : Vector2):
 	if dead: 
@@ -122,9 +147,11 @@ func take_damage(amount : int, _dir : Vector2):
 	else:
 		SoundManager.play_effect(SoundManager.Effects.HIT)
 		var tw : Tween = create_tween()
-		tw.tween_property(body, "modulate", Color.RED, 0.1)
-		tw.tween_property(body, "modulate", Color.WHITE, 0.1)
-	
+		tw.tween_property(lower_body, "self_modulate", Color.WHITE, 0.1)
+		tw.parallel().tween_property(upper_body, "self_modulate", Color.WHITE, 0.1)
+		tw.tween_interval(0.1)
+		tw.tween_property(lower_body, "self_modulate", Globals.color_palettes[Globals.current_palette][3], 0.1)
+		tw.parallel().tween_property(upper_body, "self_modulate", Globals.color_palettes[Globals.current_palette][4], 0.1)
 	
 
 func gain_exp(value):

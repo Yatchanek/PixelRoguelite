@@ -32,20 +32,26 @@ func _ready() -> void:
 	reset()
 	
 func create_color_palettes():
+	var files : PackedStringArray = DirAccess.get_files_at("res://graphics/color_palettes")
+	for file_name : String in files:
+		if file_name.get_extension() == "import":
+			file_name = file_name.replace(".import", "")
+			palette_images.append(ResourceLoader.load("res://graphics/color_palettes/" + file_name))
+		
 	for image : Texture2D in palette_images:
 		var img : Image = image.get_image()
 		var palette : PackedColorArray = []
 		for i in img.get_width():
 			palette.append(img.get_pixel(i, 0))
 		color_palettes.append(palette)
-	adjust_explosion_colors()	
-
-func adjust_explosion_colors():
-	var gradient : Gradient = Gradient.new()
-	for i in 8:
-		gradient.add_point(i * 0.143, color_palettes[current_palette][i])
+	#adjust_explosion_colors()	
+#
+#func adjust_explosion_colors():
+	#var gradient : Gradient = Gradient.new()
+	#for i in 8:
+		#gradient.add_point(i * 0.143, color_palettes[current_palette][i])
 		
-	missile_material.color_initial_ramp.gradient = gradient
+	#missile_material.color_initial_ramp.gradient = gradient
 
 func get_coords_in_distance_range(min_dist : int, max_dist : int) -> Vector2i:
 	return Vector2i(

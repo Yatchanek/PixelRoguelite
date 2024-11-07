@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://dcryx3x5sypq"]
+[gd_scene load_steps=19 format=3 uid="uid://dcryx3x5sypq"]
 
 [ext_resource type="Script" path="res://scripts/room.gd" id="1_sifb4"]
 [ext_resource type="PackedScene" uid="uid://bn3jrk0b1a0yn" path="res://scenes/door.tscn" id="2_2hh1r"]
@@ -11,11 +11,12 @@
 [ext_resource type="PackedScene" uid="uid://cfft4cjqcysuh" path="res://scenes/boss.tscn" id="9_27qhj"]
 [ext_resource type="PackedScene" uid="uid://4273yrwy70rg" path="res://scenes/boss_2.tscn" id="10_sytpb"]
 [ext_resource type="PackedScene" uid="uid://dad8n7b2ra435" path="res://scenes/boss_3.tscn" id="11_gdb43"]
-[ext_resource type="PackedScene" uid="uid://cnt47l2vm2pq3" path="res://scenes/big_enemy.tscn" id="12_v7fnh"]
+[ext_resource type="PackedScene" uid="uid://cnt47l2vm2pq3" path="res://scenes/laser_enemy.tscn" id="12_v7fnh"]
 [ext_resource type="PackedScene" uid="uid://cxudcded5ykg4" path="res://scenes/explosion.tscn" id="13_x3ili"]
 [ext_resource type="PackedScene" uid="uid://vcvrgrshhnv6" path="res://scenes/obstacle.tscn" id="14_x5e77"]
 [ext_resource type="PackedScene" uid="uid://d2epvby5lw7gl" path="res://scenes/indicator.tscn" id="15_3a2ij"]
 [ext_resource type="PackedScene" uid="uid://b4n7mvndh8rj3" path="res://scenes/gate_key.tscn" id="16_nd756"]
+[ext_resource type="Texture2D" uid="uid://d4gy38iiedsnl" path="res://graphics/mine_top.png" id="17_3vetu"]
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_vic26"]
 agent_radius = 12.0
@@ -30,14 +31,22 @@ kamikaze_enemy_scene = ExtResource("5_biw3f")
 turret_enemy_scene = ExtResource("6_l6aa6")
 missile_enemy_scene = ExtResource("7_po7v8")
 rapid_fire_enemy_scene = ExtResource("8_3hwmj")
+laser_enemy_scene = ExtResource("12_v7fnh")
 boss_scene = ExtResource("9_27qhj")
 boss_2_scene = ExtResource("10_sytpb")
 boss_3_scene = ExtResource("11_gdb43")
-big_enemy_scene = ExtResource("12_v7fnh")
 explosion_scene = ExtResource("13_x3ili")
 obstacle_scene = ExtResource("14_x5e77")
 indicator_scene = ExtResource("15_3a2ij")
 gate_key_scene = ExtResource("16_nd756")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+visible = false
+modulate = Color(0.103744, 0.103744, 0.103744, 1)
+texture_filter = 1
+position = Vector2(-2, 3)
+scale = Vector2(500, 500)
+texture = ExtResource("17_3vetu")
 
 [node name="Walls" type="Node2D" parent="."]
 z_index = -1

@@ -32,6 +32,7 @@ func _ready() -> void:
 
 	current_state = State.MOVE
 
+
 func _process(_delta: float) -> void:
 	if current_state == State.MOVE:
 		tick += 1

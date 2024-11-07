@@ -13,7 +13,7 @@ var upgrade_names : Dictionary = {
 	Upgrades.SPEED : "Speed",
 	Upgrades.FIRERATE : "Firerate",
 	Upgrades.HITPOINTS : "Hitpoints",
-	Upgrades.BULLET_SPEED : "Bullet Speed",
+	Upgrades.BULLET_SPEED : "Bullet\nSpeed",
 	Upgrades.BULLET_DAMAGE : "Power",
 }
 

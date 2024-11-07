@@ -10,7 +10,6 @@ class_name MissileEnemy
 const missile_scene : PackedScene = preload("res://scenes/missile.tscn")
 
 var elapsed_time : float = 0.0
-var can_shoot : bool = true
 
 signal missile_fired(missile : Node2D, pos : Vector2)
 

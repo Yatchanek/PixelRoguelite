@@ -1,0 +1,25 @@
+[gd_scene load_steps=3 format=3 uid="uid://bw6llibghfost"]
+
+[ext_resource type="Script" path="res://scripts/bordered_button.gd" id="1_wq8ib"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_oi23r"]
+
+[node name="BorderedButton" type="PanelContainer"]
+texture_filter = 1
+custom_minimum_size = Vector2(196, 28)
+offset_right = 196.0
+offset_bottom = 28.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_oi23r")
+script = ExtResource("1_wq8ib")
+
+[node name="TextureButton" type="TextureButton" parent="."]
+custom_minimum_size = Vector2(192, 24)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+stretch_mode = 0
+
+[connection signal="pressed" from="TextureButton" to="." method="_on_texture_button_pressed"]
