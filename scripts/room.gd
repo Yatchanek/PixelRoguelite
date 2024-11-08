@@ -16,14 +16,15 @@ class_name Room
 @export var missile_enemy_scene : PackedScene
 @export var rapid_fire_enemy_scene : PackedScene
 @export var laser_enemy_scene : PackedScene
-@export var boss_scene : PackedScene
-@export var boss_2_scene : PackedScene
-@export var boss_3_scene : PackedScene
+
+@export var bosses : Array[PackedScene] = []
 
 @export var explosion_scene : PackedScene
 @export var obstacle_scene : PackedScene
 @export var indicator_scene : PackedScene
 @export var gate_key_scene : PackedScene
+
+const boss_scene = preload("res://scenes/boss_4.tscn")
 
 var corners : Array[Vector2] = [
 		Vector2(0, 0),
@@ -97,8 +98,7 @@ func _ready() -> void:
 	
 	var depth : int = Utils.get_depth(room_data.coords)
 	
-	level = floor(depth / 3.0)
-	prints(depth, level)
+	level = floor(depth / (6 - Settings.difficulty))
 	configure_room()
 
 	if !room_data.coords == Vector2i.ZERO and !Globals.gate_key_coords.has(room_data.coords):
@@ -238,7 +238,7 @@ func spawn_boss():
 	await get_tree().create_timer(enemy_spawn_interval).timeout
 	
 	if is_inside_tree():
-		var boss : Boss = boss_scene.instantiate()
+		var boss : Boss = boss_scene.instantiate()#bosses[Globals.gate_key_coords[room_data.coords]].instantiate()
 		
 		var accepted : bool = false
 		var candidate_coords : Vector2i

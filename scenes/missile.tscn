@@ -12,7 +12,7 @@ size = Vector2(3.5, 8)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_rgrxb"]
 resource_local_to_scene = true
-size = Vector2(14, 6)
+size = Vector2(10, 6)
 
 [node name="Missile" type="Node2D"]
 texture_filter = 1
@@ -37,7 +37,7 @@ collision_mask = 7
 target = NodePath("..")
 
 [node name="CollisionShape2D" parent="Hitbox" index="0"]
-position = Vector2(-1, 0)
+position = Vector2(1, 0)
 shape = SubResource("RectangleShape2D_rgrxb")
 
 [node name="Engine" type="GPUParticles2D" parent="."]

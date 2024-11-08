@@ -29,7 +29,7 @@ enum State {
 func _ready() -> void:
 	setup()
 	laser.power = power
-	
+	laser.shoot_duration = 0.5
 	apply_color_palette()
 	set_physics_process(false)
 	set_process(false)

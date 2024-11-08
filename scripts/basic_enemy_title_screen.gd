@@ -56,12 +56,14 @@ func _ready() -> void:
 	current_state = State.CRUISE
 
 func level_up():
+	await get_tree().create_timer(0.1).timeout
 	level += 1
 	steering_force += 0.05
 	secondary_color = Globals.color_palettes[Globals.current_palette][5]
 	chasis.self_modulate = secondary_color
 	setup()
 	health_bar.hide()
+	current_state = State.CRUISE
 
 func set_target():
 	if enemies.size() < 2:
@@ -82,6 +84,8 @@ func set_target():
 		target = enemies.pick_random()
 		while target == self:
 			target = enemies.pick_random()
+			
+	current_state = State.BATTLE
 
 func _process(delta: float) -> void:
 	if current_state == State.BATTLE:
@@ -155,7 +159,7 @@ func shoot():
 	bullet_fired.emit(bullet, global_position + global_transform.x * 12)
 	can_shoot = false
 	shoot_timer.start(fire_interval)
-	SoundManager.play_effect(SoundManager.Effects.ENEMY_SHOOT)
+	#SoundManager.play_effect(SoundManager.Effects.ENEMY_SHOOT)
 
 
 func check_linesight() -> bool:
@@ -168,9 +172,27 @@ func check_linesight() -> bool:
 		
 	return false
 
+func take_damage(amount : int, dir : Vector2):
+	if dead:
+		return
+	hp -= amount
+	if hp <= 0:
+		dead = true
+		explode(dir)
+		destroyed.emit(self)
+		queue_free()
+	else:
+		health_bar.show()
+		health_bar.value = hp
+		health_bar.tint_progress = Globals.color_palettes[Globals.current_palette][3]
+		knockback(dir)	
+
 func apply_color_palette():
 	primary_color = Globals.color_palettes[Globals.current_palette][2]
-	secondary_color = Globals.color_palettes[Globals.current_palette][3]
+	if level == 0:
+		secondary_color = Globals.color_palettes[Globals.current_palette][3]
+	else:
+		secondary_color = Globals.color_palettes[Globals.current_palette][5]
 	body.self_modulate = primary_color
 	chasis.self_modulate = secondary_color
 

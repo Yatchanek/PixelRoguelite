@@ -10,3 +10,4 @@ func explode(dir : Vector2):
 			
 		explosion.initialize(dir, colors, i * 0.15)
 		exploded.emit(explosion, global_position + Vector2.RIGHT.rotated(randf_range(0, TAU)) * randf_range(-16, 16))
+	SoundManager.play_effect(SoundManager.Effects.EXPLOSION)

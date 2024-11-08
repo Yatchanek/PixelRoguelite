@@ -235,7 +235,6 @@ unique_name_in_owner = true
 layout_mode = 2
 
 [node name="TextureRect" type="TextureRect" parent="Hud/Control/TopBar/MarginContainer/VBoxContainer/LowerBar/HBoxContainer2/MarginContainer/KeysContainer"]
-self_modulate = Color(0.3, 0.3, 0.3, 1)
 custom_minimum_size = Vector2(10, 10)
 layout_mode = 2
 size_flags_horizontal = 6
@@ -244,7 +243,6 @@ texture = SubResource("AtlasTexture_05dnw")
 expand_mode = 2
 
 [node name="TextureRect2" type="TextureRect" parent="Hud/Control/TopBar/MarginContainer/VBoxContainer/LowerBar/HBoxContainer2/MarginContainer/KeysContainer"]
-self_modulate = Color(0.3, 0.3, 0.3, 1)
 custom_minimum_size = Vector2(10, 10)
 layout_mode = 2
 size_flags_horizontal = 6
@@ -253,7 +251,6 @@ texture = SubResource("AtlasTexture_si5ju")
 expand_mode = 2
 
 [node name="TextureRect3" type="TextureRect" parent="Hud/Control/TopBar/MarginContainer/VBoxContainer/LowerBar/HBoxContainer2/MarginContainer/KeysContainer"]
-self_modulate = Color(0.3, 0.3, 0.3, 1)
 custom_minimum_size = Vector2(10, 10)
 layout_mode = 2
 size_flags_horizontal = 6
@@ -262,7 +259,6 @@ texture = SubResource("AtlasTexture_r30ip")
 expand_mode = 2
 
 [node name="TextureRect4" type="TextureRect" parent="Hud/Control/TopBar/MarginContainer/VBoxContainer/LowerBar/HBoxContainer2/MarginContainer/KeysContainer"]
-self_modulate = Color(0.3, 0.3, 0.3, 1)
 custom_minimum_size = Vector2(10, 10)
 layout_mode = 2
 size_flags_horizontal = 6
@@ -271,7 +267,6 @@ texture = SubResource("AtlasTexture_25n30")
 expand_mode = 2
 
 [node name="TextureRect5" type="TextureRect" parent="Hud/Control/TopBar/MarginContainer/VBoxContainer/LowerBar/HBoxContainer2/MarginContainer/KeysContainer"]
-self_modulate = Color(0.3, 0.3, 0.3, 1)
 custom_minimum_size = Vector2(10, 10)
 layout_mode = 2
 size_flags_horizontal = 6
@@ -280,7 +275,6 @@ texture = SubResource("AtlasTexture_japut")
 expand_mode = 2
 
 [node name="TextureRect6" type="TextureRect" parent="Hud/Control/TopBar/MarginContainer/VBoxContainer/LowerBar/HBoxContainer2/MarginContainer/KeysContainer"]
-self_modulate = Color(0.3, 0.3, 0.3, 1)
 custom_minimum_size = Vector2(10, 10)
 layout_mode = 2
 size_flags_horizontal = 6
@@ -289,7 +283,6 @@ texture = SubResource("AtlasTexture_grh5u")
 expand_mode = 2
 
 [node name="TextureRect7" type="TextureRect" parent="Hud/Control/TopBar/MarginContainer/VBoxContainer/LowerBar/HBoxContainer2/MarginContainer/KeysContainer"]
-self_modulate = Color(0.3, 0.3, 0.3, 1)
 custom_minimum_size = Vector2(10, 10)
 layout_mode = 2
 size_flags_horizontal = 6
@@ -298,7 +291,6 @@ texture = SubResource("AtlasTexture_adjja")
 expand_mode = 2
 
 [node name="TextureRect8" type="TextureRect" parent="Hud/Control/TopBar/MarginContainer/VBoxContainer/LowerBar/HBoxContainer2/MarginContainer/KeysContainer"]
-self_modulate = Color(0.3, 0.3, 0.3, 1)
 custom_minimum_size = Vector2(10, 10)
 layout_mode = 2
 size_flags_horizontal = 6
@@ -307,7 +299,6 @@ texture = SubResource("AtlasTexture_5tu2i")
 expand_mode = 2
 
 [node name="TextureRect9" type="TextureRect" parent="Hud/Control/TopBar/MarginContainer/VBoxContainer/LowerBar/HBoxContainer2/MarginContainer/KeysContainer"]
-self_modulate = Color(0.3, 0.3, 0.3, 1)
 custom_minimum_size = Vector2(10, 10)
 layout_mode = 2
 size_flags_horizontal = 6

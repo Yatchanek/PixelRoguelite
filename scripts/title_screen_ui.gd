@@ -21,6 +21,11 @@ var bordered_button_scene = preload("res://scenes/bordered_button.tscn")
 @onready var crt_noise_shader: HSlider = %crt_white_noise_rate
 @onready var crt_brightnes_slider: HSlider = %crt_brightness
 
+@onready var maze_size_slider: HSlider = %maze_size
+@onready var difficulty_slider: HSlider = %difficulty
+@onready var master_volume_slider: HSlider = %master_volume
+@onready var effects_colume_slider: HSlider = %effects_volume
+@onready var music_volume_slider: HSlider = %music_volume
 
 var candidate_color_palette : int
 
@@ -45,6 +50,16 @@ func _ready() -> void:
 	for slider : HSlider in get_tree().get_nodes_in_group("CRTSliders"):
 		slider.value_changed.connect(_on_crt_slider_value_changed.bind(slider.name))
 	
+	for slider : HSlider in get_tree().get_nodes_in_group("SoundSliders"):
+		slider.value_changed.connect(_on_sound_slider_value_changed.bind(slider.name))
+	
+	crt_options.visible = CrtOverlay.visible
+	
+
+	AudioServer.set_bus_volume_db(0, Settings.master_volume)
+	AudioServer.set_bus_volume_db(1, Settings.effects_volume)
+	AudioServer.set_bus_volume_db(2, Settings.music_volume)
+	
 	set_sliders()
 	apply_color_palette()
 	set_arrow_cursor()
@@ -58,6 +73,11 @@ func set_sliders():
 	crt_noise_shader.value = crt_material.get_shader_parameter("crt_white_noise_rate")
 	crt_brightnes_slider.value = crt_material.get_shader_parameter("crt_brightness")
 	
+	for slider : HSlider in get_tree().get_nodes_in_group("SoundSliders"):
+		slider.value = db_to_linear(Settings.get(slider.name))
+	
+	maze_size_slider.value = Settings.zone_size
+	difficulty_slider.value = Settings.difficulty
 
 func apply_color_palette():
 	cursor.self_modulate = Globals.color_palettes[Globals.current_palette][6]
@@ -73,7 +93,6 @@ func apply_color_palette():
 
 	
 	for checkbox : CheckBox in get_tree().get_nodes_in_group("MenuCheckBoxes"):
-		print(checkbox)
 		checkbox.self_modulate = Globals.color_palettes[Globals.current_palette][3]
 	
 	for slider : HSlider in get_tree().get_nodes_in_group("MenuSliders"):
@@ -119,6 +138,8 @@ func apply_color_palette():
 	stylebox.border_width_left = 8
 	stylebox.border_color = Color(0, 0, 0, 0)	
 	options.add_theme_stylebox_override("tab_hovered", stylebox)
+	
+	$GameDemo.apply_color_palette()
 
 func create_palette_buttons():
 	for i in Globals.palette_images.size():
@@ -219,23 +240,14 @@ func _on_close_options_pressed() -> void:
 	animation_player.play_backwards("OpenOptions")
 
 
-func _on_previous_palette_pressed() -> void:
-	Globals.current_palette = wrapi(Globals.current_palette - 1, 0, Globals.color_palettes.size())
-	color_palette.texture = Globals.palette_images[Globals.current_palette]
-	apply_color_palette()
-
-func _on_next_palette_pressed() -> void:
-	Globals.current_palette = wrapi(Globals.current_palette + 1, 0, Globals.color_palettes.size())
-	color_palette.texture = Globals.palette_images[Globals.current_palette]
-	apply_color_palette()
-
-
 func _on_crt_shader_check_box_toggled(toggled_on: bool) -> void:
 	CrtOverlay.visible = toggled_on
 	crt_options.visible = toggled_on
 
 
 func _on_start_game_pressed() -> void:
+	Globals.new_game()
+	await get_tree().process_frame
 	get_tree().change_scene_to_file("res://scenes/game.tscn")
 
 
@@ -252,8 +264,30 @@ func _on_cancel_pressed() -> void:
 func _on_change_palette_buton_pressed() -> void:
 	animation_player.play("OpenPalettes")
 
-func _on_crt_slider_value_changed(value : float, name : String):
+func _on_crt_slider_value_changed(value : float, _name : String):
 	if crt_options.scale.x < 0.5:
 		return
 	var crt_material : ShaderMaterial = CrtOverlay.get_node("CRTOverlay").material
-	crt_material.set_shader_parameter(name, value)
+	crt_material.set_shader_parameter(_name, value)
+
+func _on_sound_slider_value_changed(value : float, _name : String):
+	if options.scale.x < 0.5:
+		return
+	Settings.set(_name, linear_to_db(value))
+	match _name:
+		"master_volume":
+			AudioServer.set_bus_volume_db(0, Settings.master_volume)
+		"effects_volume":
+			AudioServer.set_bus_volume_db(1, Settings.effects_volume)
+		"music_volume":
+			AudioServer.set_bus_volume_db(2, Settings.music_volume)
+	
+	#prints(AudioServer.get_bus_volume_db(0), AudioServer.get_bus_volume_db(1), AudioServer.get_bus_volume_db(2))
+
+func _on_maze_size_value_changed(value: float) -> void:
+	Settings.zone_size = int(value)
+
+
+
+func _on_difficulty_value_changed(value: float) -> void:
+	Settings.difficulty = int(value)

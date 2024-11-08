@@ -8,10 +8,8 @@ func _ready() -> void:
 	if delay > 0:
 		await get_tree().create_timer(delay).timeout
 		emitting = true
-		SoundManager.play_effect(SoundManager.Effects.EXPLOSION)
 	else:
 		emitting = true
-		SoundManager.play_effect(SoundManager.Effects.EXPLOSION)
 	
 
 func initialize(dir : Vector2, colors : Array[Color], _delay : float = 0.0):

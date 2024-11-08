@@ -56,6 +56,8 @@ outline_color = Color(0.169245, 0.169245, 0.169245, 1)
 font = ExtResource("2_8u3cf")
 font_size = 18
 
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_gcvmh"]
+
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_25mjt"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_1kfs4"]
@@ -85,8 +87,6 @@ font_size = 12
 [sub_resource type="LabelSettings" id="LabelSettings_hw7km"]
 font = ExtResource("2_8u3cf")
 font_size = 12
-
-[sub_resource type="StyleBoxLine" id="StyleBoxLine_gcvmh"]
 
 [sub_resource type="StyleBoxLine" id="StyleBoxLine_lqpwo"]
 grow_begin = 0.0
@@ -338,7 +338,8 @@ layout_mode = 2
 mouse_filter = 2
 theme_override_fonts/font = ExtResource("2_8u3cf")
 theme_override_font_sizes/font_size = 12
-current_tab = 1
+current_tab = 2
+tab_focus_mode = 0
 
 [node name="GAMEPLAY" type="PanelContainer" parent="UI/Control/MarginContainer/Options"]
 visible = false
@@ -349,12 +350,67 @@ metadata/_tab_index = 0
 [node name="MarginContainer" type="MarginContainer" parent="UI/Control/MarginContainer/Options/GAMEPLAY"]
 layout_mode = 2
 mouse_filter = 2
-theme_override_constants/margin_left = 8
-theme_override_constants/margin_top = 8
-theme_override_constants/margin_right = 8
-theme_override_constants/margin_bottom = 8
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/Control/MarginContainer/Options/GAMEPLAY/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 32
+alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="UI/Control/MarginContainer/Options/GAMEPLAY/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="UI/Control/MarginContainer/Options/GAMEPLAY/MarginContainer/VBoxContainer/HBoxContainer" groups=["MenuLabels"]]
+custom_minimum_size = Vector2(220, 0)
+layout_mode = 2
+text = "maze size"
+label_settings = SubResource("LabelSettings_apjwr")
+uppercase = true
+
+[node name="maze_size" type="HSlider" parent="UI/Control/MarginContainer/Options/GAMEPLAY/MarginContainer/VBoxContainer/HBoxContainer" groups=["InteractableUI", "MenuSliders"]]
+unique_name_in_owner = true
+clip_contents = true
+custom_minimum_size = Vector2(128, 0)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_icons/grabber = ExtResource("8_d2vhc")
+theme_override_icons/grabber_highlight = ExtResource("8_d2vhc")
+theme_override_styles/slider = SubResource("StyleBoxLine_gcvmh")
+min_value = 1.0
+max_value = 5.0
+allow_greater = true
+allow_lesser = true
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="UI/Control/MarginContainer/Options/GAMEPLAY/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="UI/Control/MarginContainer/Options/GAMEPLAY/MarginContainer/VBoxContainer/HBoxContainer2" groups=["MenuLabels"]]
+custom_minimum_size = Vector2(220, 0)
+layout_mode = 2
+text = "difficulty"
+label_settings = SubResource("LabelSettings_apjwr")
+uppercase = true
+
+[node name="difficulty" type="HSlider" parent="UI/Control/MarginContainer/Options/GAMEPLAY/MarginContainer/VBoxContainer/HBoxContainer2" groups=["InteractableUI", "MenuSliders"]]
+unique_name_in_owner = true
+clip_contents = true
+custom_minimum_size = Vector2(128, 0)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_icons/grabber = ExtResource("8_d2vhc")
+theme_override_icons/grabber_highlight = ExtResource("8_d2vhc")
+theme_override_styles/slider = SubResource("StyleBoxLine_gcvmh")
+min_value = 1.0
+max_value = 5.0
+value = 1.0
+allow_greater = true
+allow_lesser = true
 
 [node name="GRAPHICS" type="PanelContainer" parent="UI/Control/MarginContainer/Options"]
+visible = false
 layout_mode = 2
 mouse_filter = 2
 metadata/_tab_index = 1
@@ -595,7 +651,6 @@ allow_greater = true
 allow_lesser = true
 
 [node name="SOUND" type="PanelContainer" parent="UI/Control/MarginContainer/Options"]
-visible = false
 layout_mode = 2
 metadata/_tab_index = 2
 
@@ -605,6 +660,83 @@ theme_override_constants/margin_left = 8
 theme_override_constants/margin_top = 8
 theme_override_constants/margin_right = 8
 theme_override_constants/margin_bottom = 8
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/Control/MarginContainer/Options/SOUND/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 32
+alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="UI/Control/MarginContainer/Options/SOUND/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="UI/Control/MarginContainer/Options/SOUND/MarginContainer/VBoxContainer/HBoxContainer" groups=["MenuLabels"]]
+custom_minimum_size = Vector2(256, 0)
+layout_mode = 2
+text = "master volume"
+label_settings = SubResource("LabelSettings_apjwr")
+uppercase = true
+
+[node name="master_volume" type="HSlider" parent="UI/Control/MarginContainer/Options/SOUND/MarginContainer/VBoxContainer/HBoxContainer" groups=["InteractableUI", "MenuSliders", "SoundSliders"]]
+unique_name_in_owner = true
+clip_contents = true
+custom_minimum_size = Vector2(128, 0)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_icons/grabber = ExtResource("8_d2vhc")
+theme_override_icons/grabber_highlight = ExtResource("8_d2vhc")
+theme_override_styles/slider = SubResource("StyleBoxLine_gcvmh")
+max_value = 1.0
+step = 0.01
+allow_greater = true
+allow_lesser = true
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="UI/Control/MarginContainer/Options/SOUND/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="UI/Control/MarginContainer/Options/SOUND/MarginContainer/VBoxContainer/HBoxContainer2" groups=["MenuLabels"]]
+custom_minimum_size = Vector2(256, 0)
+layout_mode = 2
+text = "effects volume"
+label_settings = SubResource("LabelSettings_apjwr")
+uppercase = true
+
+[node name="effects_volume" type="HSlider" parent="UI/Control/MarginContainer/Options/SOUND/MarginContainer/VBoxContainer/HBoxContainer2" groups=["InteractableUI", "MenuSliders", "SoundSliders"]]
+unique_name_in_owner = true
+clip_contents = true
+custom_minimum_size = Vector2(128, 0)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_icons/grabber = ExtResource("8_d2vhc")
+theme_override_icons/grabber_highlight = ExtResource("8_d2vhc")
+theme_override_styles/slider = SubResource("StyleBoxLine_gcvmh")
+max_value = 1.0
+step = 0.01
+allow_greater = true
+allow_lesser = true
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="UI/Control/MarginContainer/Options/SOUND/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="UI/Control/MarginContainer/Options/SOUND/MarginContainer/VBoxContainer/HBoxContainer3" groups=["MenuLabels"]]
+custom_minimum_size = Vector2(256, 0)
+layout_mode = 2
+text = "music volume"
+label_settings = SubResource("LabelSettings_apjwr")
+uppercase = true
+
+[node name="music_volume" type="HSlider" parent="UI/Control/MarginContainer/Options/SOUND/MarginContainer/VBoxContainer/HBoxContainer3" groups=["InteractableUI", "MenuSliders", "SoundSliders"]]
+unique_name_in_owner = true
+clip_contents = true
+custom_minimum_size = Vector2(128, 0)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_icons/grabber = ExtResource("8_d2vhc")
+theme_override_icons/grabber_highlight = ExtResource("8_d2vhc")
+theme_override_styles/slider = SubResource("StyleBoxLine_gcvmh")
+max_value = 1.0
+step = 0.01
+allow_greater = true
+allow_lesser = true
 
 [node name="CloseOptions" type="TextureButton" parent="UI/Control/MarginContainer" groups=["InteractableUI"]]
 unique_name_in_owner = true
@@ -751,6 +883,9 @@ script = ExtResource("3_y3qm4")
 [node name="NavigationRegion2D" type="NavigationRegion2D" parent="GameDemo"]
 navigation_polygon = SubResource("NavigationPolygon_kswp7")
 
+[node name="BattleTimer" type="Timer" parent="GameDemo"]
+one_shot = true
+
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
 "": SubResource("AnimationLibrary_brsjj")
@@ -759,9 +894,12 @@ speed_scale = 4.0
 
 [connection signal="pressed" from="UI/Control/VBoxContainer/StartGame" to="." method="_on_start_game_pressed"]
 [connection signal="pressed" from="UI/Control/VBoxContainer/Options" to="." method="_on_options_pressed"]
+[connection signal="value_changed" from="UI/Control/MarginContainer/Options/GAMEPLAY/MarginContainer/VBoxContainer/HBoxContainer/maze_size" to="." method="_on_maze_size_value_changed"]
+[connection signal="value_changed" from="UI/Control/MarginContainer/Options/GAMEPLAY/MarginContainer/VBoxContainer/HBoxContainer2/difficulty" to="." method="_on_difficulty_value_changed"]
 [connection signal="pressed" from="UI/Control/MarginContainer/Options/GRAPHICS/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/ChangePaletteButon" to="." method="_on_change_palette_buton_pressed"]
 [connection signal="toggled" from="UI/Control/MarginContainer/Options/GRAPHICS/MarginContainer/VBoxContainer/HBoxContainer2/CrtShaderCheckBox" to="." method="_on_crt_shader_check_box_toggled"]
 [connection signal="pressed" from="UI/Control/MarginContainer/CloseOptions" to="." method="_on_close_options_pressed"]
 [connection signal="gui_input" from="UI/Control/ColorPalettes/MarginContainer/VBoxContainer/WrappingScrollContainer" to="UI/Control/ColorPalettes/MarginContainer/VBoxContainer/WrappingScrollContainer" method="_on_gui_input"]
 [connection signal="pressed" from="UI/Control/ColorPalettes/MarginContainer/VBoxContainer/HBoxContainer/ApplyPalette" to="." method="_on_apply_palette_pressed"]
 [connection signal="pressed" from="UI/Control/ColorPalettes/MarginContainer/VBoxContainer/HBoxContainer/Cancel" to="." method="_on_cancel_pressed"]
+[connection signal="timeout" from="GameDemo/BattleTimer" to="GameDemo" method="_on_battle_timer_timeout"]

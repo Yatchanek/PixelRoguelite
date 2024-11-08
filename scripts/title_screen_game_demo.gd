@@ -1,11 +1,13 @@
 extends Node2D
 
+@onready var battle_timer: Timer = $BattleTimer
 @onready var navigation_region_2d: NavigationRegion2D = $NavigationRegion2D
+
 const enemy_scnene = preload("res://scenes/basic_enemy_title_screen.tscn")
 
 var enemies : Array[Enemy] = []
 
-
+var spawn_called : bool = false
 var occupied_coords : Array[Vector2i] = []
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -26,31 +28,57 @@ func _ready() -> void:
 	)
 	await get_tree().create_timer(1.0).timeout
 
-	spawn_dummies()
+	spawn_dummies(10)
 	
-func spawn_dummies():
-	occupied_coords = []
-	for i in 10 - enemies.size():
-		var enemy : Enemy = enemy_scnene.instantiate()
-		#enemy.is_dummy = true
-		var pos : Vector2i = Vector2i(32, 32) + Utils.get_random_coords(0, 8, 0, 5) * 64
-		while occupied_coords.has(pos):
-			pos = Vector2i(32, 32) + Utils.get_random_coords(0, 8, 0, 5) * 64
+func spawn_dummies(amount : int):
+	if amount == 0:
+		battle_timer.start(randf_range(10, 20))
+		return
 		
+	
+	#enemy.is_dummy = true
+	var pos : Vector2i
+	var accepted : bool = false
+	var attempts : int = 0
+	while !accepted:
+		if attempts > 20:
+			break
+		pos = Vector2i(32, 32) + Utils.get_random_coords(0, 8, 0, 5) * 64
+		var too_close : bool = false
+		for other_enemy : Enemy in enemies:
+			if pos.distance_squared_to(other_enemy.position) < 900:
+				too_close = true
+				attempts += 1
+				break
+		if !too_close:
+			accepted = true
+			
+	if accepted:
+		var enemy : Enemy = enemy_scnene.instantiate()
 		enemy.bullet_fired.connect(_on_bullet_fired)
 		enemy.exploded.connect(_on_explosion)
 		enemy.destroyed.connect(_on_enemy_destroyed)
 		enemy.position = pos
 		enemy.level = 0
-		occupied_coords.append(pos)
 		enemies.append(enemy)
-		call_deferred("add_child", enemy)	
+		call_deferred("add_child", enemy)
+		await get_tree().create_timer(0.25).timeout
+	
+		spawn_dummies(amount - 1)
+	else:
+		spawn_dummies(amount)
+		
+	
 
-func start_battle():		
+func start_battle():
+	spawn_called = false	
 	for enemy in enemies:
 		enemy.enemies = enemies
 		enemy.set_target()
 
+func apply_color_palette():
+	for enemy : Enemy in enemies:
+		enemy.apply_color_palette()
 
 func _on_bullet_fired(bullet: Node2D, pos: Vector2) -> void:
 	bullet.position = to_local(pos)
@@ -73,5 +101,12 @@ func _on_enemy_destroyed(enemy : Enemy):
 				other_enemy.set_target()
 				
 	else:
-		enemies[0].level_up()
-		spawn_dummies()
+		if enemies.size() > 0:
+			enemies[0].level_up()
+		if !spawn_called:
+			spawn_dummies(10 - enemies.size())
+			spawn_called = true
+
+
+func _on_battle_timer_timeout() -> void:
+	start_battle()

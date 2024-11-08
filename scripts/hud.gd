@@ -18,6 +18,7 @@ var card_scene : PackedScene = preload("res://scenes/upgrade_card.tscn")
 func _ready() -> void:
 	apply_color_palette()
 	EventBus.gate_key_collected.connect(show_gate_key)
+	
 
 func update_health(value : int):
 	hp_bar.value = value
@@ -33,7 +34,7 @@ func update_danger(amount : int):
 
 func update_room(room_data : RoomData):
 	coords_label.text = str(room_data.coords)
-	danger_amount_label.text = str(floor(Utils.get_depth(room_data.coords) / 3.0))
+	danger_amount_label.text = str(floor(Utils.get_depth(room_data.coords) / (6 - Settings.difficulty)))
 
 func apply_color_palette():
 	var stylebox : StyleBoxFlat = StyleBoxFlat.new()
@@ -50,8 +51,14 @@ func apply_color_palette():
 	for key in keys_container.get_children():
 		key.self_modulate = Globals.color_palettes[Globals.current_palette][7]
 	
-	for i : int in Globals.keys_collected:
-		keys_container.get_child(i).self_modulate = Globals.color_palettes[Globals.current_palette][0]
+	for i in keys_container.get_child_count():
+		if Globals.keys_collected.has(i):
+			keys_container.get_child(i).self_modulate = Globals.color_palettes[Globals.current_palette][0]
+		else:
+			keys_container.get_child(i).self_modulate = Globals.color_palettes[Globals.current_palette][7]
+	
+	#for i : int in Globals.keys_collected:
+		#keys_container.get_child(i).self_modulate = Globals.color_palettes[Globals.current_palette][0]
 	
 	minimap.apply_color_palette()
 

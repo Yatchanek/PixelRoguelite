@@ -149,10 +149,11 @@ func take_damage(amount : int, _dir : Vector2):
 		var tw : Tween = create_tween()
 		tw.tween_property(lower_body, "self_modulate", Color.WHITE, 0.1)
 		tw.parallel().tween_property(upper_body, "self_modulate", Color.WHITE, 0.1)
+		tw.parallel().tween_property(legs, "self_modulate", Color.WHITE, 0.1)
 		tw.tween_interval(0.1)
-		tw.tween_property(lower_body, "self_modulate", Globals.color_palettes[Globals.current_palette][3], 0.1)
-		tw.parallel().tween_property(upper_body, "self_modulate", Globals.color_palettes[Globals.current_palette][4], 0.1)
-	
+		tw.tween_property(lower_body, "self_modulate", primary_color, 0.1)
+		tw.parallel().tween_property(upper_body, "self_modulate", secondary_color, 0.1)
+		tw.parallel().tween_property(legs, "self_modulate", tertiary_color, 0.1)
 
 func gain_exp(value):
 	experience += value

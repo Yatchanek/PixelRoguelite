@@ -148,17 +148,29 @@ func choose_exit_layout(coords : Vector2i) -> int:
 	var possible_layouts : Array[int] = []
 	var empty_neighbours_count = count_empty_neighbours(coords)
 
-	var layout_candidates : Array[int]
+	var layout_candidates : Array[int] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
 	
-	if empty_neighbours_count == 3 or empty_neighbours_count == 1:
-		layout_candidates = [3, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15]
+	if coords.x >= -Settings.zone_size * 10 and \
+	coords.x <= Settings.zone_size * 10 and \
+	coords.y >= - Settings.zone_size * 10 and \
+	coords.y <= Settings.zone_size * 10:
+	
+		if empty_neighbours_count == 3 or empty_neighbours_count == 1:
+			layout_candidates = [3, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15]
 
-	elif empty_neighbours_count == 2:
-		layout_candidates = [7, 11, 13, 14, 15]
-		
+		elif empty_neighbours_count == 2:
+			layout_candidates = [7, 11, 13, 14, 15]
 	else:
-		layout_candidates = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
-
+		if coords.x < -Settings.zone_size * 10:
+			layout_candidates = layout_candidates.filter(func (x) : return x & 8 == 0)
+		elif coords.x > Settings.zone_size * 10:
+			layout_candidates = layout_candidates.filter(func (x) : return x & 2 == 0)		
+		if coords.y < -Settings.zone_size * 10:
+			layout_candidates = layout_candidates.filter(func (x) : return x & 1 == 0)
+		elif coords.y > Settings.zone_size * 10:
+			layout_candidates = layout_candidates.filter(func (x) : return x & 4 == 0)
+	
+	
 	for i in layout_candidates.size():
 		var accepted : bool = false
 		

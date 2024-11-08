@@ -14,13 +14,19 @@ sound_effects = Array[AudioStream]([ExtResource("2_dn0vs"), ExtResource("3_721wc
 [node name="EffectChannels" type="Node" parent="."]
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="EffectChannels"]
+bus = &"Effects"
 
 [node name="AudioStreamPlayer2" type="AudioStreamPlayer" parent="EffectChannels"]
+bus = &"Effects"
 
 [node name="AudioStreamPlayer3" type="AudioStreamPlayer" parent="EffectChannels"]
+bus = &"Effects"
 
 [node name="AudioStreamPlayer4" type="AudioStreamPlayer" parent="EffectChannels"]
+bus = &"Effects"
 
 [node name="AudioStreamPlayer5" type="AudioStreamPlayer" parent="EffectChannels"]
+bus = &"Effects"
 
 [node name="AudioStreamPlayer6" type="AudioStreamPlayer" parent="EffectChannels"]
+bus = &"Effects"

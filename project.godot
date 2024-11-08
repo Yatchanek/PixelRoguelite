@@ -17,6 +17,7 @@ config/icon="res://icon.svg"
 
 [autoload]
 
+Settings="*res://scenes/settings.tscn"
 Globals="*res://scenes/globals.tscn"
 EventBus="*res://scenes/event_bus.tscn"
 SoundManager="*res://scenes/sound_manager.tscn"

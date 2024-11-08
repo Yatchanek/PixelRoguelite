@@ -29,7 +29,10 @@ var keys_collected : Array[int] = []
 func _ready() -> void:
 	rng = RandomNumberGenerator.new()
 	create_color_palettes()
+
+func new_game():
 	reset()
+
 	
 func create_color_palettes():
 	var files : PackedStringArray = DirAccess.get_files_at("res://graphics/color_palettes")
@@ -44,14 +47,7 @@ func create_color_palettes():
 		for i in img.get_width():
 			palette.append(img.get_pixel(i, 0))
 		color_palettes.append(palette)
-	#adjust_explosion_colors()	
-#
-#func adjust_explosion_colors():
-	#var gradient : Gradient = Gradient.new()
-	#for i in 8:
-		#gradient.add_point(i * 0.143, color_palettes[current_palette][i])
-		
-	#missile_material.color_initial_ramp.gradient = gradient
+
 
 func get_coords_in_distance_range(min_dist : int, max_dist : int) -> Vector2i:
 	return Vector2i(
@@ -68,7 +64,6 @@ func reset():
 	gate_key_coords = {}
 	keys_collected = []
 	
-	var min_dist : int = 1
 	for i in 7:
-		var coords : Vector2i = get_coords_in_distance_range(min_dist + i, min_dist + 1 + i)
+		var coords : Vector2i = get_coords_in_distance_range(Settings.zone_size + Settings.zone_size * i, Settings.zone_size + Settings.zone_size * (i + 1) - 1)
 		gate_key_coords[coords] = i

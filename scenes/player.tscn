@@ -1,33 +1,33 @@
 [gd_scene load_steps=15 format=3 uid="uid://60nvyx6hcw6k"]
 
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_7xbh1"]
-[ext_resource type="Texture2D" uid="uid://ofk8cf2mnah6" path="res://graphics/player_bottom.png" id="2_gg0ql"]
-[ext_resource type="Texture2D" uid="uid://c3sufm7rnlufh" path="res://graphics/player_top.png" id="3_rufsf"]
+[ext_resource type="Texture2D" uid="uid://cvrbwtjc3aamn" path="res://graphics/player_2_lower.png" id="2_sqk20"]
+[ext_resource type="Texture2D" uid="uid://camdsimsxbx06" path="res://graphics/player_2_upper.png" id="3_dbj3m"]
+[ext_resource type="Texture2D" uid="uid://bo646i178uci1" path="res://graphics/player_2.png" id="4_3cv8e"]
 [ext_resource type="PackedScene" uid="uid://drd2m072phc4v" path="res://scenes/hitbox.tscn" id="4_h6job"]
-[ext_resource type="Texture2D" uid="uid://b3dftb67jjxgm" path="res://graphics/player_legs.png" id="4_je2jt"]
 [ext_resource type="AudioStream" uid="uid://dhnr8wnf2b0ru" path="res://sounds/shoot_by_little_robot_sound_factory.ogg" id="5_manoi"]
 [ext_resource type="Texture2D" uid="uid://ckwvg67w2r0rt" path="res://graphics/boss_cannon.png" id="7_dxmpv"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_bs7nj"]
 radius = 8.0
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_y62jc"]
-atlas = ExtResource("4_je2jt")
+[sub_resource type="AtlasTexture" id="AtlasTexture_h26xg"]
+atlas = ExtResource("4_3cv8e")
 region = Rect2(0, 0, 16, 16)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_chmui"]
-atlas = ExtResource("4_je2jt")
+[sub_resource type="AtlasTexture" id="AtlasTexture_frj3b"]
+atlas = ExtResource("4_3cv8e")
 region = Rect2(16, 0, 16, 16)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_kdmah"]
-atlas = ExtResource("4_je2jt")
+[sub_resource type="AtlasTexture" id="AtlasTexture_1x8w7"]
+atlas = ExtResource("4_3cv8e")
 region = Rect2(32, 0, 16, 16)
 
-[sub_resource type="SpriteFrames" id="SpriteFrames_n1qyi"]
+[sub_resource type="SpriteFrames" id="SpriteFrames_cefm1"]
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_y62jc")
+"texture": SubResource("AtlasTexture_h26xg")
 }],
 "loop": true,
 "name": &"idle",
@@ -35,10 +35,10 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_chmui")
+"texture": SubResource("AtlasTexture_frj3b")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_kdmah")
+"texture": SubResource("AtlasTexture_1x8w7")
 }],
 "loop": true,
 "name": &"walk",
@@ -67,15 +67,14 @@ wait_time = 0.2
 one_shot = true
 
 [node name="LowerBody" type="Sprite2D" parent="."]
-texture = ExtResource("2_gg0ql")
+texture = ExtResource("2_sqk20")
 
 [node name="UpperBody" type="Sprite2D" parent="LowerBody"]
-texture = ExtResource("3_rufsf")
+texture = ExtResource("3_dbj3m")
 
 [node name="Legs" type="AnimatedSprite2D" parent="."]
-sprite_frames = SubResource("SpriteFrames_n1qyi")
+sprite_frames = SubResource("SpriteFrames_cefm1")
 animation = &"walk"
-autoplay = "idle"
 
 [node name="Hitbox" parent="." node_paths=PackedStringArray("target") instance=ExtResource("4_h6job")]
 visible = false
