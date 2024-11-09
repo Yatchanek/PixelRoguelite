@@ -48,6 +48,12 @@ func create_color_palettes():
 			palette.append(img.get_pixel(i, 0))
 		color_palettes.append(palette)
 
+func adjust_missile_palette():
+	var gradient : Gradient = Gradient.new()
+	for i in 8:
+		gradient.add_point(i / 7.0, color_palettes[current_palette][i])
+		
+	missile_material.color_initial_ramp.gradient = gradient
 
 func get_coords_in_distance_range(min_dist : int, max_dist : int) -> Vector2i:
 	return Vector2i(
@@ -64,6 +70,6 @@ func reset():
 	gate_key_coords = {}
 	keys_collected = []
 	
-	for i in 7:
+	for i in 9:
 		var coords : Vector2i = get_coords_in_distance_range(Settings.zone_size + Settings.zone_size * i, Settings.zone_size + Settings.zone_size * (i + 1) - 1)
 		gate_key_coords[coords] = i

@@ -14,6 +14,7 @@ class_name Player
 
 
 const bullet_scene : PackedScene = preload("res://scenes/bullet.tscn")
+const explosion_scene : PackedScene = preload("res://scenes/explosion.tscn")
 
 var speed : int = 160
 var power : int = 1
@@ -31,15 +32,7 @@ var can_shoot : bool = true
 
 var dead : bool = false
 
-var color_flip_cycle : int = 4
-
-var rotation_speed : int = 0
-
 var elapsed_time : float = 0
-
-var tick : int = 1
-
-var rotation_threshold : int = 11
 
 var primary_color : Color
 var secondary_color : Color
@@ -49,7 +42,7 @@ var damaging_area : HurtBox
 
 signal bullet_fired(bullet : Node2D, pos : Vector2)
 signal health_changed(value : int)
-signal exploded(pos : Vector2)
+signal exploded(explosion : Explosion, pos : Vector2)
 signal player_ready(player : Player)
 signal died
 
@@ -73,8 +66,6 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	var dir_to_mouse : Vector2 = turret_pivot.global_position.direction_to(get_global_mouse_position())
 	var target_transform : Transform2D = turret_pivot.global_transform.looking_at(turret_pivot.global_position + dir_to_mouse)
-	
-	#turret_pivot.look_at(get_global_mouse_position())
 		
 	turret_pivot.global_transform = turret_pivot.global_transform.interpolate_with(target_transform, 0.75)
 	turret_collision.position = to_local(turret.global_position)
@@ -84,6 +75,7 @@ func _process(delta: float) -> void:
 		if elapsed_time > 0.5:
 			take_damage(damaging_area.damage, Vector2.ZERO)
 			elapsed_time = 0.0
+	
 
 func get_input() -> Vector2:
 	var move_dir : Vector2 = Vector2(Input.get_axis("left", "right"), Input.get_axis("forward", "back")).normalized()
@@ -100,11 +92,8 @@ func _physics_process(delta: float) -> void:
 		
 	else:
 		legs.play("idle")
-
 	
-	#body.rotation += rotation_speed * delta			
 	velocity = lerp(velocity, move_dir * speed, 0.2)
-
 	
 	if Input.is_action_just_pressed("ui_accept"):
 		velocity *= 5.0
@@ -133,7 +122,7 @@ func take_damage(amount : int, _dir : Vector2):
 	health_changed.emit(hp)
 	
 	if hp <= 0:
-		exploded.emit(global_position)
+		explode()
 		died.emit()
 		hide()
 		dead = true
@@ -154,6 +143,13 @@ func take_damage(amount : int, _dir : Vector2):
 		tw.tween_property(lower_body, "self_modulate", primary_color, 0.1)
 		tw.parallel().tween_property(upper_body, "self_modulate", secondary_color, 0.1)
 		tw.parallel().tween_property(legs, "self_modulate", tertiary_color, 0.1)
+
+func explode():
+	var explosion : Explosion = explosion_scene.instantiate()
+	var colors : Array[Color] = [primary_color, secondary_color, tertiary_color]
+	explosion.initialize(Vector2.ZERO, colors)
+	
+	exploded.emit(explosion, global_position)
 
 func gain_exp(value):
 	experience += value
@@ -182,6 +178,33 @@ func shoot():
 	shoot_timer.start(fire_rate)
 	SoundManager.play_effect(SoundManager.Effects.PLAYER_SHOOT)
 
+
+func increase_power(amount : int):
+	power += amount
+	
+func increase_speed(amount : int):
+	speed += amount
+	legs.sprite_frames.set_animation_speed("walk", 5 * speed / 160.0)
+	
+func change_firerate(amount : float):
+	fire_rate += amount
+	
+func toggle_autofire(status : bool):
+	autofire = status
+	
+func increase_bullet_speed(amount : int):
+	bullet_speed += amount
+
+func increase_max_hp(amount : int):
+	max_hp += amount
+	EventBus.player_max_health_changed.emit(max_hp)
+	hp += amount
+	health_changed.emit(hp)
+	
+func heal(amount: int):
+	hp = min(hp + amount, max_hp)
+	health_changed.emit(hp)
+	
 func _on_shoot_timer_timeout() -> void:
 	can_shoot = true
 

@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://ddylky5tp6bpd"]
+[gd_scene load_steps=22 format=3 uid="uid://ddylky5tp6bpd"]
 
 [ext_resource type="Script" path="res://scripts/game.gd" id="1_w3yxl"]
 [ext_resource type="Script" path="res://scripts/world.gd" id="2_4ply8"]
@@ -6,6 +6,7 @@
 [ext_resource type="Script" path="res://scripts/hud.gd" id="5_rohpp"]
 [ext_resource type="FontFile" uid="uid://bs4wn8lq821l5" path="res://fonts/NotJamChunkySans.ttf" id="6_yc8th"]
 [ext_resource type="Texture2D" uid="uid://d3otih1xwa7g2" path="res://graphics/progress_bar.png" id="7_yuboa"]
+[ext_resource type="Script" path="res://scripts/upgrade_card_container.gd" id="8_2xbi3"]
 [ext_resource type="PackedScene" uid="uid://s65dq4a3p8hf" path="res://scenes/minimap.tscn" id="8_0353o"]
 [ext_resource type="Texture2D" uid="uid://882ajyq5akwp" path="res://graphics/keys.png" id="8_ga3uy"]
 
@@ -306,7 +307,7 @@ size_flags_vertical = 4
 texture = SubResource("AtlasTexture_by5pc")
 expand_mode = 2
 
-[node name="UpgradeRow" type="HBoxContainer" parent="Hud/Control"]
+[node name="UpgradeCardContainer" type="HBoxContainer" parent="Hud/Control"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -321,6 +322,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 theme_override_constants/separation = 16
+script = ExtResource("8_2xbi3")
 
 [node name="Minimap" parent="Hud/Control" instance=ExtResource("8_0353o")]
 visible = false

@@ -79,18 +79,24 @@ func _ready() -> void:
 	else:
 		Globals.rng.seed = room_data.rng_seed
 
-	var time_since_last_visit : int = Time.get_ticks_msec() - room_data.last_visited
+	var time_since_last_visit : int = int(Time.get_unix_time_from_system()) - room_data.last_visited
 	max_enemies = min(randi_range(2, 4 + 2 * level), 20)
 	enemy_spawn_interval = max(1.0 - 0.05 * level, 0.2)
 	
 	if !Globals.gate_key_coords.has(room_data.coords):
-		if room_data.last_visited == room_data.first_visited or time_since_last_visit > respawn_interval * 1000:
+		if room_data.last_visited == room_data.first_visited or time_since_last_visit > respawn_interval:
 			activate_doors()
 			timer.start(randf_range(enemy_spawn_interval, enemy_spawn_interval * 2.0))
 		else:
-			var time_left_to_respawn = respawn_interval * 1000 - time_since_last_visit
+			var time_left_to_respawn = respawn_interval - time_since_last_visit
 			enemies_spawned = max_enemies
-			timer.start(time_left_to_respawn * 0.001)
+			timer.start(time_left_to_respawn)
+	
+		if time_since_last_visit > pickup_respawn_interval:
+			pass
+	
+		if room_data.coords != Vector2i.ZERO:
+			create_obstacles()
 	
 	elif !room_data.boss_defeated:
 		activate_doors()
@@ -100,10 +106,6 @@ func _ready() -> void:
 	
 	level = floor(depth / (6 - Settings.difficulty))
 	configure_room()
-
-	if !room_data.coords == Vector2i.ZERO and !Globals.gate_key_coords.has(room_data.coords):
-		create_obstacles()
-
 	
 	await get_tree().process_frame
 	create_navigation_polygon()
@@ -191,6 +193,7 @@ func deactivate_doors():
 		EventBus.upgrade_time.emit()	
 
 func _on_door_entered(idx : int) -> void:
+	room_data.last_visited = int(Time.get_unix_time_from_system())
 	room_exited.emit(room_data.coords, idx)
 
 func _on_timer_timeout() -> void:
@@ -243,7 +246,7 @@ func spawn_boss():
 		var accepted : bool = false
 		var candidate_coords : Vector2i
 		while !accepted:
-			candidate_coords = Utils.get_random_coords()
+			candidate_coords = Utils.get_random_coords(2, 5, 2, 3)
 			if Utils.get_manhattan_distance(candidate_coords, Utils.get_coords(to_local(player.global_position))) < 3:
 				continue
 			else:
@@ -262,16 +265,16 @@ func spawn_enemy(coords : Vector2i):
 		
 	var enemy : Enemy
 	var chance : float = randf()
-	if chance < 0.80:
+	if chance < 0.7:
 		enemy = basic_enemy_scene.instantiate() as BasicEnemy
-	#elif chance < 0.0:
-		#enemy = missile_enemy_scene.instantiate() as MissileEnemy 
-	#elif chance < 0.0:
-		#enemy = turret_enemy_scene.instantiate() as TurretEnemy
-	#elif chance < 0.0:
-		#enemy = rapid_fire_enemy_scene.instantiate() as RapidFireEnemy
-	#elif chance < 0.0:
-		#enemy = kamikaze_enemy_scene.instantiate() as KamikazeEnemy
+	elif chance < 0.8:
+		enemy = missile_enemy_scene.instantiate() as MissileEnemy 
+	elif chance < 0.0:
+		enemy = turret_enemy_scene.instantiate() as TurretEnemy
+	elif chance < 0.9:
+		enemy = rapid_fire_enemy_scene.instantiate() as RapidFireEnemy
+	elif chance < 0.95:
+		enemy = kamikaze_enemy_scene.instantiate() as KamikazeEnemy
 	else:
 		enemy = laser_enemy_scene.instantiate() as LaserEnemy
 	
@@ -329,6 +332,5 @@ func _on_enemy_destroyed(enemy : Enemy):
 		enemy_destroyed.emit(enemy.exp_value)
 		enemies_array.erase(enemy)
 		if enemies_killed == max_enemies:
-
 			deactivate_doors()
 			timer.start(respawn_interval)

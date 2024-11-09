@@ -127,7 +127,7 @@ func count_empty_neighbours(coords : Vector2i):
 func create_new_room(coords : Vector2i) -> Room:
 	var new_room : Room = room_scene.instantiate()
 	var exit_layout : int
-	var current_time = Time.get_ticks_msec()
+	var current_time = int(Time.get_unix_time_from_system())
 	
 	if coords == Vector2i.ZERO:
 		exit_layout = [3, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15].pick_random()
@@ -191,24 +191,17 @@ func choose_exit_layout(coords : Vector2i) -> int:
 	return layout
 	
 func _on_room_exited(room_coords: Vector2i, exit_index : int):
-	Globals.room_grid[room_coords].last_visited = Time.get_ticks_msec()
 	change_room(room_coords, exit_index)
 
 func _on_enemy_destroyed(exp_value : int):
 	player.gain_exp(exp_value)
-	#exp_value_changed.emit(player.experience)
-
 
 func _on_player_health_changed(value : int):
 	player_health_changed.emit(value)
 
 
-func _on_explosion(pos : Vector2):
-	var explosion : GPUParticles2D = explosion_scene.instantiate()
-	explosion.initialize(Vector2.ZERO, [player.primary_color, player.secondary_color, player.tertiary_color])
+func _on_explosion(explosion : Explosion, pos : Vector2):
 	explosion.position = current_room.to_local(pos)
-	explosion.emitting = true
-	
 	current_room.call_deferred("add_child", explosion)
 
 
@@ -217,17 +210,13 @@ func _on_bullet_fired(bullet: Node2D, pos: Vector2) -> void:
 	current_room.bullets.call_deferred("add_child", bullet)
 	
 func _on_upgrade_selected(data: UpgradeData):
-	if data.current_type == UpgradeData.Upgrades.SPEED:
-		player.speed += data.amount
-		player.rotation_threshold = ceil(11 / (player.speed / 160))
-	if data.current_type == UpgradeData.Upgrades.FIRERATE:
-		player.fire_rate -= data.amount
-	if data.current_type == UpgradeData.Upgrades.HITPOINTS:
-		player.max_hp += data.amount
-		player.hp += data.amount
-		EventBus.player_max_health_changed.emit(player.max_hp)
-		player.health_changed.emit(player.hp)
-	if data.current_type == UpgradeData.Upgrades.BULLET_SPEED:
-		player.bullet_speed += data.amount
-	if data.current_type == UpgradeData.Upgrades.BULLET_DAMAGE:
-		player.power += data.amount
+	if data.current_type == UpgradeManager.Upgrades.SPEED:
+		player.increase_speed(data.amount)
+	if data.current_type == UpgradeManager.Upgrades.FIRERATE:
+		player.change_firerate(-data.amount)
+	if data.current_type == UpgradeManager.Upgrades.HITPOINTS:
+		player.increase_max_hp(data.amount)
+	if data.current_type == UpgradeManager.Upgrades.BULLET_SPEED:
+		player.increase_bullet_speed(data.amount)
+	if data.current_type == UpgradeManager.Upgrades.BULLET_DAMAGE:
+		player.increase_power(data.amount)

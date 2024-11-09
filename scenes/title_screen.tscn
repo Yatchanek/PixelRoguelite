@@ -381,6 +381,7 @@ theme_override_icons/grabber_highlight = ExtResource("8_d2vhc")
 theme_override_styles/slider = SubResource("StyleBoxLine_gcvmh")
 min_value = 1.0
 max_value = 5.0
+value = 1.0
 allow_greater = true
 allow_lesser = true
 

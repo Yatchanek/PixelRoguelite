@@ -163,6 +163,7 @@ func _on_shoot_timer_timeout() -> void:
 func _on_laser_charged() -> void:
 	current_state = State.FIRE
 	laser.fire()
+	
 
 
 func _on_laser_fired() -> void:

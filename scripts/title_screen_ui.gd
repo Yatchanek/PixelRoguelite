@@ -139,6 +139,8 @@ func apply_color_palette():
 	stylebox.border_color = Color(0, 0, 0, 0)	
 	options.add_theme_stylebox_override("tab_hovered", stylebox)
 	
+	Globals.adjust_missile_palette()
+	
 	$GameDemo.apply_color_palette()
 
 func create_palette_buttons():

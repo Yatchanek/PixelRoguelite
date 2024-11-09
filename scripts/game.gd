@@ -18,7 +18,7 @@ func _unhandled_input(event: InputEvent) -> void:
 func _ready() -> void:
 	EventBus.upgrade_time.connect(_on_player_leveled_up)
 	EventBus.player_max_health_changed.connect(_on_max_health_changed)
-	EventBus.upgrade_card_pressed.connect(_on_upgrade_selected)
+	#EventBus.upgrade_card_pressed.connect(_on_upgrade_selected)
 	EventBus.room_changed.connect(_on_room_changed)
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	Input.set_custom_mouse_cursor(load("res://graphics/cursor.png"), Input.CURSOR_ARROW, Vector2(16, 16))
@@ -41,9 +41,3 @@ func _on_max_health_changed(value : int) -> void:
 
 func _on_room_changed(room_data : RoomData) -> void:
 	hud.update_room(room_data)
-
-func _on_upgrade_selected(_data : UpgradeData) -> void:
-	Globals.leveled_up = false
-	hud.hide_upgrades()
-	await get_tree().create_timer(1.0).timeout
-	get_tree().paused = false

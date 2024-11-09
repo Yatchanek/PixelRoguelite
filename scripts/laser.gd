@@ -71,4 +71,5 @@ func charge_beam():
 	charged.emit()
 	
 func fire():
+	SoundManager.play_effect(SoundManager.Effects.LASER)
 	set_process(true)

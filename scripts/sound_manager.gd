@@ -7,6 +7,8 @@ extends Node
 enum Effects {
 	PLAYER_SHOOT,
 	ENEMY_SHOOT,
+	LASER,
+	MISSILE,
 	HIT,
 	EXPLOSION,
 	BEEP
@@ -23,3 +25,7 @@ func play_effect(effect : Effects):
 			player.play()
 			break
 			
+func stop_effect(effect : Effects):
+	for player : AudioStreamPlayer in effect_channels.get_children():
+		if player.stream == sound_effects[effect]:
+			player.stop()

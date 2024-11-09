@@ -22,6 +22,7 @@ func _ready() -> void:
 	apply_color_palette()
 	speed = min(176 + 16 * level, 256)
 	$HurtBox.damage = power
+	SoundManager.play_effect(SoundManager.Effects.MISSILE)
 
 func apply_color_palette():
 	body.self_modulate = Globals.color_palettes[Globals.current_palette][2]

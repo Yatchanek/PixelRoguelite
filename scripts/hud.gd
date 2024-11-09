@@ -6,13 +6,9 @@ class_name HUD
 @onready var danger_amount_label: Label = %DangerAmountLabel
 @onready var hp_bar: TextureProgressBar = %HPBar
 @onready var coords_label: Label = %CoordsLabel
-@onready var upgrade_row: HBoxContainer = $Control/UpgradeRow
+@onready var upgrade_card_container: HBoxContainer = $Control/UpgradeCardContainer
 @onready var minimap: MiniMap = $Control/Minimap
 @onready var keys_container: HBoxContainer = %KeysContainer
-
-var proposed_upgrades : Array[UpgradeData.Upgrades] = []
-
-var card_scene : PackedScene = preload("res://scenes/upgrade_card.tscn")
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -56,54 +52,16 @@ func apply_color_palette():
 			keys_container.get_child(i).self_modulate = Globals.color_palettes[Globals.current_palette][0]
 		else:
 			keys_container.get_child(i).self_modulate = Globals.color_palettes[Globals.current_palette][7]
-	
-	#for i : int in Globals.keys_collected:
-		#keys_container.get_child(i).self_modulate = Globals.color_palettes[Globals.current_palette][0]
-	
+
 	minimap.apply_color_palette()
 
 func show_gate_key(idx : int):
 	keys_container.get_child(idx).self_modulate = Globals.color_palettes[Globals.current_palette][0]
 	
 func show_upgrades():
-	upgrade_row.show()
-	proposed_upgrades = []
-	add_card()
-	
-func add_card():
-	var card : UpgradeCard = card_scene.instantiate()
-	card.cards_in_row = 3
-	card.other_upgrades = proposed_upgrades
-	card.card_added.connect(_on_card_added)
-	card.last_card_added.connect(_on_last_card_added)
-	upgrade_row.call_deferred("add_child", card)
-	
-func _on_card_added(data : UpgradeData):
-	proposed_upgrades.append(data.current_type)
-	add_card()
+	print("Showing upgrades")
+	upgrade_card_container.add_card()
 
-func _on_last_card_added() -> void:
-	var tw : Tween = create_tween()
-	tw.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_BOUNCE)
-	tw.set_parallel()
-	var idx : int = 0
-	for card in upgrade_row.get_children():
-		tw.tween_property(card, "position:y", 320, 1.0).set_delay(idx * 0.25)
-		idx += 1
-
-func hide_upgrades():
-	proposed_upgrades = []
-	var tw : Tween = create_tween()
-	tw.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
-	tw.set_parallel()
-	var idx : int = 0
-	for card in upgrade_row.get_children():
-		tw.tween_property(card, "position:y", 0, 1.0).set_delay(idx * 0.25)
-		idx += 1
-	await tw.finished
-	for card in upgrade_row.get_children():
-		card.queue_free()
-	upgrade_row.hide()
 
 func toggle_minimap():
 	minimap.toggle()

@@ -1,23 +1,12 @@
-[gd_scene load_steps=12 format=3 uid="uid://d1xi0pomqm0m"]
+[gd_scene load_steps=6 format=3 uid="uid://d1xi0pomqm0m"]
 
 [ext_resource type="Texture2D" uid="uid://dpn2cvamafnrj" path="res://graphics/card_body.png" id="1_catbv"]
 [ext_resource type="Script" path="res://scripts/upgrade_card.gd" id="1_iqs6v"]
 [ext_resource type="Texture2D" uid="uid://dy5qca30umj4h" path="res://graphics/card_border.png" id="3_bcb5n"]
 [ext_resource type="FontFile" uid="uid://bs4wn8lq821l5" path="res://fonts/NotJamChunkySans.ttf" id="4_myq5a"]
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_qe658"]
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_fmt5r"]
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_2cxg3"]
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_jeuoj"]
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ysjec"]
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_dan6o"]
-
-[sub_resource type="LabelSettings" id="LabelSettings_6tq4s"]
+[sub_resource type="LabelSettings" id="LabelSettings_agdvs"]
+resource_local_to_scene = true
 font = ExtResource("4_myq5a")
 font_size = 12
 
@@ -28,6 +17,8 @@ texture_filter = 1
 custom_minimum_size = Vector2(112, 160)
 offset_right = 112.0
 offset_bottom = 160.0
+mouse_filter = 0
+mouse_default_cursor_shape = 2
 texture = ExtResource("1_catbv")
 script = ExtResource("1_iqs6v")
 
@@ -37,21 +28,7 @@ offset_right = 40.0
 offset_bottom = 40.0
 texture = ExtResource("3_bcb5n")
 
-[node name="Button" type="Button" parent="."]
-layout_mode = 2
-offset_left = 4.0
-offset_top = 4.0
-offset_right = 108.0
-offset_bottom = 156.0
-mouse_default_cursor_shape = 2
-theme_override_styles/focus = SubResource("StyleBoxEmpty_qe658")
-theme_override_styles/hover_pressed_mirrored = SubResource("StyleBoxEmpty_fmt5r")
-theme_override_styles/hover_pressed = SubResource("StyleBoxEmpty_2cxg3")
-theme_override_styles/hover = SubResource("StyleBoxEmpty_jeuoj")
-theme_override_styles/pressed = SubResource("StyleBoxEmpty_ysjec")
-theme_override_styles/normal = SubResource("StyleBoxEmpty_dan6o")
-
-[node name="Label" type="Label" parent="Button"]
+[node name="Label" type="Label" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -60,11 +37,11 @@ grow_horizontal = 2
 grow_vertical = 2
 text = "firerate
 +16"
-label_settings = SubResource("LabelSettings_6tq4s")
+label_settings = SubResource("LabelSettings_agdvs")
 horizontal_alignment = 1
 vertical_alignment = 1
 uppercase = true
 
+[connection signal="gui_input" from="." to="." method="_on_gui_input"]
 [connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
 [connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]
-[connection signal="pressed" from="Button" to="." method="_on_button_pressed"]

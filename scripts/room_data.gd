@@ -10,6 +10,7 @@ var max_enemies : int
 var rng_seed : int
 var gate_key_collected : bool = false
 var boss_defeated : bool = false
+var cleared : bool = false
 var depth : int
 
 func print_data():
