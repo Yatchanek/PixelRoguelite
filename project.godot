@@ -17,10 +17,11 @@ config/icon="res://icon.svg"
 
 [autoload]
 
-Settings="*res://scenes/settings.tscn"
-Globals="*res://scenes/globals.tscn"
-EventBus="*res://scenes/event_bus.tscn"
-SoundManager="*res://scenes/sound_manager.tscn"
+Settings="*res://scenes/autoloads/settings.tscn"
+Globals="*res://scenes/autoloads/globals.tscn"
+EventBus="*res://scenes/autoloads/event_bus.tscn"
+EnemySpawner="*res://scenes/autoloads/enemy_spawner.tscn"
+SoundManager="*res://scenes/autoloads/sound_manager.tscn"
 CrtOverlay="*res://scenes/crt_overlay.tscn"
 
 [display]

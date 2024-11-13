@@ -6,14 +6,20 @@ class_name UpgradeCard
 
 var upgrade_equipped : UpgradeData
 
+var disabled : bool = false
 
 signal card_added
 signal card_pressed
 
 func _ready() -> void:
 	apply_color_palette()
-
-	label.text = "%s\n+%s" % [upgrade_equipped.upgrade_name, upgrade_equipped.amount]
+	if upgrade_equipped.type == UpgradeManager.Upgrades.FIRERATE:
+		label.text = "%s\n+%.2f" % [upgrade_equipped.upgrade_name, upgrade_equipped.amount]
+		
+	elif upgrade_equipped.amount != 0:
+		label.text = "%s\n+%d" % [upgrade_equipped.upgrade_name, upgrade_equipped.amount]
+	else:
+		label.text = "%s"
 	card_added.emit()
 
 func apply_color_palette():
@@ -22,7 +28,7 @@ func apply_color_palette():
 	label.label_settings.font_color = Globals.color_palettes[Globals.current_palette][3] 
 
 func disable():
-	$Button.disabled = true
+	disabled = true
 
 func _on_button_pressed() -> void:
 	card_pressed.emit()
@@ -44,6 +50,8 @@ func _on_mouse_exited() -> void:
 
 
 func _on_gui_input(event: InputEvent) -> void:
+	if disabled:
+		return
 	if event is InputEventMouseButton:
 		if event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 			card_pressed.emit()

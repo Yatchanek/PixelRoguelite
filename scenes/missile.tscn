@@ -1,18 +1,13 @@
-[gd_scene load_steps=8 format=3 uid="uid://cwf1kuwrvillm"]
+[gd_scene load_steps=6 format=3 uid="uid://cwf1kuwrvillm"]
 
 [ext_resource type="Script" path="res://scripts/missile.gd" id="1_shdel"]
 [ext_resource type="Texture2D" uid="uid://ddbn8y5qt7ml" path="res://graphics/missile.png" id="2_ccsmc"]
-[ext_resource type="PackedScene" uid="uid://cwshy400yx3qo" path="res://scenes/hurt_box.tscn" id="3_3om5q"]
 [ext_resource type="PackedScene" uid="uid://drd2m072phc4v" path="res://scenes/hitbox.tscn" id="4_deyas"]
 [ext_resource type="Material" uid="uid://bonsxpa6vv2x4" path="res://missile.tres" id="5_ka8un"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_armpe"]
-resource_local_to_scene = true
-size = Vector2(3.5, 8)
-
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_rgrxb"]
 resource_local_to_scene = true
-size = Vector2(10, 6)
+size = Vector2(10, 8)
 
 [node name="Missile" type="Node2D"]
 texture_filter = 1
@@ -21,23 +16,12 @@ script = ExtResource("1_shdel")
 [node name="Body" type="Sprite2D" parent="."]
 texture = ExtResource("2_ccsmc")
 
-[node name="HurtBox" parent="." instance=ExtResource("3_3om5q")]
-position = Vector2(6, 0)
-collision_layer = 512
-collision_mask = 0
-damage = 2
-
-[node name="CollisionShape2D" parent="HurtBox" index="0"]
-position = Vector2(-0.75, 0)
-shape = SubResource("RectangleShape2D_armpe")
-
 [node name="Hitbox" parent="." node_paths=PackedStringArray("target") instance=ExtResource("4_deyas")]
 collision_layer = 32
-collision_mask = 7
+collision_mask = 0
 target = NodePath("..")
 
 [node name="CollisionShape2D" parent="Hitbox" index="0"]
-position = Vector2(1, 0)
 shape = SubResource("RectangleShape2D_rgrxb")
 
 [node name="Engine" type="GPUParticles2D" parent="."]
@@ -46,5 +30,4 @@ amount = 32
 process_material = ExtResource("5_ka8un")
 lifetime = 0.5
 
-[editable path="HurtBox"]
 [editable path="Hitbox"]

@@ -1,4 +1,4 @@
-[gd_scene load_steps=62 format=3 uid="uid://blgcf5t6qthui"]
+[gd_scene load_steps=63 format=3 uid="uid://blgcf5t6qthui"]
 
 [ext_resource type="FontFile" uid="uid://bs4wn8lq821l5" path="res://fonts/NotJamChunkySans.ttf" id="2_8u3cf"]
 [ext_resource type="Script" path="res://scripts/title_screen_ui.gd" id="2_x1msa"]
@@ -51,6 +51,12 @@ font = ExtResource("2_8u3cf")
 font_size = 36
 outline_size = 8
 outline_color = Color(0.169245, 0.169245, 0.169245, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_vvar6"]
+font = ExtResource("2_8u3cf")
+font_size = 48
+outline_size = 24
+outline_color = Color(0, 0, 0, 1)
 
 [sub_resource type="LabelSettings" id="LabelSettings_apjwr"]
 font = ExtResource("2_8u3cf")
@@ -211,7 +217,9 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="UI/Control"]
+[node name="Menu" type="VBoxContainer" parent="UI/Control"]
+visible = false
+modulate = Color(1, 1, 1, 0)
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -227,7 +235,7 @@ grow_vertical = 2
 mouse_filter = 2
 theme_override_constants/separation = 16
 
-[node name="StartGame" type="Button" parent="UI/Control/VBoxContainer" groups=["InteractableUI", "MainButtons"]]
+[node name="StartGame" type="Button" parent="UI/Control/Menu" groups=["InteractableUI", "MainButtons"]]
 custom_minimum_size = Vector2(256, 48)
 layout_mode = 2
 mouse_default_cursor_shape = 2
@@ -243,7 +251,7 @@ theme_override_styles/pressed = SubResource("StyleBoxEmpty_bkxkg")
 theme_override_styles/normal_mirrored = SubResource("StyleBoxEmpty_3st6p")
 theme_override_styles/normal = SubResource("StyleBoxEmpty_jh6wt")
 
-[node name="StartGameLabel" type="Label" parent="UI/Control/VBoxContainer/StartGame" groups=["MainButtonLabels"]]
+[node name="StartGameLabel" type="Label" parent="UI/Control/Menu/StartGame" groups=["MainButtonLabels"]]
 custom_minimum_size = Vector2(256, 48)
 layout_mode = 1
 anchors_preset = 15
@@ -256,7 +264,7 @@ label_settings = SubResource("LabelSettings_ln24y")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Options" type="Button" parent="UI/Control/VBoxContainer" groups=["InteractableUI", "MainButtons"]]
+[node name="Options" type="Button" parent="UI/Control/Menu" groups=["InteractableUI", "MainButtons"]]
 custom_minimum_size = Vector2(256, 48)
 layout_mode = 2
 mouse_default_cursor_shape = 2
@@ -272,7 +280,7 @@ theme_override_styles/pressed = SubResource("StyleBoxEmpty_bkxkg")
 theme_override_styles/normal_mirrored = SubResource("StyleBoxEmpty_3st6p")
 theme_override_styles/normal = SubResource("StyleBoxEmpty_jh6wt")
 
-[node name="OptionsLabel" type="Label" parent="UI/Control/VBoxContainer/Options" groups=["MainButtonLabels"]]
+[node name="OptionsLabel" type="Label" parent="UI/Control/Menu/Options" groups=["MainButtonLabels"]]
 custom_minimum_size = Vector2(256, 48)
 layout_mode = 1
 anchors_preset = 15
@@ -285,7 +293,7 @@ label_settings = SubResource("LabelSettings_3wh1c")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Quit" type="Button" parent="UI/Control/VBoxContainer" groups=["InteractableUI", "MainButtons"]]
+[node name="Quit" type="Button" parent="UI/Control/Menu" groups=["InteractableUI", "MainButtons"]]
 custom_minimum_size = Vector2(256, 48)
 layout_mode = 2
 mouse_default_cursor_shape = 2
@@ -301,7 +309,7 @@ theme_override_styles/pressed = SubResource("StyleBoxEmpty_bkxkg")
 theme_override_styles/normal_mirrored = SubResource("StyleBoxEmpty_3st6p")
 theme_override_styles/normal = SubResource("StyleBoxEmpty_jh6wt")
 
-[node name="QuitLabel" type="Label" parent="UI/Control/VBoxContainer/Quit" groups=["MainButtonLabels"]]
+[node name="QuitLabel" type="Label" parent="UI/Control/Menu/Quit" groups=["MainButtonLabels"]]
 custom_minimum_size = Vector2(256, 48)
 layout_mode = 1
 anchors_preset = 15
@@ -313,6 +321,173 @@ text = "QUIT"
 label_settings = SubResource("LabelSettings_qxidk")
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="Title" type="VBoxContainer" parent="UI/Control"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_top = 14.0
+offset_bottom = 120.0
+grow_horizontal = 2
+theme_override_constants/separation = 8
+
+[node name="HBoxContainer" type="HBoxContainer" parent="UI/Control/Title"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 32
+alignment = 1
+
+[node name="The" type="HBoxContainer" parent="UI/Control/Title/HBoxContainer"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 0
+
+[node name="Label" type="Label" parent="UI/Control/Title/HBoxContainer/The" groups=["TitleLetters"]]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+text = "t"
+label_settings = SubResource("LabelSettings_vvar6")
+horizontal_alignment = 1
+uppercase = true
+
+[node name="Label2" type="Label" parent="UI/Control/Title/HBoxContainer/The" groups=["TitleLetters"]]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+text = "h"
+label_settings = SubResource("LabelSettings_vvar6")
+horizontal_alignment = 1
+uppercase = true
+
+[node name="Label3" type="Label" parent="UI/Control/Title/HBoxContainer/The" groups=["TitleLetters"]]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+text = "e"
+label_settings = SubResource("LabelSettings_vvar6")
+horizontal_alignment = 1
+uppercase = true
+
+[node name="Last" type="HBoxContainer" parent="UI/Control/Title/HBoxContainer"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 0
+
+[node name="Label" type="Label" parent="UI/Control/Title/HBoxContainer/Last" groups=["TitleLetters"]]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+text = "l"
+label_settings = SubResource("LabelSettings_vvar6")
+horizontal_alignment = 1
+uppercase = true
+
+[node name="Label2" type="Label" parent="UI/Control/Title/HBoxContainer/Last" groups=["TitleLetters"]]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+text = "a"
+label_settings = SubResource("LabelSettings_vvar6")
+horizontal_alignment = 1
+uppercase = true
+
+[node name="Label3" type="Label" parent="UI/Control/Title/HBoxContainer/Last" groups=["TitleLetters"]]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+text = "s"
+label_settings = SubResource("LabelSettings_vvar6")
+horizontal_alignment = 1
+uppercase = true
+
+[node name="Label4" type="Label" parent="UI/Control/Title/HBoxContainer/Last" groups=["TitleLetters"]]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+text = "t"
+label_settings = SubResource("LabelSettings_vvar6")
+horizontal_alignment = 1
+uppercase = true
+
+[node name="Mazewalker" type="HBoxContainer" parent="UI/Control/Title"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 0
+alignment = 1
+
+[node name="Label" type="Label" parent="UI/Control/Title/Mazewalker" groups=["TitleLetters"]]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+text = "m"
+label_settings = SubResource("LabelSettings_vvar6")
+horizontal_alignment = 1
+uppercase = true
+
+[node name="Label2" type="Label" parent="UI/Control/Title/Mazewalker" groups=["TitleLetters"]]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+text = "a"
+label_settings = SubResource("LabelSettings_vvar6")
+horizontal_alignment = 1
+uppercase = true
+
+[node name="Label3" type="Label" parent="UI/Control/Title/Mazewalker" groups=["TitleLetters"]]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+text = "z"
+label_settings = SubResource("LabelSettings_vvar6")
+horizontal_alignment = 1
+uppercase = true
+
+[node name="Label4" type="Label" parent="UI/Control/Title/Mazewalker" groups=["TitleLetters"]]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+text = "e"
+label_settings = SubResource("LabelSettings_vvar6")
+horizontal_alignment = 1
+uppercase = true
+
+[node name="Label5" type="Label" parent="UI/Control/Title/Mazewalker" groups=["TitleLetters"]]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+text = "w"
+label_settings = SubResource("LabelSettings_vvar6")
+horizontal_alignment = 1
+uppercase = true
+
+[node name="Label6" type="Label" parent="UI/Control/Title/Mazewalker" groups=["TitleLetters"]]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+text = "a"
+label_settings = SubResource("LabelSettings_vvar6")
+horizontal_alignment = 1
+uppercase = true
+
+[node name="Label7" type="Label" parent="UI/Control/Title/Mazewalker" groups=["TitleLetters"]]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+text = "l"
+label_settings = SubResource("LabelSettings_vvar6")
+horizontal_alignment = 1
+uppercase = true
+
+[node name="Label8" type="Label" parent="UI/Control/Title/Mazewalker" groups=["TitleLetters"]]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+text = "k"
+label_settings = SubResource("LabelSettings_vvar6")
+horizontal_alignment = 1
+uppercase = true
+
+[node name="Label9" type="Label" parent="UI/Control/Title/Mazewalker" groups=["TitleLetters"]]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+text = "e"
+label_settings = SubResource("LabelSettings_vvar6")
+horizontal_alignment = 1
+uppercase = true
+
+[node name="Label10" type="Label" parent="UI/Control/Title/Mazewalker" groups=["TitleLetters"]]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+text = "r"
+label_settings = SubResource("LabelSettings_vvar6")
+horizontal_alignment = 1
+uppercase = true
 
 [node name="MarginContainer" type="MarginContainer" parent="UI/Control"]
 custom_minimum_size = Vector2(512, 320)
@@ -893,8 +1068,8 @@ libraries = {
 }
 speed_scale = 4.0
 
-[connection signal="pressed" from="UI/Control/VBoxContainer/StartGame" to="." method="_on_start_game_pressed"]
-[connection signal="pressed" from="UI/Control/VBoxContainer/Options" to="." method="_on_options_pressed"]
+[connection signal="pressed" from="UI/Control/Menu/StartGame" to="." method="_on_start_game_pressed"]
+[connection signal="pressed" from="UI/Control/Menu/Options" to="." method="_on_options_pressed"]
 [connection signal="value_changed" from="UI/Control/MarginContainer/Options/GAMEPLAY/MarginContainer/VBoxContainer/HBoxContainer/maze_size" to="." method="_on_maze_size_value_changed"]
 [connection signal="value_changed" from="UI/Control/MarginContainer/Options/GAMEPLAY/MarginContainer/VBoxContainer/HBoxContainer2/difficulty" to="." method="_on_difficulty_value_changed"]
 [connection signal="pressed" from="UI/Control/MarginContainer/Options/GRAPHICS/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/ChangePaletteButon" to="." method="_on_change_palette_buton_pressed"]

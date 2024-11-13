@@ -8,7 +8,7 @@ var rotation_offset : int
 var size : int
 
 @onready var body: Polygon2D = $Polygon2D
-@onready var light_occluder: LightOccluder2D = $LightOccluder
+#@onready var light_occluder: LightOccluder2D = $LightOccluder
 
 
 
@@ -30,7 +30,7 @@ func _ready() -> void:
 	#vertices = Transform2D(rotation_offset * PI / 2, Vector2.ZERO) * vertices
 	$Polygon2D.set_polygon(vertices)
 	$CollisionPolygon2D.set_polygon(vertices)
-	light_occluder.occluder.set_polygon(vertices)
+	#light_occluder.occluder.set_polygon(vertices)
 	apply_color_palette()
 	
 	rotation = rotation_offset * PI / 2

@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3 uid="uid://reorxy057pn7"]
+
+[ext_resource type="Texture2D" uid="uid://o8fchqgb75fw" path="res://graphics/player_ghost.png" id="1_ocrpq"]
+[ext_resource type="Script" path="res://scripts/player_ghost.gd" id="2_kqke3"]
+
+[node name="PlayerGhost" type="Sprite2D"]
+texture_filter = 1
+texture = ExtResource("1_ocrpq")
+region_enabled = true
+region_rect = Rect2(0, 0, 16, 16)
+script = ExtResource("2_kqke3")

@@ -53,7 +53,7 @@ func explode(spawn_fragments : bool = true):
 	explosion.initialize(Vector2.ZERO, colors)
 	exploded.emit(explosion, global_position)
 	if spawn_fragments:
-		for i in randi_range(16, 20):
+		for i in randi_range(12, 16):
 			var fragment = fragment_scene.instantiate()
 			fragment.rotation = randf_range(0, TAU)
 			fragment_fired.emit(fragment, global_position)

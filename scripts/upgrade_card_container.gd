@@ -4,53 +4,48 @@ class_name UpgradeManager
 const card_scene = preload("res://scenes/upgrade_card.tscn")
 
 var selected_upgrades : Array[Upgrades] = []
-var cards_added : int = 0
 var cards_to_add : int = 2
+var cards_added : int = 0
 
 enum Upgrades {
 	SPEED,
 	FIRERATE,
 	HITPOINTS,
+	SHIELD_STRENGTH,
 	BULLET_SPEED,
-	BULLET_DAMAGE
+	BULLET_DAMAGE,
+	AUTOFIRE,
 }
 
-var upgrade_names : Dictionary = {
-	Upgrades.SPEED : "Speed",
-	Upgrades.FIRERATE : "Firerate",
-	Upgrades.HITPOINTS : "Hitpoints",
-	Upgrades.BULLET_SPEED : "Bullet\nSpeed",
-	Upgrades.BULLET_DAMAGE : "Power",
-}
 
 var upgrade_probabilities : Dictionary = {
-	Upgrades.SPEED : 0.35,
+	Upgrades.SPEED : 0.25,
 	Upgrades.FIRERATE : 0.25,
-	Upgrades.HITPOINTS : 0.15,
-	Upgrades.BULLET_SPEED : 0.2,
-	Upgrades.BULLET_DAMAGE : 0.05,	
+	Upgrades.HITPOINTS : 0.1,
+	Upgrades.SHIELD_STRENGTH : 0.05,
+	Upgrades.BULLET_SPEED : 0.15,
+	Upgrades.BULLET_DAMAGE : 0.025,
+	Upgrades.AUTOFIRE : 0.01,
 }
 
-func add_card():
-	print("Adding card")
+func add_cards():
 	var candidates : Array[Upgrades] = get_possible_upgrades()
-	if candidates.size() == 1 and get_child_count() == 0:
-		cards_to_add = 1
+	for i in min(candidates.size(), cards_to_add):	
+		var selected_upgrade : Upgrades = select_upgrade_type(candidates)
+		var amount : float = get_amount(selected_upgrade)
+	
+		var upgrade_data = UpgradeData.new()
+		upgrade_data.initialize(selected_upgrade, amount)
+	
+		var card : UpgradeCard = card_scene.instantiate()
+		card.upgrade_equipped = upgrade_data
+	
+		selected_upgrades.append(selected_upgrade)
+	
+		card.card_added.connect(_on_card_added)
+		card.card_pressed.connect(_on_card_pressed)
+		call_deferred("add_child", card)
 		
-	var selected_upgrade : Upgrades = select_upgrade_type()
-	var amount : int = get_amount(selected_upgrade)
-	
-	var upgrade_data = UpgradeData.new()
-	upgrade_data.initialize(selected_upgrade, amount)
-	
-	var card : UpgradeCard = card_scene.instantiate()
-	card.upgrade_equipped = upgrade_data
-	
-	selected_upgrades.append(selected_upgrade)
-	
-	card.card_added.connect(_on_card_added)
-	card.card_pressed.connect(_on_card_pressed)
-	call_deferred("add_child", card)
 	
 func show_cards():
 	var tw : Tween = create_tween()
@@ -61,85 +56,74 @@ func show_cards():
 
 
 func hide_cards():
-	selected_upgrades = []
+	cards_added = 0
 	var tw : Tween = create_tween()
 	tw.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
 	tw.set_parallel()
 	for idx in get_child_count():
-		tw.tween_property(get_child(idx), "position:y", 0, 1.0).set_delay(idx * 0.25)
+		tw.tween_property(get_child(idx), "position:y", 0, 0.75).set_delay(idx * 0.15)
 	await tw.finished
 	for card in get_children():
 		card.queue_free()
 	Globals.leveled_up = false
-	await get_tree().create_timer(1.0).timeout
 	get_tree().paused = false
 
-func select_upgrade_type() -> Upgrades:
+func select_upgrade_type(candidate_pool : Array[Upgrades]) -> Upgrades:
 	var candidate : Upgrades
-	var candidate_pool : Array[Upgrades] = get_possible_upgrades()
 	
 	var roll : float = randf()
 	var total_chance : float = 0
 	
-	for upgrade : Upgrades in upgrade_probabilities.keys():
+	for upgrade : Upgrades in candidate_pool:
 		total_chance += upgrade_probabilities[upgrade]
 		if roll < total_chance:
 			candidate = upgrade
+			candidate_pool.erase(candidate)
 			break
 
 	return candidate
 
-func get_amount(upgrade : Upgrades):
+func get_amount(upgrade : Upgrades) -> float:
 	match upgrade:
 		Upgrades.SPEED:
 			return 16
 		Upgrades.BULLET_DAMAGE:
 			return 1
 		Upgrades.FIRERATE:
-			return 0.1
+			return 0.05
 		Upgrades.BULLET_SPEED:
 			return 16
 		Upgrades.HITPOINTS:
-			return 5	
+			return 5
+		Upgrades.SHIELD_STRENGTH:
+			return 3
+		Upgrades.AUTOFIRE:
+			return 0
+	return -1
 
 func get_possible_upgrades() -> Array[Upgrades]:
-	var candidates : Array[Upgrades] = [Upgrades.SPEED, Upgrades.FIRERATE, Upgrades.HITPOINTS, Upgrades.BULLET_SPEED, Upgrades.BULLET_DAMAGE]
-	if Globals.player.speed >= 320:
-		candidates.erase(Upgrades.SPEED)
-	if Globals.player.power >= 5:
-		candidates.erase(Upgrades.BULLET_DAMAGE)
-	if Globals.player.fire_rate <= 0.1:
-		candidates.erase(Upgrades.FIRERATE)	
-	if Globals.player.bullet_speed >= 720:
-		candidates.erase(Upgrades.BULLET_SPEED)
+	var candidates : Array[Upgrades] = [Upgrades.HITPOINTS]
+	if Globals.player.speed < 320:
+		candidates.append(Upgrades.SPEED)
+	if Globals.player.power < 10:
+		candidates.append(Upgrades.BULLET_DAMAGE)
+	if Globals.player.fire_rate > 0.1:
+		candidates.append(Upgrades.FIRERATE)	
+	if Globals.player.bullet_speed < 768:
+		candidates.append(Upgrades.BULLET_SPEED)
+	if Globals.player.level > 5 and Globals.player.autofire == false:
+		candidates.append(Upgrades.AUTOFIRE)
 	
 	return candidates
 
-func is_upgrade_possible(upgrade : Upgrades) -> bool:
-	if selected_upgrades.has(upgrade):
-		return false
-	match upgrade:
-		Upgrades.SPEED:
-			if Globals.player.speed >= 320:
-				return false
-		Upgrades.BULLET_DAMAGE:
-			if Globals.player.power >= 5:
-				return false
-		Upgrades.FIRERATE:
-			if Globals.player.fire_rate <= 0.1:
-				return false
-		Upgrades.BULLET_SPEED:
-			if Globals.player.bullet_speed >= 720:
-				return false
-	return true
-	
-func _on_card_added():
-	cards_added += 1
-	if cards_added < cards_to_add:
-		add_card()
-	else:
-		show_cards()
 
 func _on_card_pressed():
 	for card : UpgradeCard in get_children():
 		card.disable()
+	await get_tree().create_timer(0.5).timeout
+	hide_cards()
+
+func _on_card_added():
+	cards_added += 1
+	if cards_added == cards_to_add:
+		show_cards()

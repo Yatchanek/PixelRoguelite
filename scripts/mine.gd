@@ -72,7 +72,7 @@ func _on_timer_timeout() -> void:
 	explode()
 
 
-func _on_body_entered(body: Node2D) -> void:
+func _on_body_entered(_body: Node2D) -> void:
 	color_flip_interval = 0.075
 	beep = true
 	timer.start(0.75)

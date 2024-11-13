@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://60nvyx6hcw6k"]
+[gd_scene load_steps=21 format=3 uid="uid://60nvyx6hcw6k"]
 
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_7xbh1"]
 [ext_resource type="Texture2D" uid="uid://cvrbwtjc3aamn" path="res://graphics/player_2_lower.png" id="2_sqk20"]
@@ -7,6 +7,8 @@
 [ext_resource type="PackedScene" uid="uid://drd2m072phc4v" path="res://scenes/hitbox.tscn" id="4_h6job"]
 [ext_resource type="AudioStream" uid="uid://dhnr8wnf2b0ru" path="res://sounds/shoot_by_little_robot_sound_factory.ogg" id="5_manoi"]
 [ext_resource type="Texture2D" uid="uid://ckwvg67w2r0rt" path="res://graphics/boss_cannon.png" id="7_dxmpv"]
+[ext_resource type="Texture2D" uid="uid://cps3lggc81usf" path="res://graphics/shield_body.png" id="8_gxjw5"]
+[ext_resource type="Texture2D" uid="uid://c7pb0vnkiuvc2" path="res://graphics/shield_legs.png" id="9_k2wbq"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_bs7nj"]
 radius = 8.0
@@ -52,6 +54,40 @@ size = Vector2(16, 16)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_26t0u"]
 size = Vector2(8, 8)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_a2nta"]
+atlas = ExtResource("9_k2wbq")
+region = Rect2(0, 0, 20, 20)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_eos30"]
+atlas = ExtResource("9_k2wbq")
+region = Rect2(20, 0, 20, 20)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_y2swh"]
+atlas = ExtResource("9_k2wbq")
+region = Rect2(40, 0, 20, 20)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_wo77b"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_a2nta")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 0.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_eos30")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_y2swh")
+}],
+"loop": true,
+"name": &"walk",
+"speed": 5.0
+}]
+
 [node name="Player" type="CharacterBody2D"]
 z_index = 3
 texture_filter = 1
@@ -74,7 +110,7 @@ texture = ExtResource("3_dbj3m")
 
 [node name="Legs" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_cefm1")
-animation = &"walk"
+animation = &"idle"
 
 [node name="Hitbox" parent="." node_paths=PackedStringArray("target") instance=ExtResource("4_h6job")]
 visible = false
@@ -85,6 +121,11 @@ target = NodePath("..")
 
 [node name="CollisionShape2D" parent="Hitbox" index="0"]
 shape = SubResource("RectangleShape2D_mxbb2")
+
+[node name="TurretHitbox" type="CollisionShape2D" parent="Hitbox"]
+visible = false
+position = Vector2(16, 0)
+shape = SubResource("RectangleShape2D_26t0u")
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("5_manoi")
@@ -99,13 +140,27 @@ offset = Vector2(2, 0)
 [node name="Muzzle" type="Marker2D" parent="TurretPivot/Turret"]
 position = Vector2(8, 0)
 
+[node name="Shield" type="Sprite2D" parent="."]
+modulate = Color(1, 1, 1, 0)
+texture = ExtResource("8_gxjw5")
+offset = Vector2(0, -2)
+
+[node name="ShieldLegs" type="AnimatedSprite2D" parent="."]
+modulate = Color(1, 1, 1, 0)
+sprite_frames = SubResource("SpriteFrames_wo77b")
+animation = &"idle"
+
 [node name="TurretCollision" type="CollisionShape2D" parent="."]
 visible = false
 position = Vector2(16, 0)
 shape = SubResource("RectangleShape2D_26t0u")
 
+[node name="GhostTimer" type="Timer" parent="."]
+wait_time = 0.05
+
 [connection signal="timeout" from="ShootTimer" to="." method="_on_shoot_timer_timeout"]
 [connection signal="area_entered" from="Hitbox" to="." method="_on_hitbox_area_entered"]
 [connection signal="area_exited" from="Hitbox" to="." method="_on_hitbox_area_exited"]
+[connection signal="timeout" from="GhostTimer" to="." method="_on_ghost_timer_timeout"]
 
 [editable path="Hitbox"]

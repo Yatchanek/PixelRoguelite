@@ -1,0 +1,34 @@
+[gd_scene load_steps=9 format=3 uid="uid://bdpxgjmayljm6"]
+
+[ext_resource type="Script" path="res://scripts/autoloads/sound_manager.gd" id="1_sy5cd"]
+[ext_resource type="AudioStream" uid="uid://dhnr8wnf2b0ru" path="res://sounds/shoot_by_little_robot_sound_factory.ogg" id="2_dn0vs"]
+[ext_resource type="AudioStream" uid="uid://cqpik766a2fhp" path="res://sounds/shoot_by_shades.ogg" id="3_721wc"]
+[ext_resource type="AudioStream" uid="uid://benilu5tidf" path="res://sounds/hit_by_little_robot_sound_factory.ogg" id="4_2gigp"]
+[ext_resource type="AudioStream" uid="uid://bo2wl8k2kepak" path="res://sounds/laser_by_kenney.ogg" id="4_mbm1f"]
+[ext_resource type="AudioStream" uid="uid://es7fbcvtd0bj" path="res://sounds/missile_by_juhani_junkala.ogg" id="5_omqyu"]
+[ext_resource type="AudioStream" uid="uid://bfhcog5w2syw7" path="res://sounds/beep_by_phoenix1291.ogg" id="6_spina"]
+[ext_resource type="AudioStream" uid="uid://cifvlw1h1bj5e" path="res://sounds/explosion_by_juhani_junkala.ogg" id="7_17ns8"]
+
+[node name="SoundManager" type="Node"]
+script = ExtResource("1_sy5cd")
+sound_effects = Array[AudioStream]([ExtResource("2_dn0vs"), ExtResource("3_721wc"), ExtResource("4_mbm1f"), ExtResource("5_omqyu"), ExtResource("4_2gigp"), ExtResource("7_17ns8"), ExtResource("6_spina")])
+
+[node name="EffectChannels" type="Node" parent="."]
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="EffectChannels"]
+bus = &"Effects"
+
+[node name="AudioStreamPlayer2" type="AudioStreamPlayer" parent="EffectChannels"]
+bus = &"Effects"
+
+[node name="AudioStreamPlayer3" type="AudioStreamPlayer" parent="EffectChannels"]
+bus = &"Effects"
+
+[node name="AudioStreamPlayer4" type="AudioStreamPlayer" parent="EffectChannels"]
+bus = &"Effects"
+
+[node name="AudioStreamPlayer5" type="AudioStreamPlayer" parent="EffectChannels"]
+bus = &"Effects"
+
+[node name="AudioStreamPlayer6" type="AudioStreamPlayer" parent="EffectChannels"]
+bus = &"Effects"

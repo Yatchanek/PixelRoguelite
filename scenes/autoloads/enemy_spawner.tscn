@@ -1,0 +1,16 @@
+[gd_scene load_steps=7 format=3 uid="uid://dst0p55y01x1v"]
+
+[ext_resource type="Script" path="res://scripts/enemy_spawner.gd" id="1_ui817"]
+[ext_resource type="PackedScene" uid="uid://cbt43bob567kg" path="res://scenes/enemies/basic_enemy.tscn" id="2_4d4b1"]
+[ext_resource type="PackedScene" uid="uid://dtr518r4etmki" path="res://scenes/enemies/kamikaze_enemy.tscn" id="3_uk38f"]
+[ext_resource type="PackedScene" uid="uid://bakh3yemw3t6c" path="res://scenes/enemies/missile_enemy.tscn" id="4_ijcy2"]
+[ext_resource type="PackedScene" uid="uid://bhucoim8sfub4" path="res://scenes/enemies/rapid_fire_enemy.tscn" id="5_u6f5k"]
+[ext_resource type="PackedScene" uid="uid://cnt47l2vm2pq3" path="res://scenes/enemies/laser_enemy.tscn" id="6_c61jf"]
+
+[node name="EnemySpawner" type="Node"]
+script = ExtResource("1_ui817")
+basic_enemy_scene = ExtResource("2_4d4b1")
+kamikaze_enemy_scene = ExtResource("3_uk38f")
+missile_enemy_scene = ExtResource("4_ijcy2")
+rapid_fire_enemy_scene = ExtResource("5_u6f5k")
+laser_enemy_scene = ExtResource("6_c61jf")

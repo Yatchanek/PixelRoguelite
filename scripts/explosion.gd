@@ -12,7 +12,7 @@ func _ready() -> void:
 		emitting = true
 	
 
-func initialize(dir : Vector2, colors : Array[Color], _delay : float = 0.0):
+func initialize(_dir : Vector2, colors : Array[Color], _delay : float = 0.0):
 	var gradient : Gradient = Gradient.new()
 	gradient.colors = []
 	gradient.offsets = []

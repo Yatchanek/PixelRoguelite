@@ -3,7 +3,7 @@ extends Node2D
 @onready var battle_timer: Timer = $BattleTimer
 @onready var navigation_region_2d: NavigationRegion2D = $NavigationRegion2D
 
-const enemy_scnene = preload("res://scenes/basic_enemy_title_screen.tscn")
+const enemy_scene = preload("res://scenes/enemies/basic_enemy_title_screen.tscn")
 
 var enemies : Array[Enemy] = []
 
@@ -26,6 +26,9 @@ func _ready() -> void:
 	navigation_region_2d.bake_navigation_polygon(
 		
 	)
+	
+	
+func start():
 	await get_tree().create_timer(1.0).timeout
 
 	spawn_dummies(10)
@@ -54,7 +57,7 @@ func spawn_dummies(amount : int):
 			accepted = true
 			
 	if accepted:
-		var enemy : Enemy = enemy_scnene.instantiate()
+		var enemy : Enemy = enemy_scene.instantiate()
 		enemy.bullet_fired.connect(_on_bullet_fired)
 		enemy.exploded.connect(_on_explosion)
 		enemy.destroyed.connect(_on_enemy_destroyed)

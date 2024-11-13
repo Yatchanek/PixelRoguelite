@@ -4,7 +4,7 @@
 
 [node name="OuterWall" type="StaticBody2D"]
 collision_layer = 4
-collision_mask = 3
+collision_mask = 32771
 script = ExtResource("1_13tny")
 
 [node name="Lines" type="Node2D" parent="."]

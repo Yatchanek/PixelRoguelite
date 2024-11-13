@@ -105,13 +105,13 @@ func change_room(previous_room_coords : Vector2i, exit_index : int):
 	player.activate_collision()
 	EventBus.room_changed.emit(current_room.room_data)
 
-func create_room_data(coords : Vector2i, layout : int, first_visited : int, last_visited : int) -> RoomData:
+func create_room_data(coords : Vector2i, layout : int, first_visited : int, last_cleared : int) -> RoomData:
 	var data : RoomData = RoomData.new()
 	
 	data.coords = coords
 	data.layout_type = layout
 	data.first_visited = first_visited
-	data.last_visited = last_visited
+	data.last_cleared = last_cleared
 	
 	return data
 
@@ -135,7 +135,7 @@ func create_new_room(coords : Vector2i) -> Room:
 	else:
 		exit_layout = choose_exit_layout(coords)
 		
-	var room_data : RoomData = create_room_data(coords, exit_layout, current_time, current_time)
+	var room_data : RoomData = create_room_data(coords, exit_layout, current_time, 0)
 	new_room.room_data = room_data
 	
 	return new_room
@@ -208,15 +208,23 @@ func _on_explosion(explosion : Explosion, pos : Vector2):
 func _on_bullet_fired(bullet: Node2D, pos: Vector2) -> void:
 	bullet.position = current_room.to_local(pos)
 	current_room.bullets.call_deferred("add_child", bullet)
-	
+
+func _on_ghost_spawned(ghost : Sprite2D, pos : Vector2):
+	ghost.position = pos
+	call_deferred("add_child", ghost)
+
 func _on_upgrade_selected(data: UpgradeData):
-	if data.current_type == UpgradeManager.Upgrades.SPEED:
+	if data.type == UpgradeManager.Upgrades.SPEED:
 		player.increase_speed(data.amount)
-	if data.current_type == UpgradeManager.Upgrades.FIRERATE:
+	if data.type == UpgradeManager.Upgrades.FIRERATE:
 		player.change_firerate(-data.amount)
-	if data.current_type == UpgradeManager.Upgrades.HITPOINTS:
+	if data.type == UpgradeManager.Upgrades.HITPOINTS:
 		player.increase_max_hp(data.amount)
-	if data.current_type == UpgradeManager.Upgrades.BULLET_SPEED:
+	if data.type == UpgradeManager.Upgrades.BULLET_SPEED:
 		player.increase_bullet_speed(data.amount)
-	if data.current_type == UpgradeManager.Upgrades.BULLET_DAMAGE:
+	if data.type == UpgradeManager.Upgrades.BULLET_DAMAGE:
 		player.increase_power(data.amount)
+	if data.type == UpgradeManager.Upgrades.SHIELD_STRENGTH:
+		player.increase_shield_max_hp(data.amount)
+	if data.type == UpgradeManager.Upgrades.AUTOFIRE:
+		player.autofire = true

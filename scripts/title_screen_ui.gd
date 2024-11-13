@@ -27,6 +27,10 @@ var bordered_button_scene = preload("res://scenes/bordered_button.tscn")
 @onready var effects_colume_slider: HSlider = %effects_volume
 @onready var music_volume_slider: HSlider = %music_volume
 
+@onready var menu: VBoxContainer = $UI/Control/Menu
+@onready var game_demo: Node2D = $GameDemo
+
+
 var candidate_color_palette : int
 
 # Called when the node enters the scene tree for the first time.
@@ -63,6 +67,31 @@ func _ready() -> void:
 	set_sliders()
 	apply_color_palette()
 	set_arrow_cursor()
+	animate_title()
+
+func animate_title():
+	var letter_array : Array = get_tree().get_nodes_in_group("TitleLetters")
+	letter_array.shuffle()
+	var tw : Tween = create_tween()
+	tw.set_ease(Tween.EASE_IN_OUT)
+	tw.set_parallel()
+	
+	for i in letter_array.size():
+		tw.tween_property(letter_array[i], "modulate:a", 1.0, 0.15).set_delay(1.0 + i * 0.075)
+
+	await tw.finished
+	animate_menu()
+	
+func animate_menu():
+	menu.show()
+	var tw : Tween = create_tween()
+	tw.set_ease(Tween.EASE_IN_OUT)
+	tw.tween_interval(1.0)
+	tw.tween_property(menu, "modulate:a", 1.0, 0.75)
+	
+	await tw.finished
+	game_demo.start()
+	
 
 func set_sliders():
 	var crt_material : ShaderMaterial = CrtOverlay.get_node("CRTOverlay").material
@@ -140,7 +169,10 @@ func apply_color_palette():
 	options.add_theme_stylebox_override("tab_hovered", stylebox)
 	
 	Globals.adjust_missile_palette()
-	
+	$UI/Control/Title/HBoxContainer/The/Label.label_settings.font_color = Globals.color_palettes[Globals.current_palette][2]
+	$UI/Control/Title/HBoxContainer/The/Label.label_settings.outline_color = Globals.color_palettes[Globals.current_palette][6]
+
+
 	$GameDemo.apply_color_palette()
 
 func create_palette_buttons():
@@ -169,7 +201,7 @@ func set_hand_cursor():
 	cursor.offset = Vector2(12, 19)
 	cursor_inner.offset = Vector2(12, 19)
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	cursor.position = get_global_mouse_position()
 
 

@@ -169,16 +169,37 @@ horizontal_alignment = 2
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 0
+theme_override_constants/separation = 32
 alignment = 2
 
-[node name="HPLabel" type="Label" parent="Hud/Control/TopBar/MarginContainer/VBoxContainer/UpperBar/HBoxContainer2"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="Hud/Control/TopBar/MarginContainer/VBoxContainer/UpperBar/HBoxContainer2"]
+layout_mode = 2
+
+[node name="ShieldLabel" type="Label" parent="Hud/Control/TopBar/MarginContainer/VBoxContainer/UpperBar/HBoxContainer2/HBoxContainer2"]
+layout_mode = 2
+size_flags_vertical = 0
+text = "SHield:"
+label_settings = SubResource("LabelSettings_xoy25")
+uppercase = true
+
+[node name="ShieldBar" type="TextureProgressBar" parent="Hud/Control/TopBar/MarginContainer/VBoxContainer/UpperBar/HBoxContainer2/HBoxContainer2"]
+custom_minimum_size = Vector2(64, 0)
+layout_mode = 2
+max_value = 50.0
+value = 5.0
+texture_progress = ExtResource("7_yuboa")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Hud/Control/TopBar/MarginContainer/VBoxContainer/UpperBar/HBoxContainer2"]
+layout_mode = 2
+
+[node name="HPLabel" type="Label" parent="Hud/Control/TopBar/MarginContainer/VBoxContainer/UpperBar/HBoxContainer2/HBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 0
 text = "HP:"
 label_settings = SubResource("LabelSettings_xoy25")
 uppercase = true
 
-[node name="HPBar" type="TextureProgressBar" parent="Hud/Control/TopBar/MarginContainer/VBoxContainer/UpperBar/HBoxContainer2"]
+[node name="HPBar" type="TextureProgressBar" parent="Hud/Control/TopBar/MarginContainer/VBoxContainer/UpperBar/HBoxContainer2/HBoxContainer"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(64, 0)
 layout_mode = 2
@@ -336,4 +357,8 @@ environment = SubResource("Environment_pad1q")
 [connection signal="bullet_fired" from="World/Player" to="World" method="_on_bullet_fired"]
 [connection signal="died" from="World/Player" to="World" method="_on_player_died"]
 [connection signal="exploded" from="World/Player" to="World" method="_on_explosion"]
+[connection signal="ghost_spawned" from="World/Player" to="World" method="_on_ghost_spawned"]
 [connection signal="health_changed" from="World/Player" to="World" method="_on_player_health_changed"]
+[connection signal="max_health_changed" from="World/Player" to="Hud" method="update_max_health"]
+[connection signal="max_shield_hp_changed" from="World/Player" to="Hud" method="update_max_shield"]
+[connection signal="shield_hp_changed" from="World/Player" to="Hud" method="update_shield"]

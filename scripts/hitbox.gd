@@ -4,6 +4,8 @@ class_name HitBox
 @export var target : Node2D
 
 func _on_area_entered(area: Area2D) -> void:
+	if is_instance_valid(target) and target is Missile:
+		target.take_damage(999, Vector2.ZERO)
 	if is_instance_valid(target):
 		target.take_damage(area.damage, Vector2.ZERO)
 

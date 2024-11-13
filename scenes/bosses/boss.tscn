@@ -1,0 +1,160 @@
+[gd_scene load_steps=12 format=3 uid="uid://cfft4cjqcysuh"]
+
+[ext_resource type="Script" path="res://scripts/bosses/first_boss.gd" id="1_h10x8"]
+[ext_resource type="Texture2D" uid="uid://306f7776acpu" path="res://graphics/boss_body.png" id="2_p1c6m"]
+[ext_resource type="Texture2D" uid="uid://ces7b78r6v6jt" path="res://graphics/boss_chasis.png" id="3_u6ei0"]
+[ext_resource type="Texture2D" uid="uid://b5sc3jg3t7sfp" path="res://graphics/boss_sides.png" id="4_d8o0l"]
+[ext_resource type="PackedScene" uid="uid://drd2m072phc4v" path="res://scenes/hitbox.tscn" id="4_mbrjq"]
+[ext_resource type="PackedScene" uid="uid://cwshy400yx3qo" path="res://scenes/hurt_box.tscn" id="5_m3lux"]
+[ext_resource type="Texture2D" uid="uid://d3otih1xwa7g2" path="res://graphics/progress_bar.png" id="6_ek6a8"]
+[ext_resource type="Texture2D" uid="uid://ckwvg67w2r0rt" path="res://graphics/boss_cannon.png" id="8_kptws"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_48w8c"]
+radius = 18.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_d8mox"]
+resource_local_to_scene = true
+size = Vector2(32, 32)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_xonui"]
+resource_local_to_scene = true
+size = Vector2(32, 32)
+
+[node name="Boss" type="CharacterBody2D"]
+texture_filter = 1
+collision_layer = 2
+collision_mask = 4
+script = ExtResource("1_h10x8")
+base_hp = 30
+max_hp = 60
+hp_per_level = 5
+speed_per_level = 16
+base_power = 2
+max_power = 5
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+visible = false
+shape = SubResource("CircleShape2D_48w8c")
+
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
+path_desired_distance = 4.0
+path_max_distance = 10.0
+avoidance_enabled = true
+radius = 12.0
+neighbor_distance = 72.0
+max_speed = 128.0
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 0.1
+one_shot = true
+
+[node name="Body" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("2_p1c6m")
+
+[node name="Chasis" type="Sprite2D" parent="Body"]
+texture = ExtResource("3_u6ei0")
+
+[node name="Sides" type="Sprite2D" parent="Body"]
+texture = ExtResource("4_d8o0l")
+
+[node name="ShootTimer" type="Timer" parent="."]
+one_shot = true
+
+[node name="Hitbox" parent="." node_paths=PackedStringArray("target") instance=ExtResource("4_mbrjq")]
+visible = false
+collision_layer = 32
+collision_mask = 512
+target = NodePath("..")
+
+[node name="CollisionShape2D" parent="Hitbox" index="0"]
+shape = SubResource("RectangleShape2D_d8mox")
+
+[node name="HurtBox" parent="." instance=ExtResource("5_m3lux")]
+visible = false
+collision_layer = 256
+collision_mask = 0
+monitoring = false
+damage = 2
+
+[node name="CollisionShape2D" parent="HurtBox" index="0"]
+shape = SubResource("RectangleShape2D_xonui")
+
+[node name="HealthBarPivot" type="Marker2D" parent="."]
+
+[node name="HealthBar" type="TextureProgressBar" parent="HealthBarPivot"]
+visible = false
+custom_minimum_size = Vector2(16, 4)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -16.0
+offset_top = -24.0
+offset_right = 16.0
+offset_bottom = -20.0
+grow_horizontal = 2
+grow_vertical = 2
+max_value = 1.0
+value = 1.0
+nine_patch_stretch = true
+texture_progress = ExtResource("6_ek6a8")
+metadata/_edit_use_anchors_ = true
+
+[node name="MuzzlePivot" type="Marker2D" parent="."]
+
+[node name="Marker2D" type="Marker2D" parent="MuzzlePivot"]
+position = Vector2(30, 0)
+
+[node name="Sprite2D" type="Sprite2D" parent="MuzzlePivot/Marker2D" groups=["Cannons"]]
+position = Vector2(-4, 0)
+texture = ExtResource("8_kptws")
+
+[node name="Marker2D2" type="Marker2D" parent="MuzzlePivot"]
+
+[node name="Sprite2D" type="Sprite2D" parent="MuzzlePivot/Marker2D2" groups=["Cannons"]]
+position = Vector2(-4, 0)
+texture = ExtResource("8_kptws")
+
+[node name="Marker2D3" type="Marker2D" parent="MuzzlePivot"]
+
+[node name="Sprite2D" type="Sprite2D" parent="MuzzlePivot/Marker2D3" groups=["Cannons"]]
+position = Vector2(-4, 0)
+texture = ExtResource("8_kptws")
+
+[node name="Marker2D4" type="Marker2D" parent="MuzzlePivot"]
+
+[node name="Sprite2D" type="Sprite2D" parent="MuzzlePivot/Marker2D4" groups=["Cannons"]]
+position = Vector2(-4, 0)
+texture = ExtResource("8_kptws")
+
+[node name="Marker2D5" type="Marker2D" parent="MuzzlePivot"]
+
+[node name="Sprite2D" type="Sprite2D" parent="MuzzlePivot/Marker2D5" groups=["Cannons"]]
+position = Vector2(-4, 0)
+texture = ExtResource("8_kptws")
+
+[node name="Marker2D6" type="Marker2D" parent="MuzzlePivot"]
+
+[node name="Sprite2D" type="Sprite2D" parent="MuzzlePivot/Marker2D6" groups=["Cannons"]]
+position = Vector2(-4, 0)
+texture = ExtResource("8_kptws")
+
+[node name="Marker2D7" type="Marker2D" parent="MuzzlePivot"]
+
+[node name="Sprite2D" type="Sprite2D" parent="MuzzlePivot/Marker2D7" groups=["Cannons"]]
+position = Vector2(-4, 0)
+texture = ExtResource("8_kptws")
+
+[node name="Marker2D8" type="Marker2D" parent="MuzzlePivot"]
+
+[node name="Sprite2D" type="Sprite2D" parent="MuzzlePivot/Marker2D8" groups=["Cannons"]]
+position = Vector2(-4, 0)
+texture = ExtResource("8_kptws")
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
+[connection signal="timeout" from="ShootTimer" to="." method="_on_shoot_timer_timeout"]
+
+[editable path="Hitbox"]
+[editable path="HurtBox"]
