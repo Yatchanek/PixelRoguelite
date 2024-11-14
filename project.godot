@@ -22,7 +22,7 @@ Globals="*res://scenes/autoloads/globals.tscn"
 EventBus="*res://scenes/autoloads/event_bus.tscn"
 EnemySpawner="*res://scenes/autoloads/enemy_spawner.tscn"
 SoundManager="*res://scenes/autoloads/sound_manager.tscn"
-CrtOverlay="*res://scenes/crt_overlay.tscn"
+CrtOverlay="*res://scenes/autoloads/crt_overlay.tscn"
 
 [display]
 

@@ -33,13 +33,16 @@ func _ready() -> void:
 	current_state = State.MOVE
 
 
-func _process(_delta: float) -> void:
+func _process(_delta: float) -> void:	
+	health_bar_pivot.global_rotation = 0
+	if !is_instance_valid(target):
+		return
 	if current_state == State.MOVE:
 		tick += 1
 		if tick % 2 == 0 and target:
 			nav_agent.target_position = target.global_position
 	
-	health_bar_pivot.global_rotation = 0	
+	
 
 func _physics_process(delta: float) -> void:
 	if current_state == State.KNOCKBACK:
@@ -50,7 +53,7 @@ func _physics_process(delta: float) -> void:
 		else:
 			move_and_slide()
 	else:	
-		if nav_agent.is_navigation_finished() or !target:
+		if nav_agent.is_navigation_finished() or !is_instance_valid(target):
 			velocity = lerp(velocity, Vector2.ZERO, 0.1)
 			move_and_slide()
 			return

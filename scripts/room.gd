@@ -68,7 +68,9 @@ var enemies_array : Array[Enemy] = []
 signal room_exited(coords : Vector2, exit_index : int)
 signal enemy_destroyed(exp_value : int)
 
-func _ready() -> void:
+func _ready() -> void:	
+	player.died.connect(_on_player_died)
+	
 	if room_data.last_cleared == 0:
 		Globals.rng.seed = room_data.first_visited
 		room_data.rng_seed = room_data.first_visited
@@ -86,9 +88,8 @@ func _ready() -> void:
 	if !Globals.gate_key_coords.has(room_data.coords):
 		if room_data.last_cleared == 0 or time_since_last_clear > respawn_interval:
 			activate_doors()
-			if randf() < 0.03:
-				spawn_turret()
-				print("Turret spawned")
+			spawn_turret(0.035)
+				
 			timer.start(randf_range(enemy_spawn_interval, enemy_spawn_interval * 2.0))
 		else:
 			var time_left_to_respawn = respawn_interval - time_since_last_clear
@@ -106,6 +107,8 @@ func _ready() -> void:
 					spawn_pickup()
 			elif randf() < 0.025:
 				spawn_pickup()
+		else:
+			place_gate()
 	
 	elif !room_data.boss_defeated:
 		activate_doors()
@@ -199,6 +202,11 @@ func _on_pickup_collected():
 	room_data.pickup_collect_time = int(Time.get_unix_time_from_system())
 	room_data.pickup_spawned = false
 
+func place_gate():
+	var gate : Node2D = load("res://scenes/gate.tscn").instantiate()
+	gate.position = Vector2(48, 48)
+	call_deferred("add_child", gate)
+
 func place_gate_key(pos : Vector2):
 	var gate_key : GateKey = gate_key_scene.instantiate()
 	gate_key.coords = room_data.coords
@@ -207,7 +215,9 @@ func place_gate_key(pos : Vector2):
 	gate_key.position = pos
 	call_deferred("add_child", gate_key)
 
-func spawn_turret(probability : float = 1.0):
+func spawn_turret(probability : float):
+	if randf() > probability or room_data.coords == Vector2i.ZERO:
+		return
 	var enemy : Enemy = turret_enemy_scene.instantiate() as TurretEnemy
 	var coords_accepted : bool = false
 	var coords : Vector2i
@@ -217,13 +227,13 @@ func spawn_turret(probability : float = 1.0):
 			coords_accepted = true
 			permanently_occupied.append(coords)
 			
-	enemy.position = base_pos + Vector2(coords * 64)
-	
+	enemy.position = Vector2(base_pos + coords * 64)
+	enemy.target = player
+	enemy.bullet_fired.connect(_on_bullet_fired)
 	call_deferred("add_child", enemy)
 	
 	probability *= 0.25
-	if randf() < probability:
-		spawn_turret(probability)
+	spawn_turret(probability)
 		
 	
 func _on_gate_key_collected():
@@ -257,7 +267,7 @@ func _on_timer_timeout() -> void:
 		timer.start(randf_range(enemy_spawn_interval, 2 * enemy_spawn_interval))
 	else:
 		temporarily_occupied = []
-		var enemies_to_spawn : int = clamp(randi_range(1, min(1 + int(depth / 2), 5)), 1, max(max_enemies - enemies_spawned, 1))	
+		var enemies_to_spawn : int = clamp(randi_range(1, min(1 + int(depth), 5)), 1, max(max_enemies - enemies_spawned, 1))	
 		for i in enemies_to_spawn:		
 			var accepted : bool = false
 			var attempts : int = 0
@@ -294,7 +304,7 @@ func spawn_boss():
 	await get_tree().create_timer(enemy_spawn_interval).timeout
 	
 	if is_inside_tree():
-		var boss : Boss = bosses[1].instantiate() #bosses[Globals.gate_key_coords[room_data.coords]].instantiate()
+		var boss : Boss = bosses[Globals.gate_key_coords[room_data.coords]].instantiate()
 		
 		var accepted : bool = false
 		var candidate_coords : Vector2i
@@ -312,6 +322,7 @@ func spawn_boss():
 		boss.exploded.connect(_on_explosion)
 		boss.destroyed.connect(_on_boss_destroyed)
 		enemies.call_deferred("add_child", boss)
+		enemies_array.append(boss)
 
 
 func spawn_enemy(coords : Vector2i):	
@@ -376,3 +387,7 @@ func _on_enemy_destroyed(enemy : Enemy):
 			room_data.last_cleared = int(Time.get_unix_time_from_system())
 			deactivate_doors()
 			timer.start(respawn_interval)
+
+func _on_player_died():
+	for enemy in enemies_array:
+		enemy.target = null

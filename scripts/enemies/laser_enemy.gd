@@ -45,12 +45,15 @@ func _ready() -> void:
 	shoot_timer.start(fire_interval)
 
 func _process(_delta: float) -> void:
+	health_bar_pivot.global_rotation = 0	
+	if !is_instance_valid(target):
+		return
 	if current_state == State.MOVE:
 		tick += 1
 		if tick % 2 == 0 and is_instance_valid(target):
 			nav_agent.target_position = target.global_position
 			
-	health_bar_pivot.global_rotation = 0		
+		
 		
 func _physics_process(_delta: float) -> void:
 	if current_state == State.KNOCKBACK:
@@ -63,7 +66,7 @@ func _physics_process(_delta: float) -> void:
 		if nav_agent.is_navigation_finished() or !is_instance_valid(target):
 			velocity = lerp(velocity, Vector2.ZERO, 0.1)
 			move_and_slide()
-
+			return
 		
 		elif global_position.distance_squared_to(target.global_position) > 900:
 			var intended_velocity : Vector2 = global_position.direction_to(nav_agent.get_next_path_position()) * speed

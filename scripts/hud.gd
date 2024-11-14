@@ -10,13 +10,16 @@ class_name HUD
 @onready var minimap: MiniMap = $Control/Minimap
 @onready var keys_container: HBoxContainer = %KeysContainer
 @onready var shield_bar: TextureProgressBar = $Control/TopBar/MarginContainer/VBoxContainer/UpperBar/HBoxContainer2/HBoxContainer2/ShieldBar
+@onready var energy_bar: TextureProgressBar = %EnergyBar
+@onready var message_label: Label = $Control/MessageLabel
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	apply_color_palette()
 	EventBus.gate_key_collected.connect(show_gate_key)
+	EventBus.gate_approached.connect(show_message)
+	EventBus.gate_left.connect(hide_message)
 	
-
 func update_health(value : int):
 	hp_bar.value = value
 
@@ -32,6 +35,11 @@ func update_shield(value : int):
 func update_max_shield(value : int):
 	shield_bar.max_value = value
 
+func update_energy(value : float):
+	energy_bar.value = value
+	
+func update_max_energy(value : int):
+	energy_bar.max_value = value
 
 func update_room(room_data : RoomData):
 	coords_label.text = str(room_data.coords)
@@ -46,9 +54,12 @@ func apply_color_palette():
 	top_bar.add_theme_stylebox_override("panel", stylebox)
 	
 	coords_label.label_settings.font_color = Globals.color_palettes[Globals.current_palette][3] 
+	message_label.label_settings.font_color = Globals.color_palettes[Globals.current_palette][4]
+	message_label.label_settings.outline_color = Globals.color_palettes[Globals.current_palette][2] 
 	
 	hp_bar.tint_progress = Globals.color_palettes[Globals.current_palette][3]
 	shield_bar.tint_progress = Globals.color_palettes[Globals.current_palette][3]
+	energy_bar.tint_progress = Globals.color_palettes[Globals.current_palette][3]
 	
 	for key in keys_container.get_children():
 		key.self_modulate = Globals.color_palettes[Globals.current_palette][7]
@@ -67,6 +78,11 @@ func show_gate_key(idx : int):
 func show_upgrades():
 	upgrade_card_container.add_cards()
 
+func show_message():
+	message_label.show()
+	
+func hide_message():
+	message_label.hide()
 
 func toggle_minimap():
 	minimap.toggle()

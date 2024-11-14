@@ -98,10 +98,6 @@ script = ExtResource("1_7xbh1")
 visible = false
 shape = SubResource("CircleShape2D_bs7nj")
 
-[node name="ShootTimer" type="Timer" parent="."]
-wait_time = 0.2
-one_shot = true
-
 [node name="LowerBody" type="Sprite2D" parent="."]
 texture = ExtResource("2_sqk20")
 
@@ -155,12 +151,20 @@ visible = false
 position = Vector2(16, 0)
 shape = SubResource("RectangleShape2D_26t0u")
 
+[node name="ShootTimer" type="Timer" parent="."]
+wait_time = 0.2
+one_shot = true
+
 [node name="GhostTimer" type="Timer" parent="."]
 wait_time = 0.05
 
-[connection signal="timeout" from="ShootTimer" to="." method="_on_shoot_timer_timeout"]
+[node name="DashTimer" type="Timer" parent="."]
+one_shot = true
+
 [connection signal="area_entered" from="Hitbox" to="." method="_on_hitbox_area_entered"]
 [connection signal="area_exited" from="Hitbox" to="." method="_on_hitbox_area_exited"]
+[connection signal="timeout" from="ShootTimer" to="." method="_on_shoot_timer_timeout"]
 [connection signal="timeout" from="GhostTimer" to="." method="_on_ghost_timer_timeout"]
+[connection signal="timeout" from="DashTimer" to="." method="_on_dash_timer_timeout"]
 
 [editable path="Hitbox"]

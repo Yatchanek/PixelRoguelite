@@ -21,23 +21,17 @@ var current_muzzle : int
 func _ready() -> void:
 	setup()
 	apply_color_palette()
-	#set_process(false)
-	#$Hitbox.deactivate()
-	#var tw : Tween = create_tween()
-	#tw.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN_OUT)
-	#tw.tween_property(body, "modulate:a", 1.0, 0.5)
-	#await tw.finished
-	#$Hitbox.activate()
-	#tw = create_tween()
-	#tw.tween_interval(0.15)
-	#await tw.finished
-	#set_process(true)
+
 	await get_tree().create_timer(1.0).timeout
 	shoot_timer.start(fire_interval)
 
 
 
 func _process(_delta: float) -> void:
+	if !is_instance_valid(target):
+		set_process(false)
+		return
+	
 	var target_transform : Transform2D = chasis.global_transform.looking_at(target.global_position)
 	
 	chasis.global_transform = chasis.global_transform.interpolate_with(target_transform, 0.75)

@@ -1,7 +1,8 @@
 extends TextureRect
 class_name UpgradeCard
 
-@onready var label: Label = $Label
+@onready var desc_label: Label = $VBoxContainer/DescLabel
+@onready var amount_label: Label = $VBoxContainer/AmountLabel
 @onready var border: TextureRect = $Border
 
 var upgrade_equipped : UpgradeData
@@ -13,19 +14,14 @@ signal card_pressed
 
 func _ready() -> void:
 	apply_color_palette()
-	if upgrade_equipped.type == UpgradeManager.Upgrades.FIRERATE:
-		label.text = "%s\n+%.2f" % [upgrade_equipped.upgrade_name, upgrade_equipped.amount]
-		
-	elif upgrade_equipped.amount != 0:
-		label.text = "%s\n+%d" % [upgrade_equipped.upgrade_name, upgrade_equipped.amount]
-	else:
-		label.text = "%s"
+	desc_label.text = upgrade_equipped.upgrade_name
+	amount_label.text = upgrade_equipped.amount_desc
 	card_added.emit()
 
 func apply_color_palette():
 	self_modulate = Globals.color_palettes[Globals.current_palette][6]
 	border.self_modulate = Globals.color_palettes[Globals.current_palette][4]
-	label.label_settings.font_color = Globals.color_palettes[Globals.current_palette][3] 
+	desc_label.label_settings.font_color = Globals.color_palettes[Globals.current_palette][3] 
 
 func disable():
 	disabled = true
@@ -42,7 +38,7 @@ func _on_mouse_entered() -> void:
 	stylebox.set_border_width_all(2)
 	add_theme_stylebox_override("panel", stylebox)
 	
-	label.label_settings.font_color = Globals.color_palettes[Globals.current_palette][2] 
+	desc_label.label_settings.font_color = Globals.color_palettes[Globals.current_palette][2] 
 
 
 func _on_mouse_exited() -> void:

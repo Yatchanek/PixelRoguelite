@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://ddylky5tp6bpd"]
+[gd_scene load_steps=23 format=3 uid="uid://ddylky5tp6bpd"]
 
 [ext_resource type="Script" path="res://scripts/game.gd" id="1_w3yxl"]
 [ext_resource type="Script" path="res://scripts/world.gd" id="2_4ply8"]
@@ -57,6 +57,12 @@ region = Rect2(112, 0, 16, 16)
 [sub_resource type="AtlasTexture" id="AtlasTexture_by5pc"]
 atlas = ExtResource("8_ga3uy")
 region = Rect2(128, 0, 16, 16)
+
+[sub_resource type="LabelSettings" id="LabelSettings_t8dk0"]
+font = ExtResource("6_yc8th")
+font_size = 24
+outline_size = 8
+outline_color = Color(0.223103, 0.223103, 0.223103, 1)
 
 [sub_resource type="Environment" id="Environment_pad1q"]
 ambient_light_color = Color(0.836122, 0.0505156, 0.0286081, 1)
@@ -146,31 +152,28 @@ theme_override_constants/separation = 8
 layout_mode = 2
 mouse_filter = 2
 
-[node name="HBoxContainer3" type="HBoxContainer" parent="Hud/Control/TopBar/MarginContainer/VBoxContainer/UpperBar"]
-layout_mode = 2
-mouse_filter = 2
-
-[node name="RoomLabel" type="Label" parent="Hud/Control/TopBar/MarginContainer/VBoxContainer/UpperBar/HBoxContainer3"]
-layout_mode = 2
-size_flags_vertical = 0
-text = "ROOM:"
-label_settings = SubResource("LabelSettings_xoy25")
-
-[node name="CoordsLabel" type="Label" parent="Hud/Control/TopBar/MarginContainer/VBoxContainer/UpperBar/HBoxContainer3"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(56, 0)
-layout_mode = 2
-size_flags_horizontal = 2
-size_flags_vertical = 0
-label_settings = SubResource("LabelSettings_xoy25")
-horizontal_alignment = 2
-
 [node name="HBoxContainer2" type="HBoxContainer" parent="Hud/Control/TopBar/MarginContainer/VBoxContainer/UpperBar"]
 layout_mode = 2
-size_flags_horizontal = 3
 size_flags_vertical = 0
-theme_override_constants/separation = 32
-alignment = 2
+theme_override_constants/separation = 26
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="Hud/Control/TopBar/MarginContainer/VBoxContainer/UpperBar/HBoxContainer2"]
+layout_mode = 2
+
+[node name="EnergyLabel" type="Label" parent="Hud/Control/TopBar/MarginContainer/VBoxContainer/UpperBar/HBoxContainer2/HBoxContainer3"]
+layout_mode = 2
+size_flags_vertical = 0
+text = "energy:"
+label_settings = SubResource("LabelSettings_xoy25")
+uppercase = true
+
+[node name="EnergyBar" type="TextureProgressBar" parent="Hud/Control/TopBar/MarginContainer/VBoxContainer/UpperBar/HBoxContainer2/HBoxContainer3"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(64, 0)
+layout_mode = 2
+step = 0.1
+value = 5.0
+texture_progress = ExtResource("7_yuboa")
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="Hud/Control/TopBar/MarginContainer/VBoxContainer/UpperBar/HBoxContainer2"]
 layout_mode = 2
@@ -206,6 +209,28 @@ layout_mode = 2
 max_value = 50.0
 value = 5.0
 texture_progress = ExtResource("7_yuboa")
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="Hud/Control/TopBar/MarginContainer/VBoxContainer/UpperBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+alignment = 2
+
+[node name="RoomLabel" type="Label" parent="Hud/Control/TopBar/MarginContainer/VBoxContainer/UpperBar/HBoxContainer3"]
+visible = false
+layout_mode = 2
+size_flags_vertical = 0
+text = "ROOM:"
+label_settings = SubResource("LabelSettings_xoy25")
+
+[node name="CoordsLabel" type="Label" parent="Hud/Control/TopBar/MarginContainer/VBoxContainer/UpperBar/HBoxContainer3"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(56, 0)
+layout_mode = 2
+size_flags_horizontal = 10
+size_flags_vertical = 0
+text = "(0, 0)"
+label_settings = SubResource("LabelSettings_xoy25")
 
 [node name="LowerBar" type="HBoxContainer" parent="Hud/Control/TopBar/MarginContainer/VBoxContainer"]
 layout_mode = 2
@@ -349,16 +374,39 @@ script = ExtResource("8_2xbi3")
 visible = false
 layout_mode = 1
 
+[node name="MessageLabel" type="Label" parent="Hud/Control"]
+visible = false
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -204.0
+offset_top = -26.5
+offset_right = 204.0
+offset_bottom = 26.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "find all nine keys
+to open the gate!"
+label_settings = SubResource("LabelSettings_t8dk0")
+horizontal_alignment = 1
+uppercase = true
+
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_pad1q")
 
 [connection signal="exp_value_changed" from="World" to="." method="_on_world_exp_value_changed"]
 [connection signal="player_health_changed" from="World" to="." method="_on_world_player_health_changed"]
 [connection signal="bullet_fired" from="World/Player" to="World" method="_on_bullet_fired"]
+[connection signal="dash_energy_changed" from="World/Player" to="Hud" method="update_energy"]
 [connection signal="died" from="World/Player" to="World" method="_on_player_died"]
 [connection signal="exploded" from="World/Player" to="World" method="_on_explosion"]
 [connection signal="ghost_spawned" from="World/Player" to="World" method="_on_ghost_spawned"]
 [connection signal="health_changed" from="World/Player" to="World" method="_on_player_health_changed"]
+[connection signal="max_energy_changed" from="World/Player" to="Hud" method="update_max_energy"]
 [connection signal="max_health_changed" from="World/Player" to="Hud" method="update_max_health"]
 [connection signal="max_shield_hp_changed" from="World/Player" to="Hud" method="update_max_shield"]
 [connection signal="shield_hp_changed" from="World/Player" to="Hud" method="update_shield"]

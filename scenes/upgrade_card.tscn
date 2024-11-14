@@ -14,29 +14,44 @@ font_size = 12
 process_mode = 3
 self_modulate = Color(0, 0, 0, 1)
 texture_filter = 1
-custom_minimum_size = Vector2(112, 160)
-offset_right = 112.0
-offset_bottom = 160.0
+custom_minimum_size = Vector2(128, 176)
+offset_right = 128.0
+offset_bottom = 176.0
+pivot_offset = Vector2(64, 88)
 mouse_filter = 0
 mouse_default_cursor_shape = 2
 texture = ExtResource("1_catbv")
 script = ExtResource("1_iqs6v")
 
 [node name="Border" type="TextureRect" parent="."]
+custom_minimum_size = Vector2(128, 176)
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
 texture = ExtResource("3_bcb5n")
 
-[node name="Label" type="Label" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-text = "firerate
-+16"
+theme_override_constants/separation = 32
+alignment = 1
+
+[node name="DescLabel" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "dash
+duration"
+label_settings = SubResource("LabelSettings_agdvs")
+horizontal_alignment = 1
+vertical_alignment = 1
+uppercase = true
+
+[node name="AmountLabel" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "+0.1s"
 label_settings = SubResource("LabelSettings_agdvs")
 horizontal_alignment = 1
 vertical_alignment = 1

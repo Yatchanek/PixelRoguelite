@@ -25,6 +25,7 @@ var leveled_up : bool = false
 
 var gate_key_coords : Dictionary = {}
 var keys_collected : Array[int] = []
+var keys_returned : Array[int] = []
 
 func _ready() -> void:
 	rng = RandomNumberGenerator.new()
@@ -69,6 +70,7 @@ func reset():
 	room_grid = {}
 	gate_key_coords = {}
 	keys_collected = []
+	keys_returned = []
 	
 	for i in 9:
 		var coords : Vector2i = get_coords_in_distance_range(Settings.zone_size + Settings.zone_size * i, Settings.zone_size + Settings.zone_size * (i + 1) - 1)

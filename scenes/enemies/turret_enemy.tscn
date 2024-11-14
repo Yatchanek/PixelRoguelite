@@ -37,7 +37,6 @@ visible = false
 shape = SubResource("CircleShape2D_48w8c")
 
 [node name="Body" type="Sprite2D" parent="."]
-modulate = Color(1, 1, 1, 0)
 texture_filter = 1
 texture = ExtResource("2_5b53m")
 

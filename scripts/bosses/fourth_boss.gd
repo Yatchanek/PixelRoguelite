@@ -76,6 +76,9 @@ func _ready() -> void:
 
 
 func _process(delta: float) -> void:
+	health_bar_pivot.global_rotation = 0
+	if !is_instance_valid(target):
+		return
 	if current_state == State.MOVE:
 		elapsed_time += delta
 		if elapsed_time > wander_interval:
@@ -89,7 +92,7 @@ func _process(delta: float) -> void:
 	if attack_mode == AttackMode.LASER:
 		base.rotation += rotation_speed * rotation_dir * delta
 	
-	health_bar_pivot.global_rotation = 0
+	
 	
 	
 
@@ -100,7 +103,7 @@ func _physics_process(_delta: float) -> void:
 			current_state = State.MOVE
 
 	else:	
-		if nav_agent.is_navigation_finished():
+		if nav_agent.is_navigation_finished() or !is_instance_valid(target):
 			velocity = lerp(velocity, Vector2.ZERO, 0.1)
 			move_and_slide()
 			if can_shoot:

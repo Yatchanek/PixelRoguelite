@@ -45,6 +45,12 @@ func _draw() -> void:
 		draw_rect(Rect2(v_box_container_2.position + grid.position + Vector2(
 			cell_size.x * 0.5 + player_map_coords.x * cell_size.x, 
 			cell_size.y * 0.5 + player_map_coords.y * cell_size.y) - 4 * map_scale, 8 * map_scale), Globals.color_palettes[Globals.current_palette][3])
+	var zero_coords = world_to_map(Vector2i.ZERO)
+	if coords_on_screen(zero_coords):
+		draw_rect(Rect2(v_box_container_2.position + grid.position + Vector2(
+			cell_size.x * 0.5 + zero_coords.x * cell_size.x, 
+			cell_size.y * 0.5 + zero_coords.y * cell_size.y) - 4 * map_scale, 8 * map_scale), Globals.color_palettes[Globals.current_palette][0])
+
 		
 	for coords : Vector2i in gate_keys_discovered:
 		if !Globals.gate_key_coords.has(coords):

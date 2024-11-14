@@ -4,7 +4,7 @@ class_name UpgradeManager
 const card_scene = preload("res://scenes/upgrade_card.tscn")
 
 var selected_upgrades : Array[Upgrades] = []
-var cards_to_add : int = 2
+var cards_to_add : int = 3
 var cards_added : int = 0
 
 enum Upgrades {
@@ -15,24 +15,43 @@ enum Upgrades {
 	BULLET_SPEED,
 	BULLET_DAMAGE,
 	AUTOFIRE,
+	DASH_DURATION,
+	DASH_REGEN,
+	DASH_ENERGY
 }
 
 
 var upgrade_probabilities : Dictionary = {
 	Upgrades.SPEED : 0.25,
-	Upgrades.FIRERATE : 0.25,
-	Upgrades.HITPOINTS : 0.1,
+	Upgrades.FIRERATE : 0.20,
+	Upgrades.HITPOINTS : 0.075,
 	Upgrades.SHIELD_STRENGTH : 0.05,
 	Upgrades.BULLET_SPEED : 0.15,
 	Upgrades.BULLET_DAMAGE : 0.025,
 	Upgrades.AUTOFIRE : 0.01,
+	Upgrades.DASH_DURATION : 0.075,
+	Upgrades.DASH_REGEN : 0.1,
+	Upgrades.DASH_ENERGY : 0.075,
+}
+
+var amounts: Dictionary = {
+	Upgrades.SPEED : 16,
+	Upgrades.FIRERATE : 0.05,
+	Upgrades.HITPOINTS : 5,
+	Upgrades.SHIELD_STRENGTH : 3,
+	Upgrades.BULLET_SPEED : 32,
+	Upgrades.BULLET_DAMAGE : 1,
+	Upgrades.AUTOFIRE : 0,
+	Upgrades.DASH_DURATION : 0.1,
+	Upgrades.DASH_REGEN : 0.1,
+	Upgrades.DASH_ENERGY : 5,	
 }
 
 func add_cards():
 	var candidates : Array[Upgrades] = get_possible_upgrades()
 	for i in min(candidates.size(), cards_to_add):	
 		var selected_upgrade : Upgrades = select_upgrade_type(candidates)
-		var amount : float = get_amount(selected_upgrade)
+		var amount : float = amounts[selected_upgrade]
 	
 		var upgrade_data = UpgradeData.new()
 		upgrade_data.initialize(selected_upgrade, amount)
@@ -83,26 +102,9 @@ func select_upgrade_type(candidate_pool : Array[Upgrades]) -> Upgrades:
 
 	return candidate
 
-func get_amount(upgrade : Upgrades) -> float:
-	match upgrade:
-		Upgrades.SPEED:
-			return 16
-		Upgrades.BULLET_DAMAGE:
-			return 1
-		Upgrades.FIRERATE:
-			return 0.05
-		Upgrades.BULLET_SPEED:
-			return 16
-		Upgrades.HITPOINTS:
-			return 5
-		Upgrades.SHIELD_STRENGTH:
-			return 3
-		Upgrades.AUTOFIRE:
-			return 0
-	return -1
 
 func get_possible_upgrades() -> Array[Upgrades]:
-	var candidates : Array[Upgrades] = [Upgrades.HITPOINTS]
+	var candidates : Array[Upgrades] = [Upgrades.HITPOINTS, Upgrades.DASH_ENERGY, Upgrades.SHIELD_STRENGTH]
 	if Globals.player.speed < 320:
 		candidates.append(Upgrades.SPEED)
 	if Globals.player.power < 10:
@@ -113,6 +115,11 @@ func get_possible_upgrades() -> Array[Upgrades]:
 		candidates.append(Upgrades.BULLET_SPEED)
 	if Globals.player.level > 5 and Globals.player.autofire == false:
 		candidates.append(Upgrades.AUTOFIRE)
+	if Globals.player.dash_duration < 0.5:
+		candidates.append(Upgrades.DASH_DURATION)
+	if Globals.player.dash_regen_speed > 0.1:
+		candidates.append(Upgrades.DASH_REGEN)
+		
 	
 	return candidates
 

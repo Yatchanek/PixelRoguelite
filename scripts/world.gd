@@ -228,3 +228,9 @@ func _on_upgrade_selected(data: UpgradeData):
 		player.increase_shield_max_hp(data.amount)
 	if data.type == UpgradeManager.Upgrades.AUTOFIRE:
 		player.autofire = true
+	if data.type == UpgradeManager.Upgrades.DASH_DURATION:
+		player.increase_dash_duration(data.amount)
+	if data.type == UpgradeManager.Upgrades.DASH_ENERGY:
+		player.increase_dash_energy(data.amount)
+	if data.type == UpgradeManager.Upgrades.DASH_REGEN:
+		player.increase_dash_regen(data.amount)	

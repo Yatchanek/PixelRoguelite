@@ -99,6 +99,8 @@ func shoot():
 	shoot_timer.start(fire_interval)
 
 func _on_grenade_ready(grenade : RectangleGrenade):
+	if Globals.player.dead:
+		return
 	var pos : Vector2 = grenade.global_position
 	remove_child(grenade)
 	bullet_fired.emit(grenade, pos)
@@ -109,7 +111,7 @@ func create_body():
 	for polygon : Polygon2D in body.get_children():
 		polygon.set_polygon(create_random_rect())
 		polygon.position = Vector2(randi_range(-16, 16 - polygon.polygon[1].x), randi_range(-16, 16 - polygon.polygon[2].y))
-		polygon.color = Globals.color_palettes[Globals.current_palette][randi() % 8]
+		polygon.color = Globals.color_palettes[Globals.current_palette][randi() % 6]
 
 func flip_parts():
 	var parts_array : Array = range(0, body.get_child_count())

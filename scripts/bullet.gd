@@ -56,7 +56,7 @@ func check_hit(result : Dictionary) -> bool:
 		if hit_body is HitBox:
 			hit_body.receive_damage(damage, global_transform.x)
 	
-		position = result.position - global_transform.x * 3
+		position = get_parent().to_local(result.position) - global_transform.x * 3
 		queue_free()
 		return true
 	else:

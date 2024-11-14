@@ -15,6 +15,7 @@ class_name Player
 @onready var shield_legs: AnimatedSprite2D = $ShieldLegs
 @onready var turret_hitbox: CollisionShape2D = $Hitbox/TurretHitbox
 @onready var ghost_timer: Timer = $GhostTimer
+@onready var dash_timer: Timer = $DashTimer
 
 
 const bullet_scene : PackedScene = preload("res://scenes/bullet.tscn")
@@ -24,10 +25,22 @@ const ghost_scene : PackedScene = preload("res://scenes/player_ghost.tscn")
 var speed : int = 160
 var power : int = 1
 var fire_rate : float = 0.5
-var shield_hp : int = 0
-var max_shield_hp : int = 5
-var max_hp : int = 10
-var hp : int = 10
+var shield_hp : int = 0 :
+	set(value):
+		shield_hp = value
+		shield_hp_changed.emit(shield_hp)
+var max_shield_hp : int = 5 :
+	set(value):
+		max_shield_hp = value
+		max_shield_hp_changed.emit(max_shield_hp)
+var max_hp : int = 10 :
+	set(value):
+		max_hp = value
+		max_health_changed.emit(max_hp)
+var hp : int = 10 :
+	set(value):
+		hp = value
+		health_changed.emit(hp)
 var bullet_speed : int = 512
 var autofire : bool = false
 
@@ -42,7 +55,17 @@ var dead : bool = false
 var elapsed_time : float = 0
 var is_dashing : bool = false
 var dashing_speed : int
-var dashing_time : float = 0.5
+var dash_duration : float = 0.1
+var dash_energy : float = 15.0 : 
+	set(value):
+		dash_energy = value
+		dash_energy_changed.emit(dash_energy)
+var max_dash_energy : int = 15 :
+	set(value):
+		max_dash_energy = value
+		max_energy_changed.emit(max_dash_energy)
+var dash_regen : float = 0
+var dash_regen_speed : float = 0.5
 
 var primary_color : Color
 var secondary_color : Color
@@ -58,6 +81,8 @@ signal max_shield_hp_changed(value : int)
 signal exploded(explosion : Explosion, pos : Vector2)
 signal player_ready(player : Player)
 signal ghost_spawned(ghost : Sprite2D, pos : Vector2)
+signal dash_energy_changed(value : float)
+signal max_energy_changed(value : int)
 signal died
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -74,11 +99,12 @@ func _ready() -> void:
 	apply_color_palette()
 	player_ready.connect(Globals._on_player_ready)
 	await get_tree().process_frame
+	max_hp = 50
 	hp = max_hp
-	max_health_changed.emit(max_hp)
-	health_changed.emit(hp)
-	max_shield_hp_changed.emit(max_shield_hp)
-	shield_hp_changed.emit(shield_hp)
+	max_shield_hp = 5
+	shield_hp = 0
+	max_dash_energy = 15
+	dash_energy = 15.0
 	dashing_speed = 3 * speed
 	player_ready.emit(self)
 
@@ -94,14 +120,14 @@ func _process(delta: float) -> void:
 		elapsed_time += delta
 		if elapsed_time > 0.25:
 			take_damage(damaging_area.damage, Vector2.ZERO)
-			elapsed_time = 0.0
-	
+			elapsed_time -= 0.25
 			
-	if is_dashing:
-		dashing_time -= delta
-		if dashing_time <= 0:
-			ghost_timer.stop()
-			is_dashing = false
+	if dash_energy < max_dash_energy:
+		dash_regen += delta
+		if dash_regen >= dash_regen_speed:
+			dash_energy += 0.1
+			dash_regen -= dash_regen_speed
+		
 	
 
 func get_input() -> Vector2:
@@ -131,9 +157,13 @@ func _physics_process(_delta: float) -> void:
 			velocity = lerp(velocity, Vector2.ZERO, 0.25)
 	
 	
-	if Input.is_action_just_pressed("ui_accept"):
+	if Input.is_action_just_pressed("ui_accept") and !is_dashing:
+		if dash_energy < 5.0:
+			return
+		dash_energy -= 5.0
+
 		is_dashing = true
-		dashing_time = 0.3
+		dash_timer.start(dash_duration)
 		ghost_timer.start()	
 		
 	if can_shoot:
@@ -259,18 +289,22 @@ func increase_bullet_speed(amount : int):
 
 func increase_max_hp(amount : int):
 	max_hp += amount
-	max_health_changed.emit(max_hp)
 	hp += amount
-	health_changed.emit(hp)
 	
 func increase_shield_max_hp(amount : int):
 	max_shield_hp += amount
-	max_shield_hp_changed.emit(max_shield_hp)
 	if shield_hp > 0:
 		shield_hp += amount
-		shield_hp_changed.emit(shield_hp)
+
+func increase_dash_duration(amount : float):
+	dash_duration += amount
 	
-	
+func increase_dash_energy(amount : int):
+	max_dash_energy += amount
+	dash_energy = clamp(dash_energy + amount, dash_energy, max_dash_energy)
+
+func increase_dash_regen(amount : float):
+	dash_regen_speed -= amount	
 	
 func heal(amount: int):
 	hp = min(hp + amount, max_hp)
@@ -298,3 +332,8 @@ func _on_ghost_timer_timeout() -> void:
 	ghost.region_rect.position.x = 16 * legs.frame
 	ghost.self_modulate = primary_color
 	ghost_spawned.emit(ghost, global_position)
+
+
+func _on_dash_timer_timeout() -> void:
+	is_dashing = false
+	ghost_timer.stop()

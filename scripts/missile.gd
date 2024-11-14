@@ -60,7 +60,7 @@ func check_hit(result : Dictionary) -> bool:
 		if hit_body is HitBox:
 			hit_body.receive_damage(power, global_transform.x)
 	
-		position = result.position - global_transform.x * 6
+		position = get_parent().to_local(result.position) - global_transform.x * 6
 		explode(Vector2.ZERO)
 		return true
 	else:

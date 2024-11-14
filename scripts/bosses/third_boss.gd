@@ -56,12 +56,19 @@ func _ready() -> void:
 	shoot_timer.start(fire_interval)
 	timer.start(randf_range(0.2, 0.4))
 
-func _process(delta: float) -> void:		
+func _process(delta: float) -> void:
 	health_bar_pivot.global_rotation = 0
+	if Globals.player.dead:
+		return	
+	
 	turret.look_at(Globals.player.global_position)
 
 
 func _physics_process(_delta: float) -> void:
+	if Globals.player.dead:
+		velocity = lerp(velocity, Vector2.ZERO, 0.15)
+		move_and_slide()
+		return
 	if current_state == State.KNOCKBACK:
 		velocity = lerp(velocity, Vector2.ZERO, 0.15)
 		if velocity.length_squared() < 100:
