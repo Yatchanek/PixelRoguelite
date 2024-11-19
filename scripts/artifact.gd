@@ -11,7 +11,7 @@ signal collected
 func _ready() -> void:
 	body.region_rect.position.x = number * 16
 
-func _on_body_entered(body: Node2D) -> void:
+func _on_body_entered(_body: Node2D) -> void:
 	EventBus.gate_key_collected.emit(number)
 	Globals.keys_collected.append(number)
 	collected.emit()

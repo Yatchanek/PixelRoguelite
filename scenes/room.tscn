@@ -1,12 +1,15 @@
-[gd_scene load_steps=17 format=3 uid="uid://dcryx3x5sypq"]
+[gd_scene load_steps=20 format=3 uid="uid://dcryx3x5sypq"]
 
 [ext_resource type="Script" path="res://scripts/room.gd" id="1_sifb4"]
 [ext_resource type="PackedScene" uid="uid://bn3jrk0b1a0yn" path="res://scenes/door.tscn" id="2_2hh1r"]
 [ext_resource type="PackedScene" uid="uid://b85jkem4iiaty" path="res://scenes/outer_wall.tscn" id="3_3l2cn"]
 [ext_resource type="PackedScene" uid="uid://cm4rgjp8lldhs" path="res://scenes/enemies/turret_enemy.tscn" id="6_l6aa6"]
 [ext_resource type="PackedScene" uid="uid://cfft4cjqcysuh" path="res://scenes/bosses/boss.tscn" id="9_27qhj"]
+[ext_resource type="PackedScene" uid="uid://n3je8ff4fc1n" path="res://scenes/bosses/boss_6.tscn" id="10_ggvmr"]
 [ext_resource type="PackedScene" uid="uid://4273yrwy70rg" path="res://scenes/bosses/boss_2.tscn" id="10_sytpb"]
 [ext_resource type="PackedScene" uid="uid://dad8n7b2ra435" path="res://scenes/bosses/boss_3.tscn" id="11_gdb43"]
+[ext_resource type="PackedScene" uid="uid://c62y131v5tlfc" path="res://scenes/bosses/boss_7.tscn" id="11_w5bks"]
+[ext_resource type="PackedScene" uid="uid://dacfwdnbqua8u" path="res://scenes/bosses/boss_8.tscn" id="12_jkess"]
 [ext_resource type="PackedScene" uid="uid://2pgp02r1nwul" path="res://scenes/bosses/boss_4.tscn" id="13_nmexb"]
 [ext_resource type="PackedScene" uid="uid://cxudcded5ykg4" path="res://scenes/explosion.tscn" id="13_x3ili"]
 [ext_resource type="PackedScene" uid="uid://c1t4b5wxk8d02" path="res://scenes/bosses/boss_5.tscn" id="14_paxn4"]
@@ -25,7 +28,7 @@ script = ExtResource("1_sifb4")
 door_scene = ExtResource("2_2hh1r")
 outer_wall_scene = ExtResource("3_3l2cn")
 turret_enemy_scene = ExtResource("6_l6aa6")
-bosses = Array[PackedScene]([ExtResource("9_27qhj"), ExtResource("10_sytpb"), ExtResource("11_gdb43"), ExtResource("13_nmexb"), ExtResource("14_paxn4")])
+bosses = Array[PackedScene]([ExtResource("9_27qhj"), ExtResource("10_sytpb"), ExtResource("11_gdb43"), ExtResource("13_nmexb"), ExtResource("14_paxn4"), ExtResource("10_ggvmr"), ExtResource("11_w5bks"), ExtResource("12_jkess")])
 explosion_scene = ExtResource("13_x3ili")
 obstacle_scene = ExtResource("14_x5e77")
 indicator_scene = ExtResource("15_3a2ij")
@@ -34,10 +37,8 @@ pickup_scene = ExtResource("18_qgbj8")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 visible = false
-modulate = Color(0.103744, 0.103744, 0.103744, 1)
 texture_filter = 1
-position = Vector2(-2, 3)
-scale = Vector2(500, 500)
+position = Vector2(32, 32)
 texture = ExtResource("17_3vetu")
 
 [node name="Walls" type="Node2D" parent="."]

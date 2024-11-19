@@ -29,7 +29,6 @@ var exit_mappings : Dictionary = {
 var room_pos : Vector2
 
 signal player_health_changed(value : int)
-signal exp_value_changed(value : int)
 
 		
 ## Called when the node enters the scene tree for the first time.
@@ -39,11 +38,13 @@ func _ready() -> void:
 	apply_color_palette()
 	EventBus.upgrade_card_pressed.connect(_on_upgrade_selected)
 	player.position = get_viewport_rect().size * 0.5
+
 	
 func apply_color_palette():
 	veil.color = Globals.color_palettes[Globals.current_palette][7]
 	background.color = Globals.color_palettes[Globals.current_palette][7]
-
+	#cursor.self_modulate = Globals.color_palettes[Globals.current_palette][1]
+	
 func change_room(previous_room_coords : Vector2i, exit_index : int):
 	player.dead = true
 	player.deactivate_collision()

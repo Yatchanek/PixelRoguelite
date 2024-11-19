@@ -12,6 +12,13 @@ class_name HUD
 @onready var shield_bar: TextureProgressBar = $Control/TopBar/MarginContainer/VBoxContainer/UpperBar/HBoxContainer2/HBoxContainer2/ShieldBar
 @onready var energy_bar: TextureProgressBar = %EnergyBar
 @onready var message_label: Label = $Control/MessageLabel
+@onready var cursor: Sprite2D = $Cursor
+
+
+func _unhandled_input(event: InputEvent) -> void:
+	if event is InputEventKey:
+		if event.pressed and event.keycode == KEY_M:
+			toggle_minimap()
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -19,6 +26,9 @@ func _ready() -> void:
 	EventBus.gate_key_collected.connect(show_gate_key)
 	EventBus.gate_approached.connect(show_message)
 	EventBus.gate_left.connect(hide_message)
+
+func _process(delta: float) -> void:
+	cursor.position = cursor.get_global_mouse_position()
 	
 func update_health(value : int):
 	hp_bar.value = value
@@ -69,6 +79,8 @@ func apply_color_palette():
 			keys_container.get_child(i).self_modulate = Globals.color_palettes[Globals.current_palette][0]
 		else:
 			keys_container.get_child(i).self_modulate = Globals.color_palettes[Globals.current_palette][7]
+
+	cursor.self_modulate = Globals.color_palettes[Globals.current_palette][1]
 
 	minimap.apply_color_palette()
 

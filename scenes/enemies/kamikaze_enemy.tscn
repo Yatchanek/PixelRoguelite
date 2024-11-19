@@ -20,9 +20,15 @@ radius = 11.0
 texture_filter = 1
 collision_layer = 2
 collision_mask = 7
+motion_mode = 1
 script = ExtResource("1_v1ifv")
-speed = 192.0
 exp_value = 15
+power = 3
+base_speed = 344
+max_speed = 512
+speed_per_level = 32
+base_power = 3
+max_power = 10
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 visible = false

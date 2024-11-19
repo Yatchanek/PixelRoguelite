@@ -14,7 +14,7 @@ var cell_size : Vector2 = Vector2(32, 32)
 
 var pos_offset : Vector2
 
-const room_scene = preload("res://scenes/map_room.tscn")
+const room_scene = preload("res://scenes/ui_elements/map_room.tscn")
 
 var gate_keys_discovered : Array[Vector2i] = []
 

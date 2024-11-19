@@ -3,7 +3,7 @@ class_name RapidFireEnemy
 
 @onready var nav_agent: NavigationAgent2D = $NavigationAgent2D
 @onready var shoot_timer: Timer = $ShootTimer
-@onready var body: Sprite2D = $Body
+@onready var body: AnimatedSprite2D = $Body
 @onready var chasis: Sprite2D = $Body/Chasis
 
 const bullet_scene : PackedScene = preload("res://scenes/bullet.tscn")
@@ -42,6 +42,7 @@ func _ready() -> void:
 	set_process(true)
 	current_state = State.MOVE
 	shoot_timer.start(fire_interval)
+	body.play("walk")
 	
 func _process(_delta: float) -> void:
 	health_bar_pivot.global_rotation = 0

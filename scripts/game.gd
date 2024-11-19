@@ -3,25 +3,16 @@ extends Node
 @onready var hud: HUD = $Hud
 @onready var world: Node2D = $World
 
-func _unhandled_input(event: InputEvent) -> void:
-	if event is InputEventKey:
-		if event.pressed and event.keycode == KEY_C:
-			Globals.current_palette = wrapi(Globals.current_palette + 1, 0, Globals.color_palettes.size())
-			world.apply_color_palette()
-			world.player.apply_color_palette()
-			world.current_room.change_color_palette()
-			Globals.adjust_explosion_colors()
-			hud.apply_color_palette()
-		if event.pressed and event.keycode == KEY_M:
-			hud.toggle_minimap()
+
 
 func _ready() -> void:
+	Globals.new_game()
 	EventBus.upgrade_time.connect(_on_player_leveled_up)
 	EventBus.player_max_health_changed.connect(_on_max_health_changed)
 	#EventBus.upgrade_card_pressed.connect(_on_upgrade_selected)
 	EventBus.room_changed.connect(_on_room_changed)
-	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-	Input.set_custom_mouse_cursor(load("res://graphics/cursor.png"), Input.CURSOR_ARROW, Vector2(16, 16))
+	#Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
+	#Input.set_custom_mouse_cursor(load("res://graphics/cursor.png"), Input.CURSOR_ARROW, Vector2(32, 32))
 
 func _on_player_leveled_up():
 	get_tree().paused = true

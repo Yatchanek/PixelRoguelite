@@ -280,7 +280,7 @@ func _on_crt_shader_check_box_toggled(toggled_on: bool) -> void:
 
 
 func _on_start_game_pressed() -> void:
-	Globals.new_game()
+	
 	await get_tree().process_frame
 	get_tree().change_scene_to_file("res://scenes/game.tscn")
 

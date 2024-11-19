@@ -4,7 +4,7 @@ class_name BasicEnemy
 @onready var nav_agent: NavigationAgent2D = $NavigationAgent2D
 @onready var timer: Timer = $Timer
 @onready var shoot_timer: Timer = $ShootTimer
-@onready var body: Sprite2D = $Body
+@onready var body: AnimatedSprite2D = $Body
 @onready var chasis: Sprite2D = $Body/Chasis
 
 const bullet_scene : PackedScene = preload("res://scenes/bullet.tscn")
@@ -39,7 +39,7 @@ func _ready() -> void:
 	set_physics_process(true)
 	set_process(true)
 	timer.start()
-	
+	body.play("walk")
 	shoot_timer.start(fire_interval)
 	current_state = State.MOVE
 

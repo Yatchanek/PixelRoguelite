@@ -20,7 +20,7 @@ func _process(delta: float) -> void:
 	
 
 func _physics_process(delta: float) -> void:
-	var query : PhysicsRayQueryParameters2D = PhysicsRayQueryParameters2D.create(global_position, global_position + transform.x * speed * delta, 22)
+	var query : PhysicsRayQueryParameters2D = PhysicsRayQueryParameters2D.create(global_position, global_position + transform.x * speed * delta, 52)
 	
 	query.collide_with_areas = true
 	query.hit_from_inside = true
@@ -44,7 +44,7 @@ func check_hit(result : Dictionary) -> bool:
 		if hit_body is HitBox:
 			hit_body.receive_damage(damage, global_transform.x)
 	
-		position = result.position - global_transform.y * 3
+		position = get_parent().to_local(result.position) - global_transform.x * 3
 		queue_free()
 		return true
 	else:

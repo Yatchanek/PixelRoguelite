@@ -1,7 +1,7 @@
 extends HBoxContainer
 class_name UpgradeManager
 
-const card_scene = preload("res://scenes/upgrade_card.tscn")
+const card_scene = preload("res://scenes/ui_elements/upgrade_card.tscn")
 
 var selected_upgrades : Array[Upgrades] = []
 var cards_to_add : int = 3
@@ -97,7 +97,9 @@ func select_upgrade_type(candidate_pool : Array[Upgrades]) -> Upgrades:
 		total_chance += upgrade_probabilities[upgrade]
 		if roll < total_chance:
 			candidate = upgrade
+			prints(candidate_pool, candidate)
 			candidate_pool.erase(candidate)
+			print(candidate_pool)
 			break
 
 	return candidate

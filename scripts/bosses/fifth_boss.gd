@@ -1,28 +1,19 @@
 extends Boss
 class_name FifthGuardian
 
-@onready var nav_agent: NavigationAgent2D = $NavigationAgent2D
 @onready var timer: Timer = $Timer
 @onready var shoot_timer: Timer = $ShootTimer
 @onready var base: Sprite2D = $Base
 @onready var middle: Sprite2D = $Middle
 @onready var turret_pivot: Marker2D = $TurretPivot
 
-
-
 const bullet_scene : PackedScene = preload("res://scenes/bullet.tscn")
-
-var elapsed_time : float = 0.0
-
-var tick : int = 0
 
 var current_state : State
 var previous_state : State
 
 var shots_fired : int = 0
 var shoots_to_fire : int = 0
-
-var wander_interval : float
 
 
 enum State {
@@ -32,7 +23,6 @@ enum State {
 }
 
 signal bullet_fired(bullet : Node2D, pos : Vector2)
-signal missile_fired(missile : Node2D, pos : Vector2)
 
 
 func _ready() -> void:
@@ -64,14 +54,10 @@ func _process(delta: float) -> void:
 	if !is_instance_valid(target):
 		return
 	if current_state == State.MOVE:
-		elapsed_time += delta
-		if elapsed_time > wander_interval:
-			nav_agent.target_position = Vector2i(32, 32) + Utils.get_random_coords(2, 5, 2, 3) * 64
-			elapsed_time -= wander_interval
-			wander_interval = randf_range(1.25, 1.75)
+		wander(delta)
 	
-		var target_transform = turret_pivot.global_transform.looking_at(target.global_position)
-		turret_pivot.global_transform = turret_pivot.global_transform.interpolate_with(target_transform, 0.25)		
+	var target_transform = turret_pivot.global_transform.looking_at(target.global_position)
+	turret_pivot.global_transform = turret_pivot.global_transform.interpolate_with(target_transform, 0.25)		
 	
 	
 	
@@ -84,18 +70,14 @@ func _physics_process(_delta: float) -> void:
 			current_state = previous_state
 
 	elif current_state == State.MOVE:	
-		if nav_agent.is_navigation_finished() or !is_instance_valid(target):
-			velocity = lerp(velocity, Vector2.ZERO, 0.1)
-			move_and_slide()
-			if can_shoot:
-				shoot()	
-			return
-		
-		velocity = lerp(velocity, global_position.direction_to(nav_agent.get_next_path_position()) * speed, 0.25)
+		if position.distance_squared_to(waypoint) < 100:
+			waypoint = select_destination()
+
+		velocity = lerp(velocity, position.direction_to(waypoint) * speed, 0.25)
 		base.rotation = lerp_angle(base.rotation, velocity.angle(), 0.25)
 
-	if can_shoot:
-		shoot()	
+		if can_shoot:
+			shoot()	
 	else:
 		velocity = lerp(velocity, Vector2.ZERO, 0.5)
 		
@@ -156,7 +138,7 @@ func find_new_destination():
 	var pos : Vector2i
 	var accepted : bool = false
 	while !accepted:
-		pos = Vector2i(32, 32) + Utils.get_random_coords(2, 5, 2, 3) * 64
+		pos = Vector2(32, 32) + Utils.get_random_coords(2, 5, 2, 3) * 64
 		if pos.distance_squared_to(to_local(target.global_position)) > 4096:
 			accepted = true
 			

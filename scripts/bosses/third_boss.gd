@@ -12,9 +12,6 @@ class_name ThirdGuardian
 const bullet_scene : PackedScene = preload("res://scenes/bullet.tscn")
 const mine_scene : PackedScene = preload("res://scenes/mine.tscn")
 
-var elapsed_time : float = 0.0
-
-
 var tick : int = 0
 
 var current_state : State
@@ -23,7 +20,6 @@ var previous_state : State
 var shots_fired : int = 0
 var burst_size : int = 0
 
-var destination : Vector2
 var target_rotation : float
 
 
@@ -56,7 +52,7 @@ func _ready() -> void:
 	shoot_timer.start(fire_interval)
 	timer.start(randf_range(0.2, 0.4))
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	health_bar_pivot.global_rotation = 0
 	if Globals.player.dead:
 		return	
@@ -75,26 +71,25 @@ func _physics_process(_delta: float) -> void:
 			velocity = Vector2.ZERO
 			if previous_state != State.ATTACK and previous_state != State.MOVE:
 				velocity = Vector2.ZERO
-				select_destination()
+				waypoint = select_destination(0, 7, 0, 3, 192)
+				target_rotation = position.direction_to(waypoint).angle()
+				current_state = State.TURN
 			elif previous_state == State.MOVE:
-				rotation = target_rotation
-				velocity = body.global_transform.x * 192
-				current_state = State.MOVE
 				current_state = previous_state
 			elif previous_state == State.ATTACK:
 				velocity = Vector2.ZERO
 				current_state = previous_state
 
 	elif current_state == State.TURN:
-		rotation = lerp_angle(rotation, target_rotation, 0.25)
-		if global_transform.x.dot(position.direction_to(destination)) > 0.99:
+		rotation = lerp_angle(rotation, target_rotation, 0.15)
+		if global_transform.x.dot(position.direction_to(waypoint)) > 0.99:
 			rotation = target_rotation
-			velocity = body.global_transform.x * speed
 			lay_mine()
 			current_state = State.MOVE
 			
 	elif current_state == State.MOVE:
-		if position.distance_squared_to(destination) < 8000:
+		velocity = lerp(velocity, position.direction_to(waypoint) * speed, 0.2)
+		if position.distance_squared_to(waypoint) < 2500:
 			current_state = State.BRAKE
 			
 	elif current_state == State.BRAKE:
@@ -158,12 +153,6 @@ func knockback(dir : Vector2):
 	previous_state = current_state
 	current_state = State.KNOCKBACK
 
-func select_destination():
-	destination = Vector2i(32, 32) + Utils.get_random_coords() * 64
-	while destination.distance_squared_to(position) < 16384:
-		destination = Vector2i(32, 32) + Utils.get_random_coords() * 64
-	target_rotation = position.direction_to(destination).angle()
-	current_state = State.TURN
 
 func _on_shoot_timer_timeout() -> void:
 	can_shoot = true

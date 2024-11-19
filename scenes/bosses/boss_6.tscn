@@ -1,0 +1,155 @@
+[gd_scene load_steps=16 format=3 uid="uid://n3je8ff4fc1n"]
+
+[ext_resource type="Script" path="res://scripts/bosses/sixth_boss.gd" id="1_k2t37"]
+[ext_resource type="Texture2D" uid="uid://crmthd2rj3xli" path="res://graphics/boss_6_upper.png" id="2_slmhu"]
+[ext_resource type="Texture2D" uid="uid://bpopw8w77w8lq" path="res://graphics/boss_6_lower.png" id="3_g4fgv"]
+[ext_resource type="Texture2D" uid="uid://bva7ecv7d8rqp" path="res://graphics/boss_6_hands_legs.png" id="4_hmoms"]
+[ext_resource type="PackedScene" uid="uid://drd2m072phc4v" path="res://scenes/hitbox.tscn" id="5_wcrvi"]
+[ext_resource type="PackedScene" uid="uid://cwshy400yx3qo" path="res://scenes/hurt_box.tscn" id="6_3eafv"]
+[ext_resource type="Texture2D" uid="uid://d3otih1xwa7g2" path="res://graphics/progress_bar.png" id="7_udwbm"]
+[ext_resource type="Texture2D" uid="uid://ckwvg67w2r0rt" path="res://graphics/boss_cannon.png" id="8_dbbeg"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_48w8c"]
+radius = 18.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qwoqg"]
+atlas = ExtResource("4_hmoms")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_d3yd8"]
+atlas = ExtResource("4_hmoms")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2syyw"]
+atlas = ExtResource("4_hmoms")
+region = Rect2(64, 0, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_idrxm"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qwoqg")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 0.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_d3yd8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2syyw")
+}],
+"loop": true,
+"name": &"walk",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_d8mox"]
+resource_local_to_scene = true
+size = Vector2(32, 32)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_xonui"]
+resource_local_to_scene = true
+size = Vector2(32, 32)
+
+[node name="SixthGuardian" type="CharacterBody2D"]
+texture_filter = 1
+collision_layer = 2
+collision_mask = 4
+motion_mode = 1
+script = ExtResource("1_k2t37")
+exp_value = 100
+base_fire_interval = 0.25
+fire_interval_per_level = 0.05
+min_fire_interval = 0.15
+base_hp = 60
+max_hp = 120
+hp_per_level = 15
+base_speed = 144
+max_speed = 192
+speed_per_level = 32
+base_power = 3
+power_per_level = 2.0
+max_power = 9
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+visible = false
+shape = SubResource("CircleShape2D_48w8c")
+
+[node name="Timer" type="Timer" parent="."]
+one_shot = true
+
+[node name="BodyUpper" type="Sprite2D" parent="."]
+modulate = Color(1, 1, 1, 0)
+texture_filter = 1
+texture = ExtResource("2_slmhu")
+
+[node name="BodyLower" type="Sprite2D" parent="BodyUpper"]
+texture = ExtResource("3_g4fgv")
+
+[node name="MovingParts" type="AnimatedSprite2D" parent="."]
+modulate = Color(1, 1, 1, 0)
+sprite_frames = SubResource("SpriteFrames_idrxm")
+animation = &"idle"
+
+[node name="ShootTimer" type="Timer" parent="."]
+one_shot = true
+
+[node name="Hitbox" parent="." node_paths=PackedStringArray("target") instance=ExtResource("5_wcrvi")]
+visible = false
+collision_layer = 32
+collision_mask = 512
+target = NodePath("..")
+
+[node name="CollisionShape2D" parent="Hitbox" index="0"]
+shape = SubResource("RectangleShape2D_d8mox")
+
+[node name="HurtBox" parent="." instance=ExtResource("6_3eafv")]
+visible = false
+collision_layer = 256
+collision_mask = 0
+monitoring = false
+damage = 2
+
+[node name="CollisionShape2D" parent="HurtBox" index="0"]
+shape = SubResource("RectangleShape2D_xonui")
+
+[node name="HealthBarPivot" type="Marker2D" parent="."]
+
+[node name="HealthBar" type="TextureProgressBar" parent="HealthBarPivot"]
+visible = false
+custom_minimum_size = Vector2(16, 4)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -16.0
+offset_top = -24.0
+offset_right = 16.0
+offset_bottom = -20.0
+grow_horizontal = 2
+grow_vertical = 2
+max_value = 1.0
+value = 1.0
+nine_patch_stretch = true
+texture_progress = ExtResource("7_udwbm")
+metadata/_edit_use_anchors_ = true
+
+[node name="MuzzlePivot" type="Marker2D" parent="."]
+
+[node name="Cannon" type="Sprite2D" parent="MuzzlePivot"]
+position = Vector2(32, 0)
+scale = Vector2(1.5, 1.5)
+texture = ExtResource("8_dbbeg")
+
+[node name="Muzzle" type="Marker2D" parent="MuzzlePivot/Cannon"]
+position = Vector2(8, 0)
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
+[connection signal="timeout" from="ShootTimer" to="." method="_on_shoot_timer_timeout"]
+
+[editable path="Hitbox"]
+[editable path="HurtBox"]

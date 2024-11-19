@@ -37,14 +37,6 @@ max_power = 10
 visible = false
 shape = SubResource("CircleShape2D_48w8c")
 
-[node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
-path_desired_distance = 4.0
-path_max_distance = 10.0
-avoidance_enabled = true
-radius = 12.0
-neighbor_distance = 72.0
-max_speed = 128.0
-
 [node name="Timer" type="Timer" parent="."]
 wait_time = 0.1
 one_shot = true

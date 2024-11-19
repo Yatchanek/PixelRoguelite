@@ -1,7 +1,6 @@
 extends Boss
 class_name FirstGuardian
 
-@onready var nav_agent: NavigationAgent2D = $NavigationAgent2D
 @onready var timer: Timer = $Timer
 @onready var shoot_timer: Timer = $ShootTimer
 @onready var body: Sprite2D = $Body
@@ -12,9 +11,6 @@ class_name FirstGuardian
 const bullet_scene : PackedScene = preload("res://scenes/bullet.tscn")
 const missile_scene : PackedScene = preload("res://scenes/missile.tscn")
 
-var elapsed_time : float = 0.0
-
-var tick : int = 0
 
 var current_state : State
 
@@ -71,10 +67,7 @@ func place_muzzles():
 
 func _process(delta: float) -> void:
 	if current_state == State.MOVE:
-		elapsed_time += delta
-		if elapsed_time > 1.5:
-			nav_agent.target_position = Vector2i(32, 32) + Utils.get_random_coords(1, 6, 1, 2) * 64
-			elapsed_time = 0
+		wander(delta)
 			
 	health_bar_pivot.global_rotation = 0
 	chasis.rotation -= PI * 0.5 * delta
@@ -89,14 +82,10 @@ func _physics_process(_delta: float) -> void:
 			current_state = State.MOVE
 
 	else:	
-		if nav_agent.is_navigation_finished():
-			velocity = lerp(velocity, Vector2.ZERO, 0.1)
-			move_and_slide()
-			if can_shoot:
-				shoot()	
-			return
-		
-		velocity = lerp(velocity, global_position.direction_to(nav_agent.get_next_path_position()) * speed, 0.25)
+		if position.distance_squared_to(waypoint) < 100:
+			waypoint = select_destination()
+
+		velocity = lerp(velocity, position.direction_to(waypoint) * speed, 0.25)
 
 	if can_shoot:
 		shoot()	

@@ -19,6 +19,7 @@ enum State {
 
 
 func _ready() -> void:
+	setup()
 	apply_color_palette()
 	set_physics_process(false)
 	set_process(false)

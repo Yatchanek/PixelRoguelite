@@ -65,7 +65,9 @@ var permanently_occupied : Array[Vector2i] = []
 
 var enemies_array : Array[Enemy] = []
 
-signal room_exited(coords : Vector2, exit_index : int)
+var waiting_for_respawn : bool = false
+
+signal room_exited(coords : Vector2i, exit_index : int)
 signal enemy_destroyed(exp_value : int)
 
 func _ready() -> void:	
@@ -83,17 +85,17 @@ func _ready() -> void:
 	depth  = Utils.get_depth(room_data.coords)
 	level = floor(depth / (6 - Settings.difficulty))
 	max_enemies = min(randi_range(3 + depth / 2, 6 + depth / 2), 30)
-	enemy_spawn_interval = max(1.5 - 0.1 * level, 0.2)
+	enemy_spawn_interval = max(1.5 - 0.05 * depth, 0.2)
 	
 	if !Globals.gate_key_coords.has(room_data.coords):
 		if room_data.last_cleared == 0 or time_since_last_clear > respawn_interval:
 			activate_doors()
 			spawn_turret(0.035)
-				
+			EnemySpawner.setup(level)	
 			timer.start(randf_range(enemy_spawn_interval, enemy_spawn_interval * 2.0))
 		else:
 			var time_left_to_respawn = respawn_interval - time_since_last_clear
-			enemies_spawned = max_enemies
+			waiting_for_respawn = true
 			timer.start(time_left_to_respawn)
 	
 	
@@ -125,7 +127,7 @@ func create_navigation_polygon():
 	var points : PackedVector2Array = []
 	for corner in corners:
 		points.append(corner)
-	points = Geometry2D.offset_polygon(points, 18)[0]
+	points = Geometry2D.offset_polygon(points, 8)[0]
 
 	$NavigationRegion2D.navigation_polygon.add_outline(points)
 	$NavigationRegion2D.bake_navigation_polygon()
@@ -178,7 +180,7 @@ func spawn_pickup():
 		pickup.position = base_pos + room_data.pickup_coords * 64
 		pickup.type = room_data.pickup_type
 	else:
-		var coords : Vector2i 
+		var coords : Vector2i
 		var coords_accepted : bool = false
 		while !coords_accepted:
 			coords = Utils.get_random_coords()
@@ -230,6 +232,7 @@ func spawn_turret(probability : float):
 	enemy.position = Vector2(base_pos + coords * 64)
 	enemy.target = player
 	enemy.bullet_fired.connect(_on_bullet_fired)
+	enemy.exploded.connect(_on_explosion)
 	call_deferred("add_child", enemy)
 	
 	probability *= 0.25
@@ -260,22 +263,23 @@ func _on_door_entered(idx : int) -> void:
 	room_exited.emit(room_data.coords, idx)
 
 func _on_timer_timeout() -> void:
-	if enemies_spawned == max_enemies:
+	if waiting_for_respawn:
 		enemies_spawned = 0
 		enemies_killed = 0
 		activate_doors()
 		timer.start(randf_range(enemy_spawn_interval, 2 * enemy_spawn_interval))
-	else:
+	else:	
 		temporarily_occupied = []
 		var enemies_to_spawn : int = clamp(randi_range(1, min(1 + int(depth), 5)), 1, max(max_enemies - enemies_spawned, 1))	
+		var coords_array : Array[Vector2i] = []
 		for i in enemies_to_spawn:		
 			var accepted : bool = false
 			var attempts : int = 0
+			var candidate_coords : Vector2i
 			while !accepted:
 				if attempts > 10:
-					timer.start(0.25)
 					break
-				var candidate_coords : Vector2i = Utils.get_random_coords()
+				candidate_coords = Utils.get_random_coords()
 				
 				for enemy : Enemy in enemies_array:
 					if (base_pos + candidate_coords * 64).distance_squared_to(enemy.position) < 1024:
@@ -286,25 +290,67 @@ func _on_timer_timeout() -> void:
 					attempts += 1
 				else:
 					accepted = true
-					spawn_indicator(candidate_coords)
-					enemies_spawned += 1
-					temporarily_occupied.append(candidate_coords)
-					
-		if enemies_spawned < max_enemies:
-			timer.start(randf_range(enemy_spawn_interval, 2 * enemy_spawn_interval))
-
-func spawn_indicator(coords : Vector2i):
-	var indicator : Sprite2D = indicator_scene.instantiate()
-	indicator.position = base_pos + coords * 64
-	indicator.tree_exited.connect(spawn_enemy.bind(coords))
-	call_deferred("add_child", indicator)
+			if accepted:
+				coords_array.append(candidate_coords)
+				temporarily_occupied.append(candidate_coords)
+			
+		if coords_array.size() > 0:
+			spawn_indicators(coords_array)
+		else:
+			timer.start(randf_range(enemy_spawn_interval, 2 * enemy_spawn_interval))	
 
 
+func spawn_indicators(coords_array : Array[Vector2i]):	
+	if !is_inside_tree():
+		return
+		
+	for i in coords_array.size():
+		var indicator : Sprite2D = indicator_scene.instantiate()
+		indicator.position = base_pos + coords_array[i] * 64
+		call_deferred("add_child", indicator)
+		if i == coords_array.size() - 1:
+			indicator.tree_exited.connect(spawn_enemies.bind(coords_array))
+
+func spawn_enemies(coords_array : Array[Vector2i]):
+	if !is_inside_tree():
+		return
+		
+	for coords : Vector2i in coords_array:			
+		var enemy_scenes : Array[PackedScene] = EnemySpawner.select_enemy(depth)
+		var multiple : bool = enemy_scenes.size() > 1
+	
+		while enemy_scenes.size() > 0:
+			var enemy : Enemy = enemy_scenes.pop_back().instantiate() as Enemy
+
+			if multiple:
+				enemy.position = Vector2(base_pos + coords * 64) + (Vector2.RIGHT * 9).rotated(randf_range(0, TAU))
+			else:
+				enemy.position = base_pos + coords * 64
+			enemy.target = player
+			enemy.level = level
+			
+			if enemy.has_signal("bullet_fired"):
+				enemy.bullet_fired.connect(_on_bullet_fired)
+			
+			if enemy.has_signal("missile_fired"):
+				enemy.missile_fired.connect(_on_missile_fired)
+				
+			enemy.exploded.connect(_on_explosion)
+			enemy.destroyed.connect(_on_enemy_destroyed)		
+			enemies.call_deferred("add_child", enemy)
+			enemies_array.append(enemy)
+			
+		enemies_spawned += 1
+		
+	if enemies_spawned < max_enemies:
+		timer.start(randf_range(enemy_spawn_interval, 2 * enemy_spawn_interval))
+		
+		
 func spawn_boss():
 	await get_tree().create_timer(enemy_spawn_interval).timeout
 	
 	if is_inside_tree():
-		var boss : Boss = bosses[Globals.gate_key_coords[room_data.coords]].instantiate()
+		var boss : Boss = bosses[7].instantiate()#bosses[Globals.gate_key_coords[room_data.coords]].instantiate() as Boss
 		
 		var accepted : bool = false
 		var candidate_coords : Vector2i
@@ -316,7 +362,8 @@ func spawn_boss():
 				accepted = true
 		
 		boss.position = base_pos + candidate_coords * 64
-		boss.bullet_fired.connect(_on_bullet_fired)
+		if boss.has_signal("bullet_fired"):
+			boss.bullet_fired.connect(_on_bullet_fired)
 		if boss.has_signal("missile_fired"):
 			boss.missile_fired.connect(_on_missile_fired)
 		boss.exploded.connect(_on_explosion)
@@ -325,28 +372,10 @@ func spawn_boss():
 		enemies_array.append(boss)
 
 
-func spawn_enemy(coords : Vector2i):	
-	if !is_inside_tree():
-		return
-		
-	var enemy_scene : PackedScene = EnemySpawner.select_enemy(depth)
-	var enemy : Enemy = enemy_scene.instantiate() as Enemy
+
 	
-	enemy.position = base_pos + coords * 64
-	enemy.target = player
-	enemy.level = level
-	
-	if enemy.has_signal("bullet_fired"):
-		enemy.bullet_fired.connect(_on_bullet_fired)
-	
-	if enemy.has_signal("missile_fired"):
-		enemy.missile_fired.connect(_on_missile_fired)
-		
-	enemy.exploded.connect(_on_explosion)
-	enemy.destroyed.connect(_on_enemy_destroyed)		
-	enemies.call_deferred("add_child", enemy)
-	enemies_array.append(enemy)
-	
+
+
 func _on_explosion(explosion : Explosion, pos : Vector2):
 	if !is_inside_tree():
 		return
@@ -386,6 +415,7 @@ func _on_enemy_destroyed(enemy : Enemy):
 		if enemies_killed == max_enemies:
 			room_data.last_cleared = int(Time.get_unix_time_from_system())
 			deactivate_doors()
+			waiting_for_respawn = true
 			timer.start(respawn_interval)
 
 func _on_player_died():

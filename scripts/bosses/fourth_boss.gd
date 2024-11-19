@@ -19,10 +19,6 @@ class_name FourthGuardian
 const bullet_scene : PackedScene = preload("res://scenes/bullet.tscn")
 const missile_scene : PackedScene = preload("res://scenes/missile.tscn")
 
-var elapsed_time : float = 0.0
-
-var tick : int = 0
-
 var current_state : State
 
 var shots_fired : int = 0
@@ -30,7 +26,6 @@ var attack_mode : AttackMode
 var rotation_dir : int
 var rotation_speed : float
 
-var wander_interval : float
 
 enum AttackMode {
 	BULLET,
@@ -80,21 +75,14 @@ func _process(delta: float) -> void:
 	if !is_instance_valid(target):
 		return
 	if current_state == State.MOVE:
-		elapsed_time += delta
-		if elapsed_time > wander_interval:
-			nav_agent.target_position = Vector2i(32, 32) + Utils.get_random_coords(2, 5, 2, 3) * 64
-			elapsed_time -= wander_interval
-			wander_interval = randf_range(1.25, 1.75)
+		wander(delta)
 	
 		var target_transform = turret.global_transform.looking_at(target.global_position)
 		turret.global_transform = turret.global_transform.interpolate_with(target_transform, 0.25)		
 	
 	if attack_mode == AttackMode.LASER:
 		base.rotation += rotation_speed * rotation_dir * delta
-	
-	
-	
-	
+
 
 func _physics_process(_delta: float) -> void:
 	if current_state == State.KNOCKBACK:
@@ -103,14 +91,10 @@ func _physics_process(_delta: float) -> void:
 			current_state = State.MOVE
 
 	else:	
-		if nav_agent.is_navigation_finished() or !is_instance_valid(target):
-			velocity = lerp(velocity, Vector2.ZERO, 0.1)
-			move_and_slide()
-			if can_shoot:
-				shoot()	
-			return
-		
-		velocity = lerp(velocity, global_position.direction_to(nav_agent.get_next_path_position()) * speed, 0.25)
+		if position.distance_squared_to(waypoint) < 500:
+			waypoint = select_destination()
+
+		velocity = lerp(velocity, position.direction_to(waypoint) * speed, 0.25)
 
 	if can_shoot:
 		shoot()	

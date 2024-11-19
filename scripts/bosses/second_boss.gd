@@ -1,17 +1,12 @@
 extends Boss
 class_name SecondGuardian
 
-@onready var nav_agent: NavigationAgent2D = $NavigationAgent2D
 @onready var timer: Timer = $Timer
 @onready var shoot_timer: Timer = $ShootTimer
 @onready var body: Node2D = $Body
 
 
 const grenade_scene : PackedScene = preload("res://scenes/rectangle_grenade.tscn")
-
-var elapsed_time : float = 0.0
-
-var tick : int = 0
 
 var current_state : State
 
@@ -32,7 +27,6 @@ enum State {
 }
 
 signal bullet_fired(bullet : Node2D, pos : Vector2)
-signal missile_fired(missile : Node2D, pos : Vector2)
 
 
 func _ready() -> void:
@@ -59,10 +53,7 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	if current_state == State.MOVE:
-		elapsed_time += delta
-		if elapsed_time > 1.5:
-			nav_agent.target_position = Vector2i(32, 32) + Utils.get_random_coords(1, 6, 1, 2) * 64
-			elapsed_time = 0
+		wander(delta)
 			
 	health_bar_pivot.global_rotation = 0
 
@@ -75,14 +66,10 @@ func _physics_process(_delta: float) -> void:
 			current_state = State.MOVE
 
 	else:	
-		if nav_agent.is_navigation_finished():
-			velocity = lerp(velocity, Vector2.ZERO, 0.1)
-			move_and_slide()
-			if can_shoot:
-				shoot()	
-			return
+		if position.distance_squared_to(waypoint) < 100:
+			waypoint = select_destination(1, 6, 1, 2, 128)
 		
-		velocity = lerp(velocity, global_position.direction_to(nav_agent.get_next_path_position()) * speed, 0.25)
+		velocity = lerp(velocity, position.direction_to(waypoint) * speed, 0.25)
 
 	if can_shoot:
 		shoot()	
