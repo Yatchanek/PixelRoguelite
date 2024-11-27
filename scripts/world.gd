@@ -95,7 +95,8 @@ func change_room(previous_room_coords : Vector2i, exit_index : int):
 	current_room = new_room
 	
 	await get_tree().process_frame
-	call_deferred("add_child", new_room)
+	if is_instance_valid(new_room):
+		call_deferred("add_child", new_room)
 	
 	tw = create_tween()
 	tw.tween_interval(0.25)
@@ -202,11 +203,15 @@ func _on_player_health_changed(value : int):
 
 
 func _on_explosion(explosion : Explosion, pos : Vector2):
+	if !is_instance_valid(explosion):
+		return
 	explosion.position = current_room.to_local(pos)
 	current_room.call_deferred("add_child", explosion)
 
 
 func _on_bullet_fired(bullet: Node2D, pos: Vector2) -> void:
+	if !is_instance_valid(bullet):
+		return
 	bullet.position = current_room.to_local(pos)
 	current_room.bullets.call_deferred("add_child", bullet)
 

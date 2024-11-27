@@ -26,11 +26,6 @@ func apply_color_palette():
 func disable():
 	disabled = true
 
-func _on_button_pressed() -> void:
-	card_pressed.emit()
-	EventBus.upgrade_card_pressed.emit(upgrade_equipped)
-
-
 func _on_mouse_entered() -> void:
 	var stylebox : StyleBoxFlat = StyleBoxFlat.new()
 	stylebox.bg_color = Globals.color_palettes[Globals.current_palette][7]

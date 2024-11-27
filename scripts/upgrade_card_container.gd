@@ -47,6 +47,8 @@ var amounts: Dictionary = {
 	Upgrades.DASH_ENERGY : 5,	
 }
 
+signal cards_hidden
+
 func add_cards():
 	var candidates : Array[Upgrades] = get_possible_upgrades()
 	for i in min(candidates.size(), cards_to_add):	
@@ -84,6 +86,7 @@ func hide_cards():
 	await tw.finished
 	for card in get_children():
 		card.queue_free()
+	cards_hidden.emit()
 	Globals.leveled_up = false
 	get_tree().paused = false
 
@@ -97,9 +100,7 @@ func select_upgrade_type(candidate_pool : Array[Upgrades]) -> Upgrades:
 		total_chance += upgrade_probabilities[upgrade]
 		if roll < total_chance:
 			candidate = upgrade
-			prints(candidate_pool, candidate)
 			candidate_pool.erase(candidate)
-			print(candidate_pool)
 			break
 
 	return candidate

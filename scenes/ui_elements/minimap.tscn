@@ -1,56 +1,143 @@
-[gd_scene load_steps=8 format=3 uid="uid://s65dq4a3p8hf"]
+[gd_scene load_steps=13 format=3 uid="uid://s65dq4a3p8hf"]
 
+[ext_resource type="Script" path="res://scenes/ui_elements/minimap_container.gd" id="1_dhtna"]
 [ext_resource type="Script" path="res://scripts/minimap.gd" id="1_w81rf"]
 [ext_resource type="PackedScene" uid="uid://si04mud574jh" path="res://scenes/compound_button.tscn" id="2_j25qj"]
+[ext_resource type="Texture2D" uid="uid://5ogcrjwtt34o" path="res://graphics/square.png" id="2_lornr"]
+[ext_resource type="FontFile" uid="uid://dqb8ql2h8avb7" path="res://fonts/m5x7 Daniel Linssen.ttf" id="3_eah80"]
 [ext_resource type="Texture2D" uid="uid://bsmgrauj4vnu0" path="res://graphics/down.png" id="3_mbj0w"]
+[ext_resource type="Texture2D" uid="uid://ceogro3x3yhep" path="res://graphics/circle.png" id="4_74iu0"]
 [ext_resource type="Texture2D" uid="uid://cjdleaou0jut7" path="res://graphics/left.png" id="5_di6tp"]
 [ext_resource type="Texture2D" uid="uid://c78rrp5ugr5hf" path="res://graphics/right.png" id="6_hwh7i"]
 [ext_resource type="Texture2D" uid="uid://brftgejin5mdt" path="res://graphics/plus.png" id="7_t3o1m"]
 [ext_resource type="Texture2D" uid="uid://bb8xs1mxt2sfg" path="res://graphics/minus.png" id="8_noicf"]
 
-[node name="Minimap" type="HBoxContainer"]
-z_index = 2
+[sub_resource type="LabelSettings" id="LabelSettings_y4r6j"]
+font = ExtResource("3_eah80")
+
+[node name="MiniMapContainer" type="PanelContainer"]
 texture_filter = 1
+custom_minimum_size = Vector2(384, 240)
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -82.0
-offset_top = -82.0
-offset_right = 82.0
-offset_bottom = 82.0
+offset_left = -192.0
+offset_top = -120.0
+offset_right = 192.0
+offset_bottom = 120.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_dhtna")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="HBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+theme_override_constants/separation = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/HBoxContainer" groups=["Legend"]]
+layout_mode = 2
+
+[node name="CurrentPosition" type="TextureRect" parent="MarginContainer/HBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(8, 8)
+layout_mode = 2
+texture = ExtResource("2_lornr")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="CurrentPosLabel" type="Label" parent="MarginContainer/HBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "current location"
+label_settings = SubResource("LabelSettings_y4r6j")
+uppercase = true
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="MarginContainer/HBoxContainer" groups=["Legend"]]
+layout_mode = 2
+
+[node name="GateKey" type="TextureRect" parent="MarginContainer/HBoxContainer/HBoxContainer2"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(8, 8)
+layout_mode = 2
+texture = ExtResource("4_74iu0")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="GateKeyLabel" type="Label" parent="MarginContainer/HBoxContainer/HBoxContainer2"]
+layout_mode = 2
+text = "gate key"
+label_settings = SubResource("LabelSettings_y4r6j")
+uppercase = true
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="MarginContainer/HBoxContainer" groups=["Legend"]]
+layout_mode = 2
+
+[node name="GateLocation" type="TextureRect" parent="MarginContainer/HBoxContainer/HBoxContainer3"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(8, 8)
+layout_mode = 2
+texture = ExtResource("2_lornr")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="GateLocationLabel" type="Label" parent="MarginContainer/HBoxContainer/HBoxContainer3"]
+layout_mode = 2
+text = "gate location"
+label_settings = SubResource("LabelSettings_y4r6j")
+uppercase = true
+
+[node name="Minimap" type="HBoxContainer" parent="MarginContainer"]
+unique_name_in_owner = true
+visible = false
+z_index = 2
+texture_filter = 1
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 4
 mouse_filter = 2
 script = ExtResource("1_w81rf")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
-layout_mode = 2
-mouse_filter = 2
-theme_override_constants/separation = 4
-
-[node name="CompoundButton2" parent="VBoxContainer" groups=["Buttons"] instance=ExtResource("2_j25qj")]
-layout_mode = 2
-
-[node name="CompoundButton" parent="VBoxContainer" groups=["Buttons"] instance=ExtResource("2_j25qj")]
-layout_mode = 2
-
-[node name="ButtonImage" parent="VBoxContainer/CompoundButton" index="0"]
-texture = ExtResource("3_mbj0w")
-stretch_mode = 3
-
-[node name="VBoxContainer2" type="VBoxContainer" parent="."]
+[node name="MainVbox" type="VBoxContainer" parent="MarginContainer/Minimap"]
 z_index = -1
 layout_mode = 2
 mouse_filter = 2
 
-[node name="MinimapPanel" type="PanelContainer" parent="VBoxContainer2"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="MarginContainer/Minimap/MainVbox"]
+layout_mode = 2
+
+[node name="YCoordsColumn" type="VBoxContainer" parent="MarginContainer/Minimap/MainVbox/HBoxContainer2"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(18, 164)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_constants/separation = 0
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="MarginContainer/Minimap/MainVbox/HBoxContainer2"]
+layout_mode = 2
+
+[node name="XCoordsRow" type="HBoxContainer" parent="MarginContainer/Minimap/MainVbox/HBoxContainer2/VBoxContainer2"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(168, 18)
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="MinimapPanel" type="PanelContainer" parent="MarginContainer/Minimap/MainVbox/HBoxContainer2/VBoxContainer2"]
+unique_name_in_owner = true
 clip_children = 2
 custom_minimum_size = Vector2(168, 168)
 layout_mode = 2
 
-[node name="Grid" type="GridContainer" parent="VBoxContainer2/MinimapPanel"]
+[node name="Grid" type="GridContainer" parent="MarginContainer/Minimap/MainVbox/HBoxContainer2/VBoxContainer2/MinimapPanel"]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(160, 160)
 layout_mode = 2
 size_flags_horizontal = 4
@@ -59,50 +146,72 @@ theme_override_constants/h_separation = 0
 theme_override_constants/v_separation = 0
 columns = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer2"]
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/Minimap/MainVbox/HBoxContainer2/VBoxContainer2"]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 4
 
-[node name="CompoundButton" parent="VBoxContainer2/HBoxContainer" groups=["Buttons"] instance=ExtResource("2_j25qj")]
+[node name="CompoundButton" parent="MarginContainer/Minimap/MainVbox/HBoxContainer2/VBoxContainer2/HBoxContainer" groups=["Buttons"] instance=ExtResource("2_j25qj")]
 layout_mode = 2
 
-[node name="ButtonImage" parent="VBoxContainer2/HBoxContainer/CompoundButton" index="0"]
+[node name="ButtonImage" parent="MarginContainer/Minimap/MainVbox/HBoxContainer2/VBoxContainer2/HBoxContainer/CompoundButton" index="0"]
 texture = ExtResource("5_di6tp")
 
-[node name="CompoundButton2" parent="VBoxContainer2/HBoxContainer" groups=["Buttons"] instance=ExtResource("2_j25qj")]
+[node name="CompoundButton2" parent="MarginContainer/Minimap/MainVbox/HBoxContainer2/VBoxContainer2/HBoxContainer" groups=["Buttons"] instance=ExtResource("2_j25qj")]
 layout_mode = 2
 
-[node name="ButtonImage" parent="VBoxContainer2/HBoxContainer/CompoundButton2" index="0"]
+[node name="ButtonImage" parent="MarginContainer/Minimap/MainVbox/HBoxContainer2/VBoxContainer2/HBoxContainer/CompoundButton2" index="0"]
 texture = ExtResource("6_hwh7i")
 
-[node name="VBoxContainer3" type="VBoxContainer" parent="."]
+[node name="VBoxContainer4" type="VBoxContainer" parent="MarginContainer/Minimap/MainVbox/HBoxContainer2"]
+custom_minimum_size = Vector2(0, 168)
+layout_mode = 2
+size_flags_vertical = 4
+alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/Minimap/MainVbox/HBoxContainer2/VBoxContainer4"]
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+theme_override_constants/separation = 4
+
+[node name="CompoundButton2" parent="MarginContainer/Minimap/MainVbox/HBoxContainer2/VBoxContainer4/VBoxContainer" groups=["Buttons"] instance=ExtResource("2_j25qj")]
+layout_mode = 2
+
+[node name="CompoundButton" parent="MarginContainer/Minimap/MainVbox/HBoxContainer2/VBoxContainer4/VBoxContainer" groups=["Buttons"] instance=ExtResource("2_j25qj")]
+layout_mode = 2
+
+[node name="ButtonImage" parent="MarginContainer/Minimap/MainVbox/HBoxContainer2/VBoxContainer4/VBoxContainer/CompoundButton" index="0"]
+texture = ExtResource("3_mbj0w")
+stretch_mode = 3
+
+[node name="VBoxContainer3" type="VBoxContainer" parent="MarginContainer/Minimap/MainVbox/HBoxContainer2/VBoxContainer4"]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 4
 
-[node name="CompoundButton" parent="VBoxContainer3" groups=["Buttons"] instance=ExtResource("2_j25qj")]
+[node name="CompoundButton" parent="MarginContainer/Minimap/MainVbox/HBoxContainer2/VBoxContainer4/VBoxContainer3" groups=["Buttons"] instance=ExtResource("2_j25qj")]
 layout_mode = 2
 
-[node name="ButtonImage" parent="VBoxContainer3/CompoundButton" index="0"]
+[node name="ButtonImage" parent="MarginContainer/Minimap/MainVbox/HBoxContainer2/VBoxContainer4/VBoxContainer3/CompoundButton" index="0"]
 texture = ExtResource("7_t3o1m")
 
-[node name="CompoundButton2" parent="VBoxContainer3" groups=["Buttons"] instance=ExtResource("2_j25qj")]
+[node name="CompoundButton2" parent="MarginContainer/Minimap/MainVbox/HBoxContainer2/VBoxContainer4/VBoxContainer3" groups=["Buttons"] instance=ExtResource("2_j25qj")]
 layout_mode = 2
 
-[node name="ButtonImage" parent="VBoxContainer3/CompoundButton2" index="0"]
+[node name="ButtonImage" parent="MarginContainer/Minimap/MainVbox/HBoxContainer2/VBoxContainer4/VBoxContainer3/CompoundButton2" index="0"]
 texture = ExtResource("8_noicf")
 
-[connection signal="pressed" from="VBoxContainer/CompoundButton2" to="." method="move_up"]
-[connection signal="pressed" from="VBoxContainer/CompoundButton" to="." method="move_down"]
-[connection signal="pressed" from="VBoxContainer2/HBoxContainer/CompoundButton" to="." method="move_left"]
-[connection signal="pressed" from="VBoxContainer2/HBoxContainer/CompoundButton2" to="." method="move_right"]
-[connection signal="pressed" from="VBoxContainer3/CompoundButton" to="." method="_on_scale_up"]
-[connection signal="pressed" from="VBoxContainer3/CompoundButton2" to="." method="_on_scale_down"]
+[connection signal="pressed" from="MarginContainer/Minimap/MainVbox/HBoxContainer2/VBoxContainer2/HBoxContainer/CompoundButton" to="MarginContainer/Minimap" method="move_left"]
+[connection signal="pressed" from="MarginContainer/Minimap/MainVbox/HBoxContainer2/VBoxContainer2/HBoxContainer/CompoundButton2" to="MarginContainer/Minimap" method="move_right"]
+[connection signal="pressed" from="MarginContainer/Minimap/MainVbox/HBoxContainer2/VBoxContainer4/VBoxContainer/CompoundButton2" to="MarginContainer/Minimap" method="move_up"]
+[connection signal="pressed" from="MarginContainer/Minimap/MainVbox/HBoxContainer2/VBoxContainer4/VBoxContainer/CompoundButton" to="MarginContainer/Minimap" method="move_down"]
+[connection signal="pressed" from="MarginContainer/Minimap/MainVbox/HBoxContainer2/VBoxContainer4/VBoxContainer3/CompoundButton" to="MarginContainer/Minimap" method="_on_scale_up"]
+[connection signal="pressed" from="MarginContainer/Minimap/MainVbox/HBoxContainer2/VBoxContainer4/VBoxContainer3/CompoundButton2" to="MarginContainer/Minimap" method="_on_scale_down"]
 
-[editable path="VBoxContainer/CompoundButton2"]
-[editable path="VBoxContainer/CompoundButton"]
-[editable path="VBoxContainer2/HBoxContainer/CompoundButton"]
-[editable path="VBoxContainer2/HBoxContainer/CompoundButton2"]
-[editable path="VBoxContainer3/CompoundButton"]
-[editable path="VBoxContainer3/CompoundButton2"]
+[editable path="MarginContainer/Minimap/MainVbox/HBoxContainer2/VBoxContainer2/HBoxContainer/CompoundButton"]
+[editable path="MarginContainer/Minimap/MainVbox/HBoxContainer2/VBoxContainer2/HBoxContainer/CompoundButton2"]
+[editable path="MarginContainer/Minimap/MainVbox/HBoxContainer2/VBoxContainer4/VBoxContainer/CompoundButton2"]
+[editable path="MarginContainer/Minimap/MainVbox/HBoxContainer2/VBoxContainer4/VBoxContainer/CompoundButton"]
+[editable path="MarginContainer/Minimap/MainVbox/HBoxContainer2/VBoxContainer4/VBoxContainer3/CompoundButton"]
+[editable path="MarginContainer/Minimap/MainVbox/HBoxContainer2/VBoxContainer4/VBoxContainer3/CompoundButton2"]

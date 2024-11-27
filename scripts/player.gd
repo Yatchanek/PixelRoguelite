@@ -98,6 +98,7 @@ func _unhandled_input(event: InputEvent) -> void:
 func _ready() -> void:
 	apply_color_palette()
 	player_ready.connect(Globals._on_player_ready)
+	EventBus.game_completed.connect(_on_game_completed)
 	await get_tree().process_frame
 	max_hp = 50
 	hp = max_hp
@@ -337,3 +338,11 @@ func _on_ghost_timer_timeout() -> void:
 func _on_dash_timer_timeout() -> void:
 	is_dashing = false
 	ghost_timer.stop()
+	
+func _on_game_completed():
+	set_process(false)
+	set_physics_process(false)
+	set_process_unhandled_input(false)
+	legs.play("idle")
+	await get_tree().create_timer(2.0).timeout
+	get_tree().change_scene_to_file("res://scenes/title_screen.tscn")

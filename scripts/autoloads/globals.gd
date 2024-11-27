@@ -27,6 +27,8 @@ var gate_key_coords : Dictionary = {}
 var keys_collected : Array[int] = []
 var keys_returned : Array[int] = []
 
+var game_completed : bool = false
+
 func _ready() -> void:
 	rng = RandomNumberGenerator.new()
 	create_color_palettes()
@@ -67,6 +69,7 @@ func _on_player_ready(_player : Player):
 
 func reset():
 	leveled_up = false
+	game_completed = false
 	room_grid = {}
 	gate_key_coords = {}
 	keys_collected = []

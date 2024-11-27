@@ -72,7 +72,7 @@ signal enemy_destroyed(exp_value : int)
 
 func _ready() -> void:	
 	player.died.connect(_on_player_died)
-	
+	EventBus.game_completed.connect(_on_game_completed)
 	if room_data.last_cleared == 0:
 		Globals.rng.seed = room_data.first_visited
 		room_data.rng_seed = room_data.first_visited
@@ -96,7 +96,8 @@ func _ready() -> void:
 		else:
 			var time_left_to_respawn = respawn_interval - time_since_last_clear
 			waiting_for_respawn = true
-			timer.start(time_left_to_respawn)
+			if !Globals.game_completed:
+				timer.start(time_left_to_respawn)
 	
 	
 		if room_data.coords != Vector2i.ZERO:
@@ -110,7 +111,7 @@ func _ready() -> void:
 			elif randf() < 0.025:
 				spawn_pickup()
 		else:
-			place_gate()
+			place_key_collector()
 	
 	elif !room_data.boss_defeated:
 		activate_doors()
@@ -204,9 +205,15 @@ func _on_pickup_collected():
 	room_data.pickup_collect_time = int(Time.get_unix_time_from_system())
 	room_data.pickup_spawned = false
 
+func place_key_collector():
+	var collector : Node2D = load("res://scenes/key_collector.tscn").instantiate()
+	collector.position = Vector2(48, 48)
+	collector.all_keys_collected.connect(_on_all_keys_collected)
+	call_deferred("add_child", collector)
+
 func place_gate():
 	var gate : Node2D = load("res://scenes/gate.tscn").instantiate()
-	gate.position = Vector2(48, 48)
+	gate.position = Vector2(Globals.PLAYFIELD_WIDTH - 48, Globals.PLAYFIELD_HEIGHT - 48)
 	call_deferred("add_child", gate)
 
 func place_gate_key(pos : Vector2):
@@ -263,11 +270,13 @@ func _on_door_entered(idx : int) -> void:
 	room_exited.emit(room_data.coords, idx)
 
 func _on_timer_timeout() -> void:
+	if Globals.game_completed:
+		return
 	if waiting_for_respawn:
 		enemies_spawned = 0
 		enemies_killed = 0
 		activate_doors()
-		timer.start(randf_range(enemy_spawn_interval, 2 * enemy_spawn_interval))
+		timer.start(randf_range(enemy_spawn_interval, 1.25 * enemy_spawn_interval))
 	else:	
 		temporarily_occupied = []
 		var enemies_to_spawn : int = clamp(randi_range(1, min(1 + int(depth), 5)), 1, max(max_enemies - enemies_spawned, 1))	
@@ -297,7 +306,7 @@ func _on_timer_timeout() -> void:
 		if coords_array.size() > 0:
 			spawn_indicators(coords_array)
 		else:
-			timer.start(randf_range(enemy_spawn_interval, 2 * enemy_spawn_interval))	
+			timer.start(randf_range(enemy_spawn_interval, 1.25 * enemy_spawn_interval))	
 
 
 func spawn_indicators(coords_array : Array[Vector2i]):	
@@ -317,6 +326,8 @@ func spawn_enemies(coords_array : Array[Vector2i]):
 		
 	for coords : Vector2i in coords_array:			
 		var enemy_scenes : Array[PackedScene] = EnemySpawner.select_enemy(depth)
+		if enemy_scenes.size() == 0:
+			return
 		var multiple : bool = enemy_scenes.size() > 1
 	
 		while enemy_scenes.size() > 0:
@@ -343,14 +354,14 @@ func spawn_enemies(coords_array : Array[Vector2i]):
 		enemies_spawned += 1
 		
 	if enemies_spawned < max_enemies:
-		timer.start(randf_range(enemy_spawn_interval, 2 * enemy_spawn_interval))
+		timer.start(randf_range(enemy_spawn_interval, 1.25 * enemy_spawn_interval))
 		
 		
 func spawn_boss():
 	await get_tree().create_timer(enemy_spawn_interval).timeout
 	
 	if is_inside_tree():
-		var boss : Boss = bosses[7].instantiate()#bosses[Globals.gate_key_coords[room_data.coords]].instantiate() as Boss
+		var boss : Boss = bosses[8].instantiate()#bosses[Globals.gate_key_coords[room_data.coords]].instantiate() as Boss
 		
 		var accepted : bool = false
 		var candidate_coords : Vector2i
@@ -418,6 +429,16 @@ func _on_enemy_destroyed(enemy : Enemy):
 			waiting_for_respawn = true
 			timer.start(respawn_interval)
 
+func _on_all_keys_collected():
+	place_gate()
+
 func _on_player_died():
 	for enemy in enemies_array:
 		enemy.target = null
+
+func _on_game_completed():
+	for enemy in enemies_array:
+		enemy.queue_free()
+	for bullet in bullets.get_children():
+		bullet.queue_free()
+	timer.stop()

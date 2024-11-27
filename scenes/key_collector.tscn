@@ -1,0 +1,78 @@
+[gd_scene load_steps=4 format=3 uid="uid://d0ctvmuwf2s78"]
+
+[ext_resource type="Script" path="res://scripts/key_collector.gd" id="1_xbcyc"]
+[ext_resource type="Texture2D" uid="uid://882ajyq5akwp" path="res://graphics/keys.png" id="2_71edh"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_3qsat"]
+size = Vector2(48, 47)
+
+[node name="KeyCollector" type="Node2D"]
+z_index = -1
+texture_filter = 1
+script = ExtResource("1_xbcyc")
+
+[node name="KeySymbols" type="Node2D" parent="."]
+
+[node name="Key" type="Sprite2D" parent="KeySymbols"]
+position = Vector2(-16, -15)
+texture = ExtResource("2_71edh")
+region_enabled = true
+region_rect = Rect2(0, 0, 16, 16)
+
+[node name="Key2" type="Sprite2D" parent="KeySymbols"]
+position = Vector2(0, -15)
+texture = ExtResource("2_71edh")
+region_enabled = true
+region_rect = Rect2(0, 0, 16, 16)
+
+[node name="Key3" type="Sprite2D" parent="KeySymbols"]
+position = Vector2(16, -15)
+texture = ExtResource("2_71edh")
+region_enabled = true
+region_rect = Rect2(0, 0, 16, 16)
+
+[node name="Key4" type="Sprite2D" parent="KeySymbols"]
+position = Vector2(-16, 0)
+texture = ExtResource("2_71edh")
+region_enabled = true
+region_rect = Rect2(0, 0, 16, 16)
+
+[node name="Key5" type="Sprite2D" parent="KeySymbols"]
+texture = ExtResource("2_71edh")
+region_enabled = true
+region_rect = Rect2(0, 0, 16, 16)
+
+[node name="Key6" type="Sprite2D" parent="KeySymbols"]
+position = Vector2(16, 0)
+texture = ExtResource("2_71edh")
+region_enabled = true
+region_rect = Rect2(0, 0, 16, 16)
+
+[node name="Key7" type="Sprite2D" parent="KeySymbols"]
+position = Vector2(-16, 16)
+texture = ExtResource("2_71edh")
+region_enabled = true
+region_rect = Rect2(0, 0, 16, 16)
+
+[node name="Key8" type="Sprite2D" parent="KeySymbols"]
+position = Vector2(0, 16)
+texture = ExtResource("2_71edh")
+region_enabled = true
+region_rect = Rect2(0, 0, 16, 16)
+
+[node name="Key9" type="Sprite2D" parent="KeySymbols"]
+position = Vector2(16, 16)
+texture = ExtResource("2_71edh")
+region_enabled = true
+region_rect = Rect2(0, 0, 16, 16)
+
+[node name="Area2D" type="Area2D" parent="."]
+collision_layer = 0
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2(0, 0.5)
+shape = SubResource("RectangleShape2D_3qsat")
+
+[connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
+[connection signal="body_exited" from="Area2D" to="." method="_on_area_2d_body_exited"]

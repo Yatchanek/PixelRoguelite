@@ -8,11 +8,7 @@ extends Node
 func _ready() -> void:
 	Globals.new_game()
 	EventBus.upgrade_time.connect(_on_player_leveled_up)
-	EventBus.player_max_health_changed.connect(_on_max_health_changed)
-	#EventBus.upgrade_card_pressed.connect(_on_upgrade_selected)
 	EventBus.room_changed.connect(_on_room_changed)
-	#Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
-	#Input.set_custom_mouse_cursor(load("res://graphics/cursor.png"), Input.CURSOR_ARROW, Vector2(32, 32))
 
 func _on_player_leveled_up():
 	get_tree().paused = true

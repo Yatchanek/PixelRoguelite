@@ -96,7 +96,7 @@ func _physics_process(_delta: float) -> void:
 		else:
 			velocity = lerp(velocity, position.direction_to(waypoint) * speed, 0.25)
 
-			move_and_slide()
+	move_and_slide()
 
 func shoot():
 	var missile : Missile = missile_scene.instantiate() as Missile

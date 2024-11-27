@@ -2,7 +2,7 @@
 
 [ext_resource type="Texture2D" uid="uid://8bgcsu1xfo4u" path="res://graphics/up.png" id="1_d0ejv"]
 [ext_resource type="Script" path="res://scripts/compound_button.gd" id="1_vf0ds"]
-[ext_resource type="FontFile" uid="uid://wnb2movo6eli" path="res://fonts/m6x11 Daniel LInssen.ttf" id="2_ljrbw"]
+[ext_resource type="FontFile" uid="uid://wnb2movo6eli" path="res://fonts/m6x11 Daniel Linssen.ttf" id="2_ljrbw"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4mwde"]
 bg_color = Color(0, 0, 0, 1)

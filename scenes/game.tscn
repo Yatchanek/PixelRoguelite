@@ -107,6 +107,7 @@ texture_filter = 1
 script = ExtResource("2_4ply8")
 
 [node name="Player" parent="World" instance=ExtResource("3_wtd56")]
+z_as_relative = false
 position = Vector2(160, 90)
 collision_mask = 5
 
@@ -354,6 +355,16 @@ size_flags_vertical = 4
 texture = SubResource("AtlasTexture_by5pc")
 expand_mode = 2
 
+[node name="UIVeil" type="ColorRect" parent="Hud/Control"]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
 [node name="UpgradeCardContainer" type="HBoxContainer" parent="Hud/Control"]
 layout_mode = 1
 anchors_preset = 8
@@ -374,6 +385,8 @@ script = ExtResource("8_2xbi3")
 [node name="Minimap" parent="Hud/Control" instance=ExtResource("8_0353o")]
 visible = false
 layout_mode = 1
+offset_left = -210.0
+offset_right = 174.0
 
 [node name="MessageLabel" type="Label" parent="Hud/Control"]
 visible = false
@@ -415,3 +428,4 @@ environment = SubResource("Environment_pad1q")
 [connection signal="max_health_changed" from="World/Player" to="Hud" method="update_max_health"]
 [connection signal="max_shield_hp_changed" from="World/Player" to="Hud" method="update_max_shield"]
 [connection signal="shield_hp_changed" from="World/Player" to="Hud" method="update_shield"]
+[connection signal="cards_hidden" from="Hud/Control/UpgradeCardContainer" to="Hud" method="_on_cards_hidden"]

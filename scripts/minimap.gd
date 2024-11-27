@@ -1,9 +1,12 @@
 extends HBoxContainer
 class_name MiniMap
 
-@onready var grid: GridContainer = $VBoxContainer2/MinimapPanel/Grid
-@onready var minimap_panel: PanelContainer = $VBoxContainer2/MinimapPanel
-@onready var v_box_container_2: VBoxContainer = $VBoxContainer2
+@onready var grid: GridContainer = %Grid
+@onready var minimap_panel: PanelContainer = %MinimapPanel
+@onready var main_vbox: VBoxContainer = $MainVbox
+@onready var y_coords_column: VBoxContainer = %YCoordsColumn
+@onready var x_coords_row: HBoxContainer = %XCoordsRow
+@onready var v_box_container_2: VBoxContainer = $MainVbox/HBoxContainer2/VBoxContainer2
 
 @export var map_scale : Vector2 = Vector2.ONE
 
@@ -40,16 +43,18 @@ func _unhandled_input(event: InputEvent) -> void:
 			_on_scale_up()
 
 func _draw() -> void:
-	var player_map_coords = world_to_map(player_coords)
-	if coords_on_screen(player_map_coords):
-		draw_rect(Rect2(v_box_container_2.position + grid.position + Vector2(
-			cell_size.x * 0.5 + player_map_coords.x * cell_size.x, 
-			cell_size.y * 0.5 + player_map_coords.y * cell_size.y) - 4 * map_scale, 8 * map_scale), Globals.color_palettes[Globals.current_palette][3])
 	var zero_coords = world_to_map(Vector2i.ZERO)
 	if coords_on_screen(zero_coords):
-		draw_rect(Rect2(v_box_container_2.position + grid.position + Vector2(
+		draw_rect(Rect2(v_box_container_2.position + minimap_panel.position + grid.position + Vector2(
 			cell_size.x * 0.5 + zero_coords.x * cell_size.x, 
-			cell_size.y * 0.5 + zero_coords.y * cell_size.y) - 4 * map_scale, 8 * map_scale), Globals.color_palettes[Globals.current_palette][0])
+			cell_size.y * 0.5 + zero_coords.y * cell_size.y) - 8 * map_scale, 16 * map_scale), Globals.color_palettes[Globals.current_palette][0])
+			
+	var player_map_coords = world_to_map(player_coords)
+	if coords_on_screen(player_map_coords):
+		draw_rect(Rect2(v_box_container_2.position + minimap_panel.position + grid.position + Vector2(
+			cell_size.x * 0.5 + player_map_coords.x * cell_size.x, 
+			cell_size.y * 0.5 + player_map_coords.y * cell_size.y) - 4 * map_scale, 8 * map_scale), Globals.color_palettes[Globals.current_palette][3])
+
 
 		
 	for coords : Vector2i in gate_keys_discovered:
@@ -57,7 +62,7 @@ func _draw() -> void:
 			continue
 		var map_coords = world_to_map(coords)
 		if coords_on_screen(map_coords):
-			draw_circle(v_box_container_2.position + grid.position + Vector2(
+			draw_circle(v_box_container_2.position + minimap_panel.position + grid.position + Vector2(
 			cell_size.x * 0.5 + map_coords.x * cell_size.x, 
 			cell_size.y * 0.5 + map_coords.y * cell_size.y), 
 			4 * map_scale.x, Globals.color_palettes[Globals.current_palette][2])
@@ -82,7 +87,7 @@ func _ready() -> void:
 	set_process_unhandled_input(false)
 	fill_grid()
 	await get_tree().process_frame
-	pos_offset = v_box_container_2.position + grid.position
+	pos_offset = v_box_container_2.position + minimap_panel.position + grid.position
 
 func fill_grid():
 	for i in num_rows * num_cols:
@@ -94,7 +99,7 @@ func fill_grid():
 func apply_color_palette():
 	var stylebox : StyleBoxFlat = StyleBoxFlat.new()
 	stylebox.border_color = Globals.color_palettes[Globals.current_palette][4]
-	stylebox.bg_color = Globals.color_palettes[Globals.current_palette][7]
+	stylebox.bg_color = Globals.color_palettes[Globals.current_palette][6]
 	stylebox.set_border_width_all(2)
 	
 	minimap_panel.add_theme_stylebox_override("panel", stylebox)
@@ -161,8 +166,34 @@ func move_down():
 			
 func redraw_map():
 	start_x = center_coords.x - floori(num_cols / 2)
-	start_y = center_coords.y - floori(num_rows / 2)	
+	start_y = center_coords.y - floori(num_rows / 2)
+	for label in y_coords_column.get_children():
+		label.queue_free()
+	for label in x_coords_row.get_children():
+		label.queue_free()
+	var l_s : LabelSettings = LabelSettings.new()
+	
+	#var st_box : StyleBoxFlat =StyleBoxFlat.new()
+	#st_box.draw_center = false
+	#st_box.border_color = Color.WHITE
+	#st_box.set_border_width_all(2)
+	l_s.font_color = Globals.color_palettes[Globals.current_palette][3]
+	if num_cols <= 5 and abs(start_y) + num_rows < 1000:
+		l_s.font = load("res://fonts/m6x11 Daniel Linssen.ttf")
+	elif num_cols == 7:
+		l_s.font = load("res://fonts/m5x7 Daniel Linssen.ttf")
+	elif num_cols == 9:
+		l_s.font = load("res://fonts/m3x6 Daniel Linssen.ttf")
+	
 	for y in num_rows:
+		var l : Label = Label.new()
+		l.label_settings = l_s
+		l.text = str(start_y + y)
+		l.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+		l.custom_minimum_size.y = ceil(164 / num_rows)
+		l.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		#l.add_theme_stylebox_override("normal", st_box)
+		y_coords_column.add_child(l)
 		for x in num_cols:
 			var coords : Vector2i = Vector2i(start_x + x, start_y + y)
 			var room : MapRoom = grid.get_child(y * num_cols + x)
@@ -172,6 +203,15 @@ func redraw_map():
 				room.room_idx = 0
 				
 			room.update_texture()
+			if y == 0:
+				l = Label.new()
+				l.label_settings = l_s
+				l.text = str(start_x + x)
+				l.custom_minimum_size.x = ceil(168 / num_cols)
+				l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+				l.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+				#l.add_theme_stylebox_override("normal", st_box)
+				x_coords_row.add_child(l)
 	
 	queue_redraw()			
 

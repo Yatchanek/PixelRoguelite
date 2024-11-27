@@ -19,6 +19,8 @@ var current_state : State
 
 var attack_mode : AttackMode
 
+var muzzles : Array[Marker2D] = []
+var current_muzzle : int = 0
 
 enum AttackMode {
 	SWARM,
@@ -56,8 +58,9 @@ func _ready() -> void:
 
 	current_state = State.MOVE
 	attack_mode = AttackMode.BULLET
+	muzzles = [muzzle, muzzle_2]
 	shoot_timer.start(fire_interval)
-	timer.start(fire_interval + randf_range(3, 5))
+	timer.start(fire_interval + randf_range(5, 7))
 	
 
 func _process(delta: float) -> void:
@@ -78,8 +81,6 @@ func _process(delta: float) -> void:
 		target_transform = muzzle_2.global_transform.looking_at(target.global_position)
 		muzzle_2.global_transform = muzzle_2.global_transform.interpolate_with(target_transform, 0.25)
 
-	if can_shoot:
-		shoot()	
 
 func _physics_process(_delta: float) -> void:
 	if current_state == State.KNOCKBACK:
@@ -93,20 +94,24 @@ func _physics_process(_delta: float) -> void:
 		else:
 			velocity = lerp(velocity, position.direction_to(waypoint) * speed, 0.25)
 
-			move_and_slide()
+		
+	if can_shoot:
+		shoot()	
+			
+	move_and_slide()
 
 func shoot():
+	if !check_linesight(body) or Globals.player.dead:
+		return
+
 	var bullet : Bullet = bullet_scene.instantiate() as Bullet
 	bullet.damage = power
-	bullet.rotation = muzzle.global_rotation
-	bullet_fired.emit(bullet, muzzle.global_position)
-	
-	bullet = bullet_scene.instantiate() as Bullet
-	bullet.damage = power
-	bullet.rotation = muzzle_2.global_rotation
-	bullet_fired.emit(bullet, muzzle_2.global_position)
+	bullet.rotation = muzzles[current_muzzle].global_rotation
+	bullet_fired.emit(bullet, muzzles[current_muzzle].global_position)
 	can_shoot = false
-	shoot_timer.start(fire_interval)
+	shoot_timer.start(fire_interval * 0.5)
+	current_muzzle = wrapi(current_muzzle + 1, 0, 2)	
+
 
 				
 func apply_color_palette():
@@ -120,6 +125,8 @@ func apply_color_palette():
 		cannon.self_modulate = Globals.color_palettes[Globals.current_palette][2]
 
 func add_swarm():
+	if !is_inside_tree() or Globals.player.dead:
+		return
 	await get_tree().create_timer(1.0).timeout
 	swarmlings_spawned = randi_range(6, 8)
 	for i in swarmlings_spawned:
@@ -129,11 +136,13 @@ func add_swarm():
 		enemy.tree_exited.connect(_on_swarmling_killed)
 		
 		get_parent().call_deferred("add_child", enemy)
+	if !is_inside_tree():
+		return	
 	await get_tree().create_timer(1.0).timeout
-	
+	shoot_timer.start(randf_range(1.0, 1.5))
 	body.region_rect.position.x = 0	
 	current_state = State.MOVE
-
+	timer.start(randf_range(5, 7))
 
 func knockback(dir : Vector2):
 	var tw : Tween = create_tween()
@@ -148,12 +157,37 @@ func knockback(dir : Vector2):
 		velocity = dir * speed * 1.25
 		current_state = State.KNOCKBACK
 
+func check_linesight(origin : Node2D):
+	var shape : RectangleShape2D = RectangleShape2D.new()
+	shape.size = Vector2(640, 48)
+	var query : PhysicsShapeQueryParameters2D = PhysicsShapeQueryParameters2D.new()
+	query.shape = shape
+	query.transform = body.global_transform.translated(body.global_transform.x * 320)	
+	query.collision_mask = 4096
+	query.collide_with_areas = true
+	query.collide_with_bodies = false
+	var state : PhysicsDirectSpaceState2D = get_world_2d().direct_space_state
+	
+	var result : Array[Dictionary] = state.intersect_shape(query)
+	
+	if result.size() > 0:
+		var closest_dist : float = INF
+		for hit_result : Dictionary in result:
+			var dist : float = global_position.distance_squared_to(hit_result.collider.global_position)
+			if dist < closest_dist:
+				closest_dist = dist
+		if global_position.distance_squared_to(Globals.player.global_position) > closest_dist:
+			return false
+		else:
+			return true
+	else:
+		return true
+	
+
 func _on_swarmling_killed():
 	swarmlings_spawned -= 1
 
 		
-
-	
 func _on_shoot_timer_timeout() -> void:
 	can_shoot = true
 
@@ -165,7 +199,7 @@ func _on_timer_timeout() -> void:
 		shoot_timer.stop()
 		if randf() < 0.33:
 			shoot_timer.start(randf_range(1.0, 1.5))
-			timer.start(shoot_timer.time_left + randf_range(3, 5))
+			timer.start(shoot_timer.time_left + randf_range(5, 7))
 		else:
 			body.region_rect.position.x = 32
 			current_state = State.DEPLOY

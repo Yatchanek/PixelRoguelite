@@ -1,0 +1,213 @@
+[gd_scene load_steps=14 format=3 uid="uid://dej02iyc1h5nc"]
+
+[ext_resource type="Script" path="res://scripts/bosses/ninth_boss.gd" id="1_al6d6"]
+[ext_resource type="Texture2D" uid="uid://xad1iu4pj0gt" path="res://graphics/boss_9_body.png" id="2_t3vw5"]
+[ext_resource type="Texture2D" uid="uid://bd48pj747qxdm" path="res://graphics/boss_9_chasis.png" id="4_jka1h"]
+[ext_resource type="PackedScene" uid="uid://drd2m072phc4v" path="res://scenes/hitbox.tscn" id="5_r4pge"]
+[ext_resource type="Texture2D" uid="uid://crxa8rutf7joi" path="res://graphics/boss_9_top.png" id="5_upl54"]
+[ext_resource type="PackedScene" uid="uid://cwshy400yx3qo" path="res://scenes/hurt_box.tscn" id="6_mo4vu"]
+[ext_resource type="Texture2D" uid="uid://d3otih1xwa7g2" path="res://graphics/progress_bar.png" id="7_iglr0"]
+[ext_resource type="Texture2D" uid="uid://ckwvg67w2r0rt" path="res://graphics/boss_cannon.png" id="7_s53m6"]
+[ext_resource type="Texture2D" uid="uid://bmph75rlbsf0f" path="res://graphics/boss_launcher.png" id="8_m7tie"]
+[ext_resource type="PackedScene" uid="uid://c0a2i7onvluxn" path="res://scenes/laser.tscn" id="9_mmb1p"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_48w8c"]
+radius = 20.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_cjrgp"]
+radius = 16.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_s4knv"]
+radius = 19.0
+
+[node name="NinthGuardian" type="CharacterBody2D"]
+texture_filter = 1
+collision_layer = 2
+collision_mask = 4
+script = ExtResource("1_al6d6")
+base_fire_interval = 0.2
+fire_interval_per_level = 0.05
+base_hp = 60
+max_hp = 120
+hp_per_level = 15
+base_speed = 128
+max_speed = 224
+speed_per_level = 32
+base_power = 3
+power_per_level = 2.0
+max_power = 10
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_48w8c")
+
+[node name="Body" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("2_t3vw5")
+
+[node name="Chasis" type="Sprite2D" parent="Body"]
+texture = ExtResource("4_jka1h")
+
+[node name="Top" type="Sprite2D" parent="Body"]
+texture = ExtResource("5_upl54")
+
+[node name="Laser" parent="Body" groups=["Lasers"] instance=ExtResource("9_mmb1p")]
+position = Vector2(28, 0)
+
+[node name="Sprite2D" type="Sprite2D" parent="Body/Laser"]
+modulate = Color(1, 1, 1, 0)
+position = Vector2(-6, 0)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("8_m7tie")
+
+[node name="Laser2" parent="Body" groups=["Lasers"] instance=ExtResource("9_mmb1p")]
+position = Vector2(0, 28)
+rotation = 1.5708
+
+[node name="Sprite2D" type="Sprite2D" parent="Body/Laser2"]
+modulate = Color(1, 1, 1, 0)
+position = Vector2(-6, 0)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("8_m7tie")
+offset = Vector2(-6, 0)
+
+[node name="Laser3" parent="Body" groups=["Lasers"] instance=ExtResource("9_mmb1p")]
+position = Vector2(-28, 0)
+rotation = -3.14159
+
+[node name="Sprite2D" type="Sprite2D" parent="Body/Laser3"]
+modulate = Color(1, 1, 1, 0)
+position = Vector2(-6, 0)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("8_m7tie")
+offset = Vector2(-6, 0)
+
+[node name="Laser4" parent="Body" groups=["Lasers"] instance=ExtResource("9_mmb1p")]
+position = Vector2(0, -28)
+rotation = -1.5708
+
+[node name="Sprite2D" type="Sprite2D" parent="Body/Laser4"]
+modulate = Color(1, 1, 1, 0)
+position = Vector2(-6, 0)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("8_m7tie")
+offset = Vector2(-6, 0)
+
+[node name="Muzzle" type="Marker2D" parent="Body" groups=["Cannons"]]
+position = Vector2(22, 0)
+rotation = -0.174533
+scale = Vector2(1, 1)
+
+[node name="Sprite2D" type="Sprite2D" parent="Body/Muzzle"]
+modulate = Color(1, 1, 1, 0)
+texture = ExtResource("7_s53m6")
+
+[node name="Muzzle2" type="Marker2D" parent="Body" groups=["Cannons"]]
+position = Vector2(0, 22)
+rotation = 1.74533
+scale = Vector2(1, 1)
+
+[node name="Sprite2D" type="Sprite2D" parent="Body/Muzzle2"]
+modulate = Color(1, 1, 1, 0)
+texture = ExtResource("7_s53m6")
+
+[node name="Muzzle3" type="Marker2D" parent="Body" groups=["Cannons"]]
+position = Vector2(-22, 0)
+rotation = 2.96706
+
+[node name="Sprite2D" type="Sprite2D" parent="Body/Muzzle3"]
+modulate = Color(1, 1, 1, 0)
+texture = ExtResource("7_s53m6")
+
+[node name="Muzzle4" type="Marker2D" parent="Body" groups=["Cannons"]]
+position = Vector2(0, -22)
+rotation = -1.39626
+scale = Vector2(1, 1)
+
+[node name="Sprite2D" type="Sprite2D" parent="Body/Muzzle4"]
+modulate = Color(1, 1, 1, 0)
+texture = ExtResource("7_s53m6")
+
+[node name="Muzzle5" type="Marker2D" parent="Body" groups=["Cannons"]]
+position = Vector2(22, 0)
+rotation = 0.174533
+scale = Vector2(1, 1)
+
+[node name="Sprite2D" type="Sprite2D" parent="Body/Muzzle5"]
+modulate = Color(1, 1, 1, 0)
+texture = ExtResource("7_s53m6")
+
+[node name="Muzzle6" type="Marker2D" parent="Body" groups=["Cannons"]]
+position = Vector2(0, 22)
+rotation = 1.39626
+scale = Vector2(1, 1)
+
+[node name="Sprite2D" type="Sprite2D" parent="Body/Muzzle6"]
+modulate = Color(1, 1, 1, 0)
+texture = ExtResource("7_s53m6")
+
+[node name="Muzzle7" type="Marker2D" parent="Body" groups=["Cannons"]]
+position = Vector2(-22, 0)
+rotation = -2.96706
+scale = Vector2(1, 1)
+
+[node name="Sprite2D" type="Sprite2D" parent="Body/Muzzle7"]
+modulate = Color(1, 1, 1, 0)
+texture = ExtResource("7_s53m6")
+
+[node name="Muzzle8" type="Marker2D" parent="Body" groups=["Cannons"]]
+position = Vector2(0, -22)
+rotation = -1.74533
+
+[node name="Sprite2D" type="Sprite2D" parent="Body/Muzzle8"]
+modulate = Color(1, 1, 1, 0)
+texture = ExtResource("7_s53m6")
+
+[node name="Hitbox" parent="." node_paths=PackedStringArray("target") instance=ExtResource("5_r4pge")]
+collision_layer = 32
+collision_mask = 512
+target = NodePath("..")
+
+[node name="CollisionShape2D" parent="Hitbox" index="0"]
+shape = SubResource("CircleShape2D_cjrgp")
+
+[node name="HurtBox" parent="." instance=ExtResource("6_mo4vu")]
+collision_layer = 256
+collision_mask = 0
+monitoring = false
+damage = 2
+
+[node name="CollisionShape2D" parent="HurtBox" index="0"]
+shape = SubResource("CircleShape2D_s4knv")
+
+[node name="HealthBarPivot" type="Marker2D" parent="."]
+
+[node name="HealthBar" type="TextureProgressBar" parent="HealthBarPivot"]
+visible = false
+custom_minimum_size = Vector2(16, 4)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -16.0
+offset_top = -24.0
+offset_right = 16.0
+offset_bottom = -20.0
+grow_horizontal = 2
+grow_vertical = 2
+max_value = 1.0
+value = 1.0
+nine_patch_stretch = true
+texture_progress = ExtResource("7_iglr0")
+metadata/_edit_use_anchors_ = true
+
+[node name="ShootTimer" type="Timer" parent="."]
+one_shot = true
+
+[node name="Timer" type="Timer" parent="."]
+
+[connection signal="timeout" from="ShootTimer" to="." method="_on_shoot_timer_timeout"]
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
+
+[editable path="Hitbox"]
+[editable path="HurtBox"]

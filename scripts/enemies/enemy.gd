@@ -10,6 +10,7 @@ var hp : int = 1
 var speed : float = 64
 var fire_interval : float = 1.0
 @export var target : CharacterBody2D
+@export var score_value : int = 1
 @export var exp_value : int = 10
 @export var power : int = 1
 @export var base_fire_interval : float = 1.0

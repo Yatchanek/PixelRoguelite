@@ -7,12 +7,13 @@ class_name HUD
 @onready var hp_bar: TextureProgressBar = %HPBar
 @onready var coords_label: Label = %CoordsLabel
 @onready var upgrade_card_container: HBoxContainer = $Control/UpgradeCardContainer
-@onready var minimap: MiniMap = $Control/Minimap
+@onready var minimap: MiniMapContainer = $Control/Minimap
 @onready var keys_container: HBoxContainer = %KeysContainer
 @onready var shield_bar: TextureProgressBar = $Control/TopBar/MarginContainer/VBoxContainer/UpperBar/HBoxContainer2/HBoxContainer2/ShieldBar
 @onready var energy_bar: TextureProgressBar = %EnergyBar
 @onready var message_label: Label = $Control/MessageLabel
 @onready var cursor: Sprite2D = $Cursor
+@onready var ui_veil: ColorRect = $Control/UIVeil
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -26,6 +27,7 @@ func _ready() -> void:
 	EventBus.gate_key_collected.connect(show_gate_key)
 	EventBus.gate_approached.connect(show_message)
 	EventBus.gate_left.connect(hide_message)
+	EventBus.game_completed.connect(_on_game_completed)
 
 func _process(delta: float) -> void:
 	cursor.position = cursor.get_global_mouse_position()
@@ -88,6 +90,7 @@ func show_gate_key(idx : int):
 	keys_container.get_child(idx).self_modulate = Globals.color_palettes[Globals.current_palette][0]
 	
 func show_upgrades():
+	ui_veil.modulate.a = 0.75
 	upgrade_card_container.add_cards()
 
 func show_message():
@@ -96,5 +99,17 @@ func show_message():
 func hide_message():
 	message_label.hide()
 
+func _on_game_completed():
+	message_label.text = "You won!"
+	show_message()
+
 func toggle_minimap():
+	if minimap.visible:
+		ui_veil.modulate.a = 0.0
+	else:
+		ui_veil.modulate.a = 0.75
 	minimap.toggle()
+
+
+func _on_cards_hidden() -> void:
+	ui_veil.modulate.a = 0.0
