@@ -361,7 +361,7 @@ func spawn_boss():
 	await get_tree().create_timer(enemy_spawn_interval).timeout
 	
 	if is_inside_tree():
-		var boss : Boss = bosses[8].instantiate()#bosses[Globals.gate_key_coords[room_data.coords]].instantiate() as Boss
+		var boss : Boss = bosses[Globals.gate_key_coords[room_data.coords]].instantiate() as Boss
 		
 		var accepted : bool = false
 		var candidate_coords : Vector2i
