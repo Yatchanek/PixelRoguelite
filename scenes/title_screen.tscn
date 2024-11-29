@@ -1,4 +1,4 @@
-[gd_scene load_steps=63 format=3 uid="uid://blgcf5t6qthui"]
+[gd_scene load_steps=66 format=3 uid="uid://blgcf5t6qthui"]
 
 [ext_resource type="FontFile" uid="uid://bs4wn8lq821l5" path="res://fonts/NotJamChunkySans.ttf" id="2_8u3cf"]
 [ext_resource type="Script" path="res://scripts/title_screen_ui.gd" id="2_x1msa"]
@@ -11,6 +11,9 @@
 [ext_resource type="Script" path="res://scripts/wrapping_scroll_container.gd" id="8_w7r0r"]
 [ext_resource type="Texture2D" uid="uid://t8ckmrjn0o6v" path="res://graphics/pointing_hand_small_outer.png" id="10_jdfys"]
 [ext_resource type="Texture2D" uid="uid://0ssdwvll1a56" path="res://graphics/pointing_hand_small_inner.png" id="11_py0tw"]
+[ext_resource type="Material" uid="uid://bue4xq2qhgq08" path="res://explosion.tres" id="12_swn47"]
+[ext_resource type="Material" uid="uid://b41m7nd51ster" path="res://directional_explosion.tres" id="13_6b7lp"]
+[ext_resource type="Material" uid="uid://bonsxpa6vv2x4" path="res://missile.tres" id="14_wenc5"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_t7wdc"]
 
@@ -36,25 +39,25 @@
 
 [sub_resource type="LabelSettings" id="LabelSettings_ln24y"]
 font = ExtResource("2_8u3cf")
-font_size = 36
+font_size = 30
 outline_size = 8
 outline_color = Color(0.169245, 0.169245, 0.169245, 1)
 
 [sub_resource type="LabelSettings" id="LabelSettings_3wh1c"]
 font = ExtResource("2_8u3cf")
-font_size = 36
+font_size = 30
 outline_size = 8
 outline_color = Color(0.169245, 0.169245, 0.169245, 1)
 
 [sub_resource type="LabelSettings" id="LabelSettings_qxidk"]
 font = ExtResource("2_8u3cf")
-font_size = 36
+font_size = 30
 outline_size = 8
 outline_color = Color(0.169245, 0.169245, 0.169245, 1)
 
 [sub_resource type="LabelSettings" id="LabelSettings_vvar6"]
 font = ExtResource("2_8u3cf")
-font_size = 48
+font_size = 42
 outline_size = 24
 outline_color = Color(0, 0, 0, 1)
 
@@ -192,6 +195,24 @@ _data = {
 texture_filter = 1
 script = ExtResource("2_x1msa")
 
+[node name="Emitters" type="Node2D" parent="."]
+position = Vector2(-16, -16)
+
+[node name="GPUParticles2D" type="GPUParticles2D" parent="Emitters"]
+emitting = false
+process_material = ExtResource("12_swn47")
+one_shot = true
+
+[node name="GPUParticles2D2" type="GPUParticles2D" parent="Emitters"]
+emitting = false
+process_material = ExtResource("13_6b7lp")
+one_shot = true
+
+[node name="GPUParticles2D3" type="GPUParticles2D" parent="Emitters"]
+emitting = false
+process_material = ExtResource("14_wenc5")
+one_shot = true
+
 [node name="Background" type="CanvasLayer" parent="."]
 layer = -1
 
@@ -227,13 +248,13 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -154.0
-offset_top = -20.0
+offset_top = -3.0
 offset_right = 152.0
-offset_bottom = 156.0
+offset_bottom = 157.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-theme_override_constants/separation = 16
+theme_override_constants/separation = 8
 
 [node name="StartGame" type="Button" parent="UI/Control/Menu" groups=["InteractableUI", "MainButtons"]]
 custom_minimum_size = Vector2(256, 48)
@@ -1067,6 +1088,18 @@ libraries = {
 "": SubResource("AnimationLibrary_brsjj")
 }
 speed_scale = 4.0
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+layer = 100
+
+[node name="Veil" type="ColorRect" parent="CanvasLayer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 1)
 
 [connection signal="pressed" from="UI/Control/Menu/StartGame" to="." method="_on_start_game_pressed"]
 [connection signal="pressed" from="UI/Control/Menu/Options" to="." method="_on_options_pressed"]

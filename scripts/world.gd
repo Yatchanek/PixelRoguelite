@@ -219,24 +219,23 @@ func _on_ghost_spawned(ghost : Sprite2D, pos : Vector2):
 	ghost.position = pos
 	call_deferred("add_child", ghost)
 
-func _on_upgrade_selected(data: UpgradeData):
-	if data.type == UpgradeManager.Upgrades.SPEED:
-		player.increase_speed(data.amount)
-	if data.type == UpgradeManager.Upgrades.FIRERATE:
-		player.change_firerate(-data.amount)
-	if data.type == UpgradeManager.Upgrades.HITPOINTS:
-		player.increase_max_hp(data.amount)
-	if data.type == UpgradeManager.Upgrades.BULLET_SPEED:
-		player.increase_bullet_speed(data.amount)
-	if data.type == UpgradeManager.Upgrades.BULLET_DAMAGE:
-		player.increase_power(data.amount)
-	if data.type == UpgradeManager.Upgrades.SHIELD_STRENGTH:
-		player.increase_shield_max_hp(data.amount)
-	if data.type == UpgradeManager.Upgrades.AUTOFIRE:
-		player.autofire = true
-	if data.type == UpgradeManager.Upgrades.DASH_DURATION:
-		player.increase_dash_duration(data.amount)
-	if data.type == UpgradeManager.Upgrades.DASH_ENERGY:
-		player.increase_dash_energy(data.amount)
-	if data.type == UpgradeManager.Upgrades.DASH_REGEN:
-		player.increase_dash_regen(data.amount)	
+func _on_upgrade_selected(data: UpgradeManager.Upgrades):
+	if data == UpgradeManager.Upgrades.SPEED:
+		player.increase_speed(UpgradeManager.amounts[data])
+	if data == UpgradeManager.Upgrades.FIRERATE:
+		player.change_firerate(UpgradeManager.amounts[data])
+	if data == UpgradeManager.Upgrades.HITPOINTS:
+		player.increase_max_hp(UpgradeManager.amounts[data])
+	if data == UpgradeManager.Upgrades.BULLET_SPEED:
+		player.increase_bullet_speed(UpgradeManager.amounts[data])
+	if data == UpgradeManager.Upgrades.BULLET_DAMAGE:
+		player.increase_power(UpgradeManager.amounts[data])
+	if data == UpgradeManager.Upgrades.SHIELD_STRENGTH:
+		player.increase_shield_max_hp(UpgradeManager.amounts[data])
+
+	if data == UpgradeManager.Upgrades.DASH_DURATION:
+		player.increase_dash_duration(UpgradeManager.amounts[data])
+	if data == UpgradeManager.Upgrades.DASH_ENERGY:
+		player.increase_dash_energy(UpgradeManager.amounts[data])
+	if data == UpgradeManager.Upgrades.DASH_REGEN:
+		player.increase_dash_regen(UpgradeManager.amounts[data])	

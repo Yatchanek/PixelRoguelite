@@ -1,10 +1,11 @@
-[gd_scene load_steps=24 format=3 uid="uid://ddylky5tp6bpd"]
+[gd_scene load_steps=25 format=3 uid="uid://ddylky5tp6bpd"]
 
 [ext_resource type="Script" path="res://scripts/game.gd" id="1_w3yxl"]
 [ext_resource type="Script" path="res://scripts/world.gd" id="2_4ply8"]
 [ext_resource type="PackedScene" uid="uid://60nvyx6hcw6k" path="res://scenes/player.tscn" id="3_wtd56"]
 [ext_resource type="Texture2D" uid="uid://dq2cnh1sqxv1g" path="res://graphics/cursor.png" id="4_foggy"]
 [ext_resource type="Script" path="res://scripts/hud.gd" id="5_rohpp"]
+[ext_resource type="Texture2D" uid="uid://cjjdvh80q0dxm" path="res://graphics/progress_bar_over.png" id="6_pmhur"]
 [ext_resource type="FontFile" uid="uid://bs4wn8lq821l5" path="res://fonts/NotJamChunkySans.ttf" id="6_yc8th"]
 [ext_resource type="Texture2D" uid="uid://d3otih1xwa7g2" path="res://graphics/progress_bar.png" id="7_yuboa"]
 [ext_resource type="Script" path="res://scripts/upgrade_card_container.gd" id="8_2xbi3"]
@@ -175,6 +176,7 @@ custom_minimum_size = Vector2(64, 0)
 layout_mode = 2
 step = 0.1
 value = 5.0
+texture_over = ExtResource("6_pmhur")
 texture_progress = ExtResource("7_yuboa")
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="Hud/Control/TopBar/MarginContainer/VBoxContainer/UpperBar/HBoxContainer2"]
@@ -192,6 +194,7 @@ custom_minimum_size = Vector2(64, 0)
 layout_mode = 2
 max_value = 50.0
 value = 5.0
+texture_over = ExtResource("6_pmhur")
 texture_progress = ExtResource("7_yuboa")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Hud/Control/TopBar/MarginContainer/VBoxContainer/UpperBar/HBoxContainer2"]
@@ -210,6 +213,7 @@ custom_minimum_size = Vector2(64, 0)
 layout_mode = 2
 max_value = 50.0
 value = 5.0
+texture_over = ExtResource("6_pmhur")
 texture_progress = ExtResource("7_yuboa")
 
 [node name="HBoxContainer3" type="HBoxContainer" parent="Hud/Control/TopBar/MarginContainer/VBoxContainer/UpperBar"]
@@ -417,13 +421,12 @@ texture = ExtResource("4_foggy")
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_pad1q")
 
-[connection signal="player_health_changed" from="World" to="." method="_on_world_player_health_changed"]
 [connection signal="bullet_fired" from="World/Player" to="World" method="_on_bullet_fired"]
 [connection signal="dash_energy_changed" from="World/Player" to="Hud" method="update_energy"]
 [connection signal="died" from="World/Player" to="World" method="_on_player_died"]
 [connection signal="exploded" from="World/Player" to="World" method="_on_explosion"]
 [connection signal="ghost_spawned" from="World/Player" to="World" method="_on_ghost_spawned"]
-[connection signal="health_changed" from="World/Player" to="World" method="_on_player_health_changed"]
+[connection signal="health_changed" from="World/Player" to="Hud" method="update_health"]
 [connection signal="max_energy_changed" from="World/Player" to="Hud" method="update_max_energy"]
 [connection signal="max_health_changed" from="World/Player" to="Hud" method="update_max_health"]
 [connection signal="max_shield_hp_changed" from="World/Player" to="Hud" method="update_max_shield"]

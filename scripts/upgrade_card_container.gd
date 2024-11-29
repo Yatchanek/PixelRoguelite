@@ -14,37 +14,82 @@ enum Upgrades {
 	SHIELD_STRENGTH,
 	BULLET_SPEED,
 	BULLET_DAMAGE,
-	AUTOFIRE,
 	DASH_DURATION,
 	DASH_REGEN,
 	DASH_ENERGY
 }
 
 
-var upgrade_probabilities : Dictionary = {
+static var upgrade_probabilities : Dictionary = {
 	Upgrades.SPEED : 0.25,
 	Upgrades.FIRERATE : 0.20,
 	Upgrades.HITPOINTS : 0.075,
 	Upgrades.SHIELD_STRENGTH : 0.05,
 	Upgrades.BULLET_SPEED : 0.15,
 	Upgrades.BULLET_DAMAGE : 0.025,
-	Upgrades.AUTOFIRE : 0.01,
 	Upgrades.DASH_DURATION : 0.075,
 	Upgrades.DASH_REGEN : 0.1,
 	Upgrades.DASH_ENERGY : 0.075,
 }
 
-var amounts: Dictionary = {
+static var amounts: Dictionary = {
 	Upgrades.SPEED : 16,
 	Upgrades.FIRERATE : 0.05,
 	Upgrades.HITPOINTS : 5,
 	Upgrades.SHIELD_STRENGTH : 3,
 	Upgrades.BULLET_SPEED : 32,
 	Upgrades.BULLET_DAMAGE : 1,
-	Upgrades.AUTOFIRE : 0,
-	Upgrades.DASH_DURATION : 0.1,
-	Upgrades.DASH_REGEN : 0.1,
+	Upgrades.DASH_DURATION : -0.1,
+	Upgrades.DASH_REGEN : -0.1,
 	Upgrades.DASH_ENERGY : 5,	
+}
+
+static var upgrade_names : Dictionary = {
+	Upgrades.SPEED : "Speed",
+	Upgrades.FIRERATE : "Firerate",
+	Upgrades.HITPOINTS : "Max\nHealth",
+	Upgrades.SHIELD_STRENGTH : "Shield\nPower",
+	Upgrades.BULLET_SPEED : "Bullet\nSpeed",
+	Upgrades.BULLET_DAMAGE : "Power",
+	Upgrades.DASH_DURATION : "Dash\nDuration",
+	Upgrades.DASH_REGEN : "Dash\n regen rate",
+	Upgrades.DASH_ENERGY : "Dash\n energy",	
+}
+
+static var amounts_verbose: Dictionary = {
+	Upgrades.SPEED : "+16 px/s",
+	Upgrades.FIRERATE : "-0.1 s/shot",
+	Upgrades.HITPOINTS : "+5",
+	Upgrades.SHIELD_STRENGTH : "+3",
+	Upgrades.BULLET_SPEED : "+32 px/s",
+	Upgrades.BULLET_DAMAGE : "+1",
+	Upgrades.DASH_DURATION : "+0.1 s",
+	Upgrades.DASH_REGEN : "-0.1 s",
+	Upgrades.DASH_ENERGY : "+5",	
+}
+
+static var properties: Dictionary = {
+	Upgrades.SPEED : "speed",
+	Upgrades.FIRERATE : "fire_rate",
+	Upgrades.HITPOINTS : "max_hp",
+	Upgrades.SHIELD_STRENGTH : "shield_hp",
+	Upgrades.BULLET_SPEED : "bullet_speed",
+	Upgrades.BULLET_DAMAGE : "power",
+	Upgrades.DASH_DURATION : "dash_duration",
+	Upgrades.DASH_REGEN : "dash_regen_speed",
+	Upgrades.DASH_ENERGY : "dash_energy",	
+}
+
+static var units: Dictionary = {
+	Upgrades.SPEED : "px/s",
+	Upgrades.FIRERATE : "shots/s",
+	Upgrades.HITPOINTS : "",
+	Upgrades.SHIELD_STRENGTH : "",
+	Upgrades.BULLET_SPEED : "px/s",
+	Upgrades.BULLET_DAMAGE : "",
+	Upgrades.DASH_DURATION : "s",
+	Upgrades.DASH_REGEN : "pt/s",
+	Upgrades.DASH_ENERGY : "",	
 }
 
 signal cards_hidden
@@ -55,11 +100,10 @@ func add_cards():
 		var selected_upgrade : Upgrades = select_upgrade_type(candidates)
 		var amount : float = amounts[selected_upgrade]
 	
-		var upgrade_data = UpgradeData.new()
-		upgrade_data.initialize(selected_upgrade, amount)
 	
 		var card : UpgradeCard = card_scene.instantiate()
-		card.upgrade_equipped = upgrade_data
+		card.upgrade_equipped = selected_upgrade
+
 	
 		selected_upgrades.append(selected_upgrade)
 	
@@ -116,8 +160,6 @@ func get_possible_upgrades() -> Array[Upgrades]:
 		candidates.append(Upgrades.FIRERATE)	
 	if Globals.player.bullet_speed < 768:
 		candidates.append(Upgrades.BULLET_SPEED)
-	if Globals.player.level > 5 and Globals.player.autofire == false:
-		candidates.append(Upgrades.AUTOFIRE)
 	if Globals.player.dash_duration < 0.5:
 		candidates.append(Upgrades.DASH_DURATION)
 	if Globals.player.dash_regen_speed > 0.1:

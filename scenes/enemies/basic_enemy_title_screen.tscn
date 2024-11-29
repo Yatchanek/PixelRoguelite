@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://dm7bcw82b0vv8"]
+[gd_scene load_steps=14 format=3 uid="uid://dm7bcw82b0vv8"]
 
 [ext_resource type="Script" path="res://scripts/enemies/basic_enemy_title_screen.gd" id="1_cfu71"]
 [ext_resource type="Texture2D" uid="uid://bwir2s2huib6f" path="res://graphics/enemy.png" id="2_rkefa"]
@@ -9,6 +9,40 @@
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_48w8c"]
 radius = 7.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wksi0"]
+atlas = ExtResource("2_rkefa")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_h2yib"]
+atlas = ExtResource("2_rkefa")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_esr0a"]
+atlas = ExtResource("2_rkefa")
+region = Rect2(16, 0, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_wr1k3"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wksi0")
+}],
+"loop": true,
+"name": &"default",
+"speed": 0.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_h2yib")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_esr0a")
+}],
+"loop": true,
+"name": &"walk",
+"speed": 5.0
+}]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_d8mox"]
 resource_local_to_scene = true
@@ -24,10 +58,20 @@ collision_layer = 2
 collision_mask = 7
 motion_mode = 1
 script = ExtResource("1_cfu71")
+score_value = null
+exp_value = null
+power = null
 base_fire_interval = 2.0
+fire_interval_per_level = null
+min_fire_interval = null
+base_hp = null
 max_hp = 20
+hp_per_level = null
 base_speed = 48
 max_speed = 192
+speed_per_level = null
+base_power = null
+power_per_level = null
 max_power = 5
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
@@ -41,16 +85,17 @@ radius = 20.0
 neighbor_distance = 128.0
 max_speed = 192.0
 
-[node name="Timer" type="Timer" parent="."]
-wait_time = 0.1
-
-[node name="Body" type="Sprite2D" parent="."]
+[node name="Body" type="AnimatedSprite2D" parent="."]
 modulate = Color(1, 1, 1, 0)
 texture_filter = 1
-texture = ExtResource("2_rkefa")
+sprite_frames = SubResource("SpriteFrames_wr1k3")
+autoplay = "default"
 
 [node name="Chasis" type="Sprite2D" parent="Body"]
 texture = ExtResource("3_7nm72")
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 0.1
 
 [node name="ShootTimer" type="Timer" parent="."]
 one_shot = true

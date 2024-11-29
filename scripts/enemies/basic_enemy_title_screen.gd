@@ -4,7 +4,7 @@ class_name BasicEnemyTitleScreen
 @onready var nav_agent: NavigationAgent2D = $NavigationAgent2D
 @onready var timer: Timer = $Timer
 @onready var shoot_timer: Timer = $ShootTimer
-@onready var body: Sprite2D = $Body
+@onready var body: AnimatedSprite2D = $Body
 @onready var chasis: Sprite2D = $Body/Chasis
 
 const bullet_scene : PackedScene = preload("res://scenes/bullet.tscn")
@@ -49,7 +49,7 @@ func _ready() -> void:
 	await tw.finished
 	set_physics_process(true)
 	set_process(true)
-	
+	body.play("walk")
 	wander_ratio = randf_range(1.0, 2.0)
 	idle_chance = randf_range(0.1, 0.2)
 	shoot_timer.start(fire_interval)
@@ -100,7 +100,7 @@ func _process(delta: float) -> void:
 				current_state = State.IDLE
 				elapsed_time = 0
 			else:
-				nav_agent.target_position = Vector2(32, 32) + Vector2(Utils.get_random_coords(0, 10, 0, 5)) * 64
+				nav_agent.target_position = Vector2i(32, 32) + Utils.get_random_coords(0, 10, 0, 5) * 64
 				elapsed_time -= wander_ratio
 				
 	elif current_state == State.IDLE:

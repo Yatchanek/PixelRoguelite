@@ -8,12 +8,14 @@ class_name Bullet
 
 var color : Color = Color.WHITE
 
+var velocity : Vector2 = Vector2.ZERO
+
 @onready var body: Sprite2D = $Body
 
 
 func _ready() -> void:
 	body.self_modulate = color
-
+	velocity += global_transform.x * speed
 	
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
@@ -43,7 +45,7 @@ func _physics_process(delta: float) -> void:
 			result = state.intersect_ray(query)
 	
 			if !check_hit(result):
-				position += global_transform.x * speed * delta
+				global_position += velocity * delta
 
 	
 				lifetime -= delta

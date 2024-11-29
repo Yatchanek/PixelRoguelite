@@ -1,6 +1,6 @@
 extends Node2D
 
-var bordered_button_scene = preload("res://scenes/bordered_button.tscn")
+var bordered_button_scene = preload("res://scenes/ui_elements/bordered_button.tscn")
 
 @onready var background: ColorRect = $Background/Background
 @onready var options: TabContainer = $UI/Control/MarginContainer/Options
@@ -30,6 +30,7 @@ var bordered_button_scene = preload("res://scenes/bordered_button.tscn")
 @onready var menu: VBoxContainer = $UI/Control/Menu
 @onready var game_demo: Node2D = $GameDemo
 
+@onready var veil: ColorRect = $CanvasLayer/Veil
 
 var candidate_color_palette : int
 
@@ -67,6 +68,20 @@ func _ready() -> void:
 	set_sliders()
 	apply_color_palette()
 	set_arrow_cursor()
+	
+	for emitter : GPUParticles2D in $Emitters.get_children():
+		var gradient : Gradient = Gradient.new()
+		gradient.add_point(1.0, Globals.color_palettes[Globals.current_palette][7])
+		emitter.process_material.color_initial_ramp.gradient = gradient
+		emitter.finished.connect(emitter.queue_free)
+		emitter.emitting = true
+
+		
+
+	var tw : Tween = create_tween()
+	tw.tween_property(veil, "modulate:a", 0.0, 1.5)
+	await tw.finished
+	
 	animate_title()
 
 func animate_title():
@@ -77,6 +92,7 @@ func animate_title():
 	tw.set_parallel()
 	
 	for i in letter_array.size():
+		letter_array[i].label_settings = letter_array[i].label_settings.duplicate()
 		tw.tween_property(letter_array[i], "modulate:a", 1.0, 0.15).set_delay(1.0 + i * 0.075)
 
 	await tw.finished
@@ -90,8 +106,21 @@ func animate_menu():
 	tw.tween_property(menu, "modulate:a", 1.0, 0.75)
 	
 	await tw.finished
+	blink_letter()
 	game_demo.start()
 	
+
+func blink_letter():
+	var letter = get_tree().get_nodes_in_group("TitleLetters").pick_random()
+	var tw : Tween = create_tween()
+	tw.set_ease(Tween.EASE_IN_OUT)
+	tw.tween_property(letter.label_settings, "font_color", Globals.color_palettes[Globals.current_palette][randi() % 2], 0.3)
+	tw.tween_interval(randf_range(0.15, 0.25))
+	tw.tween_property(letter.label_settings, "font_color", Globals.color_palettes[Globals.current_palette][2], 0.3)
+	tw.tween_interval(randf_range(0.75, 1.0))
+	await tw.finished
+	
+	blink_letter()
 
 func set_sliders():
 	var crt_material : ShaderMaterial = CrtOverlay.get_node("CRTOverlay").material
@@ -169,8 +198,9 @@ func apply_color_palette():
 	options.add_theme_stylebox_override("tab_hovered", stylebox)
 	
 	Globals.adjust_missile_palette()
-	$UI/Control/Title/HBoxContainer/The/Label.label_settings.font_color = Globals.color_palettes[Globals.current_palette][2]
-	$UI/Control/Title/HBoxContainer/The/Label.label_settings.outline_color = Globals.color_palettes[Globals.current_palette][6]
+	for label : Label in get_tree().get_nodes_in_group("TitleLetters"):
+		label.label_settings.font_color = Globals.color_palettes[Globals.current_palette][2]
+		label.label_settings.outline_color = Globals.color_palettes[Globals.current_palette][6]
 
 
 	$GameDemo.apply_color_palette()

@@ -52,7 +52,7 @@ resource_local_to_scene = true
 size = Vector2(16, 16)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_26t0u"]
-size = Vector2(8, 8)
+size = Vector2(16, 8)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_a2nta"]
 atlas = ExtResource("9_k2wbq")
@@ -96,7 +96,6 @@ motion_mode = 1
 script = ExtResource("1_7xbh1")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-visible = false
 shape = SubResource("CircleShape2D_bs7nj")
 
 [node name="LowerBody" type="Sprite2D" parent="."]
@@ -110,7 +109,6 @@ sprite_frames = SubResource("SpriteFrames_cefm1")
 animation = &"idle"
 
 [node name="Hitbox" parent="." node_paths=PackedStringArray("target") instance=ExtResource("4_h6job")]
-visible = false
 collision_layer = 16
 collision_mask = 1792
 monitorable = false
@@ -120,8 +118,7 @@ target = NodePath("..")
 shape = SubResource("RectangleShape2D_mxbb2")
 
 [node name="TurretHitbox" type="CollisionShape2D" parent="Hitbox"]
-visible = false
-position = Vector2(16, 0)
+position = Vector2(12, 0)
 shape = SubResource("RectangleShape2D_26t0u")
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
@@ -148,8 +145,7 @@ sprite_frames = SubResource("SpriteFrames_wo77b")
 animation = &"idle"
 
 [node name="TurretCollision" type="CollisionShape2D" parent="."]
-visible = false
-position = Vector2(16, 0)
+position = Vector2(12, 0)
 shape = SubResource("RectangleShape2D_26t0u")
 
 [node name="ShootTimer" type="Timer" parent="."]

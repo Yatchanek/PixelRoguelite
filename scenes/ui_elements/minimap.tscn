@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://scenes/ui_elements/minimap_container.gd" id="1_dhtna"]
 [ext_resource type="Script" path="res://scripts/minimap.gd" id="1_w81rf"]
-[ext_resource type="PackedScene" uid="uid://si04mud574jh" path="res://scenes/compound_button.tscn" id="2_j25qj"]
+[ext_resource type="PackedScene" uid="uid://si04mud574jh" path="res://scenes/ui_elements/compound_button.tscn" id="2_j25qj"]
 [ext_resource type="Texture2D" uid="uid://5ogcrjwtt34o" path="res://graphics/square.png" id="2_lornr"]
 [ext_resource type="FontFile" uid="uid://dqb8ql2h8avb7" path="res://fonts/m5x7 Daniel Linssen.ttf" id="3_eah80"]
 [ext_resource type="Texture2D" uid="uid://bsmgrauj4vnu0" path="res://graphics/down.png" id="3_mbj0w"]

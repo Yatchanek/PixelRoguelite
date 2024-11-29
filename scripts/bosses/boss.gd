@@ -26,7 +26,7 @@ func wander(delta : float):
 
 func select_destination(min_x : int = 0, max_x : int = 7, min_y : int = 0, max_y : int = 3, min_dist = 128) -> Vector2i:
 	var destination : Vector2i
-	destination = Vector2(32, 32) + Utils.get_random_coords(min_x, max_x, min_y, max_y) * 64
+	destination = Vector2i(32, 32) + Utils.get_random_coords(min_x, max_x, min_y, max_y) * 64
 	while destination.distance_squared_to(position) < min_dist * min_dist:
-		destination = Vector2(32, 32) + Utils.get_random_coords() * 64
+		destination = Vector2i(32, 32) + Utils.get_random_coords() * 64
 	return destination

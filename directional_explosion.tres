@@ -1,0 +1,35 @@
+[gd_resource type="ParticleProcessMaterial" load_steps=5 format=3 uid="uid://b41m7nd51ster"]
+
+[sub_resource type="Gradient" id="Gradient_3ilt3"]
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_kqieq"]
+resource_local_to_scene = true
+gradient = SubResource("Gradient_3ilt3")
+
+[sub_resource type="Gradient" id="Gradient_tev4w"]
+offsets = PackedFloat32Array(0, 0.688525, 1)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_k832a"]
+gradient = SubResource("Gradient_tev4w")
+
+[resource]
+resource_local_to_scene = true
+lifetime_randomness = 0.25
+particle_flag_disable_z = true
+angle_min = -720.0
+angle_max = 720.0
+direction = Vector3(0.7, -0.7, 0)
+initial_velocity_min = 75.0
+initial_velocity_max = 150.0
+gravity = Vector3(0, 0, 0)
+damping_min = 200.0
+damping_max = 230.0
+scale_min = 2.0
+scale_max = 5.0
+color_ramp = SubResource("GradientTexture1D_k832a")
+color_initial_ramp = SubResource("GradientTexture1D_kqieq")
+collision_mode = 1
+collision_friction = 0.2
+collision_bounce = 0.5
+collision_use_scale = true

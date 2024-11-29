@@ -101,7 +101,7 @@ func shoot():
 		var muzzle : Marker2D = find_best_muzzle()
 		missile.rotation = muzzle.global_rotation
 		missile.power = power * 2
-		missile_fired.emit(missile, muzzle.global_position)
+		missile_fired.emit(missile, muzzle.global_position + muzzle.global_transform.x * 8)
 		can_shoot = false
 		
 		shots_fired += 1
@@ -123,19 +123,18 @@ func shoot():
 			bullet.speed = min(speed * 3.0, 512)
 			bullet.color = Globals.color_palettes[Globals.current_palette][3]
 			bullet.damage = power
-			
+			if attack_mode == AttackMode.ROTATE:
+				bullet.velocity = muzzle.global_transform.y * rotation_speed * 32
 			bullet_fired.emit(bullet, muzzle.global_position)
 			can_shoot = false
-			
-		
-		
+				
 		if attack_mode == AttackMode.PULSE:
 			shots_fired += 1
 			if shots_fired % 3 == 0 and shots_fired < 9:
 				fire_interval = 0.5
 				shoot_timer.start(fire_interval)
 			else:
-				fire_interval = 0.15
+				fire_interval = max(base_fire_interval - fire_interval_per_level * level, min_fire_interval)
 				shoot_timer.start(fire_interval)
 		else:
 			shoot_timer.start(fire_interval)
@@ -190,14 +189,14 @@ func switch_to_rotate_attack():
 	rotation_dir = pow(-1, randi() % 2)
 	rotation_speed = randf_range(PI * 1.5, TAU)
 
-	fire_interval = 0.25
+	fire_interval = max(base_fire_interval - fire_interval_per_level * level, min_fire_interval)
 	shots_fired = 0
 	shoot_timer.start(fire_interval)
 	timer.start(randf_range(1.75, 3.25))
 
 func switch_to_pulse_attack():
 	attack_mode = AttackMode.PULSE
-	fire_interval = 0.15
+	fire_interval = max(base_fire_interval - fire_interval_per_level * level, min_fire_interval)
 	shots_fired = 0
 	shoot_timer.start(fire_interval)
 	

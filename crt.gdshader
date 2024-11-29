@@ -18,7 +18,7 @@ uniform float crt_white_noise_rate : hint_range( 0.0, 1.0 ) = 0.0;
 uniform float crt_brightness : hint_range(1.0, 2.0, 0.05) = 1.5;
 
 float random( vec2 pos )
-{ 
+{
 	return fract(sin(dot(pos, vec2(12.9898,78.233))) * 43758.5453);
 }
 

@@ -152,6 +152,7 @@ func shoot():
 		bullet.color = Globals.color_palettes[Globals.current_palette][0]
 		bullet.damage = power
 		bullet.rotation = muzzles[i].global_rotation
+		bullet.velocity = muzzles[i].global_transform.y * rotation_speed_bullet * 32
 		bullet_fired.emit(bullet, muzzles[i].global_position)
 		muzzles[i].rotation = i * PI * 0.5 + randf_range(-PI / 4, PI / 4)
 	

@@ -10,6 +10,8 @@ const fragment_scene = preload("res://scenes/fragment.tscn")
 
 var colors : PackedColorArray = []
 
+var has_exploded : bool = false
+
 signal armed
 signal exploded
 signal fragment_fired(fragment : Node2D, pos : Vector2)
@@ -49,6 +51,9 @@ func _physics_process(delta: float) -> void:
 		explode()
 
 func explode(spawn_fragments : bool = true):
+	if has_exploded: 
+		return
+	
 	var explosion : Explosion = explosion_scene.instantiate()
 	explosion.initialize(Vector2.ZERO, colors)
 	exploded.emit(explosion, global_position)
@@ -58,6 +63,7 @@ func explode(spawn_fragments : bool = true):
 			fragment.rotation = randf_range(0, TAU)
 			fragment_fired.emit(fragment, global_position)
 			fragment.color = [body.color, body_2.color, body_3.color].pick_random()
+	has_exploded = true
 	queue_free()	
 		
 func take_damage(_amount: int, dir : Vector2):

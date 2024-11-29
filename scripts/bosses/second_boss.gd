@@ -27,6 +27,7 @@ enum State {
 }
 
 signal bullet_fired(bullet : Node2D, pos : Vector2)
+signal missile_fired(missile : Node2D, pos : Vector2)
 
 
 func _ready() -> void:

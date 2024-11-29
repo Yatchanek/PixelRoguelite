@@ -95,7 +95,6 @@ offset = Vector2(-6, 0)
 [node name="Muzzle" type="Marker2D" parent="Body" groups=["Cannons"]]
 position = Vector2(22, 0)
 rotation = -0.174533
-scale = Vector2(1, 1)
 
 [node name="Sprite2D" type="Sprite2D" parent="Body/Muzzle"]
 modulate = Color(1, 1, 1, 0)
@@ -104,7 +103,6 @@ texture = ExtResource("7_s53m6")
 [node name="Muzzle2" type="Marker2D" parent="Body" groups=["Cannons"]]
 position = Vector2(0, 22)
 rotation = 1.74533
-scale = Vector2(1, 1)
 
 [node name="Sprite2D" type="Sprite2D" parent="Body/Muzzle2"]
 modulate = Color(1, 1, 1, 0)
@@ -121,7 +119,6 @@ texture = ExtResource("7_s53m6")
 [node name="Muzzle4" type="Marker2D" parent="Body" groups=["Cannons"]]
 position = Vector2(0, -22)
 rotation = -1.39626
-scale = Vector2(1, 1)
 
 [node name="Sprite2D" type="Sprite2D" parent="Body/Muzzle4"]
 modulate = Color(1, 1, 1, 0)
@@ -130,7 +127,6 @@ texture = ExtResource("7_s53m6")
 [node name="Muzzle5" type="Marker2D" parent="Body" groups=["Cannons"]]
 position = Vector2(22, 0)
 rotation = 0.174533
-scale = Vector2(1, 1)
 
 [node name="Sprite2D" type="Sprite2D" parent="Body/Muzzle5"]
 modulate = Color(1, 1, 1, 0)
@@ -139,7 +135,6 @@ texture = ExtResource("7_s53m6")
 [node name="Muzzle6" type="Marker2D" parent="Body" groups=["Cannons"]]
 position = Vector2(0, 22)
 rotation = 1.39626
-scale = Vector2(1, 1)
 
 [node name="Sprite2D" type="Sprite2D" parent="Body/Muzzle6"]
 modulate = Color(1, 1, 1, 0)
@@ -148,7 +143,6 @@ texture = ExtResource("7_s53m6")
 [node name="Muzzle7" type="Marker2D" parent="Body" groups=["Cannons"]]
 position = Vector2(-22, 0)
 rotation = -2.96706
-scale = Vector2(1, 1)
 
 [node name="Sprite2D" type="Sprite2D" parent="Body/Muzzle7"]
 modulate = Color(1, 1, 1, 0)

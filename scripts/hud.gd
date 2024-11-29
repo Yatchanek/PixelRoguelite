@@ -33,6 +33,11 @@ func _process(delta: float) -> void:
 	cursor.position = cursor.get_global_mouse_position()
 	
 func update_health(value : int):
+	if value < hp_bar.value:
+		var tw : Tween = create_tween()
+		tw.tween_property(hp_bar, "tint_progress", Globals.color_palettes[Globals.current_palette][0], 0.15)
+		tw.tween_property(hp_bar, "tint_progress", Globals.color_palettes[Globals.current_palette][3], 0.1)
+		
 	hp_bar.value = value
 
 func update_max_health(value : int):
@@ -42,6 +47,11 @@ func update_danger(amount : int):
 	danger_amount_label.text = str(amount)
 
 func update_shield(value : int):
+	if value < shield_bar.value:
+		var tw : Tween = create_tween()
+		tw.tween_property(shield_bar, "tint_progress", Globals.color_palettes[Globals.current_palette][0], 0.15)
+		tw.tween_property(shield_bar, "tint_progress", Globals.color_palettes[Globals.current_palette][3], 0.1)
+	
 	shield_bar.value = value
 	
 func update_max_shield(value : int):
@@ -70,8 +80,11 @@ func apply_color_palette():
 	message_label.label_settings.outline_color = Globals.color_palettes[Globals.current_palette][2] 
 	
 	hp_bar.tint_progress = Globals.color_palettes[Globals.current_palette][3]
+	hp_bar.tint_over = Globals.color_palettes[Globals.current_palette][4]
 	shield_bar.tint_progress = Globals.color_palettes[Globals.current_palette][3]
+	shield_bar.tint_over = Globals.color_palettes[Globals.current_palette][4]
 	energy_bar.tint_progress = Globals.color_palettes[Globals.current_palette][3]
+	energy_bar.tint_over = Globals.color_palettes[Globals.current_palette][4]
 	
 	for key in keys_container.get_children():
 		key.self_modulate = Globals.color_palettes[Globals.current_palette][7]

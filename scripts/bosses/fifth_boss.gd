@@ -138,7 +138,7 @@ func find_new_destination():
 	var pos : Vector2i
 	var accepted : bool = false
 	while !accepted:
-		pos = Vector2(32, 32) + Utils.get_random_coords(2, 5, 2, 3) * 64
+		pos = Vector2i(32, 32) + Utils.get_random_coords(2, 5, 2, 3) * 64
 		if pos.distance_squared_to(to_local(target.global_position)) > 4096:
 			accepted = true
 			

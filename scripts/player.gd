@@ -100,13 +100,13 @@ func _ready() -> void:
 	player_ready.connect(Globals._on_player_ready)
 	EventBus.game_completed.connect(_on_game_completed)
 	await get_tree().process_frame
-	max_hp = 50
-	hp = max_hp
-	max_shield_hp = 5
-	shield_hp = 0
-	max_dash_energy = 15
-	dash_energy = 15.0
-	dashing_speed = 3 * speed
+	self.max_hp = 50
+	self.hp = max_hp
+	self.max_shield_hp = 5
+	self.shield_hp = 0
+	self.max_dash_energy = 15
+	self.dash_energy = 15.0
+	self.dashing_speed = 3 * speed
 	player_ready.emit(self)
 
 func _process(delta: float) -> void:
@@ -114,8 +114,9 @@ func _process(delta: float) -> void:
 	var target_transform : Transform2D = turret_pivot.global_transform.looking_at(turret_pivot.global_position + dir_to_mouse)
 		
 	turret_pivot.global_transform = turret_pivot.global_transform.interpolate_with(target_transform, 0.75)
-	turret_collision.position = to_local(turret.global_position)
-	turret_hitbox.position = to_local(turret.global_position)
+	turret_collision.transform = turret_pivot.transform.translated(turret_pivot.transform.x * 12)
+
+	turret_hitbox.transform = turret_collision.transform
 
 	if damaging_area:
 		elapsed_time += delta
@@ -167,11 +168,8 @@ func _physics_process(_delta: float) -> void:
 		dash_timer.start(dash_duration)
 		ghost_timer.start()	
 		
-	if can_shoot:
-		if autofire and Input.is_action_pressed("shoot"):
-			shoot()
-		elif Input.is_action_just_pressed("shoot"):
-			shoot()
+	if Input.is_action_pressed("shoot"):
+		shoot()
 	
 	move_and_slide()
 
@@ -289,31 +287,31 @@ func increase_bullet_speed(amount : int):
 	bullet_speed += amount
 
 func increase_max_hp(amount : int):
-	max_hp += amount
-	hp += amount
+	self.max_hp += amount
+	self.hp += amount
 	
 func increase_shield_max_hp(amount : int):
-	max_shield_hp += amount
+	self.max_shield_hp += amount
 	if shield_hp > 0:
-		shield_hp += amount
+		self.shield_hp += amount
 
 func increase_dash_duration(amount : float):
-	dash_duration += amount
+	self.dash_duration += amount
 	
 func increase_dash_energy(amount : int):
-	max_dash_energy += amount
-	dash_energy = clamp(dash_energy + amount, dash_energy, max_dash_energy)
+	self.max_dash_energy += amount
+	self.dash_energy = clamp(dash_energy + amount, dash_energy, max_dash_energy)
 
 func increase_dash_regen(amount : float):
-	dash_regen_speed -= amount	
+	self.dash_regen_speed += amount	
 	
 func heal(amount: int):
-	hp = min(hp + amount, max_hp)
-	health_changed.emit(hp)
+	self.hp = min(hp + amount, max_hp)
+	#health_changed.emit(hp)
 	
 func get_shield(amount : int):
-	shield_hp = min(shield_hp + amount, max_shield_hp)
-	shield_hp_changed.emit(shield_hp)	
+	self.shield_hp = min(shield_hp + amount, max_shield_hp)
+	#shield_hp_changed.emit(shield_hp)	
 	
 func _on_shoot_timer_timeout() -> void:
 	can_shoot = true
