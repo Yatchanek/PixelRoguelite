@@ -1,9 +1,12 @@
-[gd_scene load_steps=21 format=3 uid="uid://dcryx3x5sypq"]
+[gd_scene load_steps=23 format=3 uid="uid://dcryx3x5sypq"]
 
 [ext_resource type="Script" path="res://scripts/room.gd" id="1_sifb4"]
-[ext_resource type="PackedScene" uid="uid://bn3jrk0b1a0yn" path="res://scenes/door.tscn" id="2_2hh1r"]
-[ext_resource type="PackedScene" uid="uid://b85jkem4iiaty" path="res://scenes/outer_wall.tscn" id="3_3l2cn"]
+[ext_resource type="PackedScene" uid="uid://bvfk2fyk13k8f" path="res://scenes/wall_horizontal.tscn" id="4_8xvrl"]
+[ext_resource type="PackedScene" uid="uid://rqp2li80noa8" path="res://scenes/wall_horizontal_door.tscn" id="5_c83xn"]
+[ext_resource type="PackedScene" uid="uid://bn6r0xp2stc1g" path="res://scenes/wall_vertical.tscn" id="6_3bs5l"]
 [ext_resource type="PackedScene" uid="uid://cm4rgjp8lldhs" path="res://scenes/enemies/turret_enemy.tscn" id="6_l6aa6"]
+[ext_resource type="PackedScene" uid="uid://bn7lc02b5ntn4" path="res://scenes/obstacle_vertical.tscn" id="7_haxev"]
+[ext_resource type="PackedScene" uid="uid://w74dseo0xit6" path="res://scenes/wall_vertical_door.tscn" id="7_v8mxx"]
 [ext_resource type="PackedScene" uid="uid://cfft4cjqcysuh" path="res://scenes/bosses/boss.tscn" id="9_27qhj"]
 [ext_resource type="PackedScene" uid="uid://n3je8ff4fc1n" path="res://scenes/bosses/boss_6.tscn" id="10_ggvmr"]
 [ext_resource type="PackedScene" uid="uid://4273yrwy70rg" path="res://scenes/bosses/boss_2.tscn" id="10_sytpb"]
@@ -14,10 +17,9 @@
 [ext_resource type="PackedScene" uid="uid://2pgp02r1nwul" path="res://scenes/bosses/boss_4.tscn" id="13_nmexb"]
 [ext_resource type="PackedScene" uid="uid://cxudcded5ykg4" path="res://scenes/explosion.tscn" id="13_x3ili"]
 [ext_resource type="PackedScene" uid="uid://c1t4b5wxk8d02" path="res://scenes/bosses/boss_5.tscn" id="14_paxn4"]
-[ext_resource type="PackedScene" uid="uid://vcvrgrshhnv6" path="res://scenes/obstacle.tscn" id="14_x5e77"]
+[ext_resource type="PackedScene" uid="uid://vcvrgrshhnv6" path="res://scenes/obstacle_horizontal.tscn" id="14_x5e77"]
 [ext_resource type="PackedScene" uid="uid://d2epvby5lw7gl" path="res://scenes/indicator.tscn" id="15_3a2ij"]
 [ext_resource type="PackedScene" uid="uid://b4n7mvndh8rj3" path="res://scenes/gate_key.tscn" id="16_nd756"]
-[ext_resource type="Texture2D" uid="uid://d4gy38iiedsnl" path="res://graphics/mine_top.png" id="17_3vetu"]
 [ext_resource type="PackedScene" uid="uid://dgoxuogx50x5m" path="res://scenes/pickup.tscn" id="18_qgbj8"]
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_vic26"]
@@ -26,21 +28,18 @@ agent_radius = 12.0
 [node name="Room" type="Node2D"]
 z_index = 1
 script = ExtResource("1_sifb4")
-door_scene = ExtResource("2_2hh1r")
-outer_wall_scene = ExtResource("3_3l2cn")
+wall_horizontal_scene = ExtResource("4_8xvrl")
+wall_horizontal_door_scene = ExtResource("5_c83xn")
+wall_vertical_scene = ExtResource("6_3bs5l")
+wall_vertical_door_scene = ExtResource("7_v8mxx")
+obstacle_horizontal_scene = ExtResource("14_x5e77")
+obstacle_vertical_scene = ExtResource("7_haxev")
 turret_enemy_scene = ExtResource("6_l6aa6")
 bosses = Array[PackedScene]([ExtResource("9_27qhj"), ExtResource("10_sytpb"), ExtResource("11_gdb43"), ExtResource("13_nmexb"), ExtResource("14_paxn4"), ExtResource("10_ggvmr"), ExtResource("11_w5bks"), ExtResource("12_jkess"), ExtResource("13_0m534")])
 explosion_scene = ExtResource("13_x3ili")
-obstacle_scene = ExtResource("14_x5e77")
 indicator_scene = ExtResource("15_3a2ij")
 gate_key_scene = ExtResource("16_nd756")
 pickup_scene = ExtResource("18_qgbj8")
-
-[node name="Sprite2D" type="Sprite2D" parent="."]
-visible = false
-texture_filter = 1
-position = Vector2(32, 32)
-texture = ExtResource("17_3vetu")
 
 [node name="Walls" type="Node2D" parent="."]
 z_index = -1

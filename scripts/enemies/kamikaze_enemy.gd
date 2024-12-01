@@ -5,6 +5,7 @@ class_name KamikazeEnemy
 @onready var timer: Timer = $Timer
 @onready var body: Sprite2D = $Body
 @onready var chasis: Sprite2D = $Body/Chasis
+@onready var collision_shape: CollisionShape2D = $CollisionShape2D
 
 var elapsed_time : float = 0.0
 
@@ -20,6 +21,7 @@ enum State {
 
 func _ready() -> void:
 	setup()
+	collision_shape.set_deferred("disabled", true)
 	apply_color_palette()
 	set_physics_process(false)
 	set_process(false)
@@ -27,6 +29,7 @@ func _ready() -> void:
 	tw.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN_OUT)
 	tw.tween_property(body, "modulate:a", 1.0, 0.5)
 	await tw.finished
+	collision_shape.set_deferred("disabled", false)
 	set_physics_process(true)
 	set_process(true)
 	timer.start()

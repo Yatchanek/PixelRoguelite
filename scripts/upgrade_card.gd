@@ -26,8 +26,6 @@ func _ready() -> void:
 	card_added.emit()
 
 
-func initialize(desc : String, current_amount : String, next_amount : String):
-	pass
 
 func apply_color_palette():
 	self_modulate = Globals.color_palettes[Globals.current_palette][6]
@@ -60,3 +58,4 @@ func _on_gui_input(event: InputEvent) -> void:
 		if event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 			card_pressed.emit()
 			EventBus.upgrade_card_pressed.emit(upgrade_equipped)
+			disable()

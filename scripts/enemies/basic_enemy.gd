@@ -6,6 +6,7 @@ class_name BasicEnemy
 @onready var shoot_timer: Timer = $ShootTimer
 @onready var body: AnimatedSprite2D = $Body
 @onready var chasis: Sprite2D = $Body/Chasis
+@onready var collision_shape: CollisionShape2D = $CollisionShape2D
 
 const bullet_scene : PackedScene = preload("res://scenes/bullet.tscn")
 
@@ -25,7 +26,7 @@ enum State {
 
 func _ready() -> void:
 	setup()
-	
+	collision_shape.set_deferred("disabled", true)
 	apply_color_palette()
 	set_physics_process(false)
 	set_process(false)	
@@ -36,6 +37,7 @@ func _ready() -> void:
 	tw = create_tween()
 	tw.tween_interval(0.15)
 	await tw.finished
+	collision_shape.set_deferred("disabled", false)
 	set_physics_process(true)
 	set_process(true)
 	timer.start()

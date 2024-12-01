@@ -20,7 +20,7 @@ enum Upgrades {
 }
 
 
-static var upgrade_probabilities : Dictionary = {
+const upgrade_probabilities : Dictionary = {
 	Upgrades.SPEED : 0.25,
 	Upgrades.FIRERATE : 0.20,
 	Upgrades.HITPOINTS : 0.075,
@@ -32,9 +32,9 @@ static var upgrade_probabilities : Dictionary = {
 	Upgrades.DASH_ENERGY : 0.075,
 }
 
-static var amounts: Dictionary = {
+const amounts: Dictionary = {
 	Upgrades.SPEED : 16,
-	Upgrades.FIRERATE : 0.05,
+	Upgrades.FIRERATE : -0.05,
 	Upgrades.HITPOINTS : 5,
 	Upgrades.SHIELD_STRENGTH : 3,
 	Upgrades.BULLET_SPEED : 32,
@@ -44,7 +44,7 @@ static var amounts: Dictionary = {
 	Upgrades.DASH_ENERGY : 5,	
 }
 
-static var upgrade_names : Dictionary = {
+const upgrade_names : Dictionary = {
 	Upgrades.SPEED : "Speed",
 	Upgrades.FIRERATE : "Firerate",
 	Upgrades.HITPOINTS : "Max\nHealth",
@@ -56,19 +56,7 @@ static var upgrade_names : Dictionary = {
 	Upgrades.DASH_ENERGY : "Dash\n energy",	
 }
 
-static var amounts_verbose: Dictionary = {
-	Upgrades.SPEED : "+16 px/s",
-	Upgrades.FIRERATE : "-0.1 s/shot",
-	Upgrades.HITPOINTS : "+5",
-	Upgrades.SHIELD_STRENGTH : "+3",
-	Upgrades.BULLET_SPEED : "+32 px/s",
-	Upgrades.BULLET_DAMAGE : "+1",
-	Upgrades.DASH_DURATION : "+0.1 s",
-	Upgrades.DASH_REGEN : "-0.1 s",
-	Upgrades.DASH_ENERGY : "+5",	
-}
-
-static var properties: Dictionary = {
+const properties: Dictionary = {
 	Upgrades.SPEED : "speed",
 	Upgrades.FIRERATE : "fire_rate",
 	Upgrades.HITPOINTS : "max_hp",
@@ -80,9 +68,9 @@ static var properties: Dictionary = {
 	Upgrades.DASH_ENERGY : "dash_energy",	
 }
 
-static var units: Dictionary = {
+const units: Dictionary = {
 	Upgrades.SPEED : "px/s",
-	Upgrades.FIRERATE : "shots/s",
+	Upgrades.FIRERATE : "s/shot",
 	Upgrades.HITPOINTS : "",
 	Upgrades.SHIELD_STRENGTH : "",
 	Upgrades.BULLET_SPEED : "px/s",
@@ -96,16 +84,13 @@ signal cards_hidden
 
 func add_cards():
 	var candidates : Array[Upgrades] = get_possible_upgrades()
-	for i in min(candidates.size(), cards_to_add):	
+	for i in min(candidates.size(), cards_to_add):
+		prints("Candidates before:", candidates)
 		var selected_upgrade : Upgrades = select_upgrade_type(candidates)
-		var amount : float = amounts[selected_upgrade]
-	
+		prints("Candidates after:", candidates)
 	
 		var card : UpgradeCard = card_scene.instantiate()
 		card.upgrade_equipped = selected_upgrade
-
-	
-		selected_upgrades.append(selected_upgrade)
 	
 		card.card_added.connect(_on_card_added)
 		card.card_pressed.connect(_on_card_pressed)

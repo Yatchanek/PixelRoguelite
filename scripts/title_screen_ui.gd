@@ -92,7 +92,7 @@ func animate_title():
 	tw.set_parallel()
 	
 	for i in letter_array.size():
-		letter_array[i].label_settings = letter_array[i].label_settings.duplicate()
+		#letter_array[i].label_settings = letter_array[i].label_settings.duplicate()
 		tw.tween_property(letter_array[i], "modulate:a", 1.0, 0.15).set_delay(1.0 + i * 0.075)
 
 	await tw.finished
@@ -106,7 +106,7 @@ func animate_menu():
 	tw.tween_property(menu, "modulate:a", 1.0, 0.75)
 	
 	await tw.finished
-	blink_letter()
+	#blink_letter()
 	game_demo.start()
 	
 
@@ -198,9 +198,9 @@ func apply_color_palette():
 	options.add_theme_stylebox_override("tab_hovered", stylebox)
 	
 	Globals.adjust_missile_palette()
-	for label : Label in get_tree().get_nodes_in_group("TitleLetters"):
-		label.label_settings.font_color = Globals.color_palettes[Globals.current_palette][2]
-		label.label_settings.outline_color = Globals.color_palettes[Globals.current_palette][6]
+	var label : Label = get_tree().get_first_node_in_group("TitleLetters")
+	label.label_settings.font_color = Globals.color_palettes[Globals.current_palette][2]
+	label.label_settings.outline_color = Globals.color_palettes[Globals.current_palette][6]
 
 
 	$GameDemo.apply_color_palette()

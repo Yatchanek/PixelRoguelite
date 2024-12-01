@@ -6,6 +6,7 @@ class_name LaserEnemy
 @onready var body: Sprite2D = $Body
 @onready var chasis: Sprite2D = $Body/Chasis
 @onready var laser: Laser = $Laser
+@onready var collision_shape: CollisionShape2D = $CollisionShape2D
 
 const bullet_scene : PackedScene = preload("res://scenes/bullet.tscn")
 
@@ -26,6 +27,7 @@ enum State {
 
 func _ready() -> void:
 	setup()
+	collision_shape.set_deferred("disabled", true)
 	laser.power = power
 	laser.shoot_duration = 0.5
 	apply_color_palette()
@@ -36,6 +38,7 @@ func _ready() -> void:
 	tw.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN_OUT)
 	tw.tween_property(body, "modulate:a", 1.0, 0.5)
 	await tw.finished
+	collision_shape.set_deferred("disabled", true)
 	$Hitbox.activate()
 	tw = create_tween()
 	tw.tween_interval(0.15)

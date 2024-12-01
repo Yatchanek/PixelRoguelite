@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=3 uid="uid://ddylky5tp6bpd"]
+[gd_scene load_steps=24 format=3 uid="uid://ddylky5tp6bpd"]
 
 [ext_resource type="Script" path="res://scripts/game.gd" id="1_w3yxl"]
 [ext_resource type="Script" path="res://scripts/world.gd" id="2_4ply8"]
@@ -65,12 +65,6 @@ font = ExtResource("6_yc8th")
 font_size = 24
 outline_size = 8
 outline_color = Color(0.223103, 0.223103, 0.223103, 1)
-
-[sub_resource type="Environment" id="Environment_pad1q"]
-ambient_light_color = Color(0.836122, 0.0505156, 0.0286081, 1)
-glow_intensity = 8.0
-glow_bloom = 1.0
-glow_hdr_threshold = 0.92
 
 [node name="Game" type="Node"]
 process_mode = 3
@@ -417,9 +411,6 @@ uppercase = true
 z_index = 5
 texture_filter = 1
 texture = ExtResource("4_foggy")
-
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
-environment = SubResource("Environment_pad1q")
 
 [connection signal="bullet_fired" from="World/Player" to="World" method="_on_bullet_fired"]
 [connection signal="dash_energy_changed" from="World/Player" to="Hud" method="update_energy"]

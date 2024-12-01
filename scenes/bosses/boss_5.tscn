@@ -56,45 +56,45 @@ texture = ExtResource("3_kyd4l")
 [node name="TurretPivot" type="Marker2D" parent="."]
 self_modulate = Color(0.337812, 0.526588, 0.948227, 1)
 
-[node name="Turret1" type="Sprite2D" parent="TurretPivot"]
-position = Vector2(20, 0)
+[node name="Muzzle1" type="Marker2D" parent="TurretPivot" groups=["Muzzles"]]
+position = Vector2(25, 0)
+
+[node name="Turret1" type="Sprite2D" parent="TurretPivot/Muzzle1"]
+position = Vector2(-5, 0)
 texture = ExtResource("4_4p3fc")
 script = ExtResource("5_frtw7")
 
-[node name="Muzzle1" type="Marker2D" parent="TurretPivot/Turret1" groups=["Muzzles"]]
-position = Vector2(5, 0)
+[node name="Muzzle2" type="Marker2D" parent="TurretPivot" groups=["Muzzles"]]
+position = Vector2(21, -10)
 
-[node name="Turret2" type="Sprite2D" parent="TurretPivot"]
-position = Vector2(16, -10)
+[node name="Turret2" type="Sprite2D" parent="TurretPivot/Muzzle2"]
+position = Vector2(-5, 0)
 texture = ExtResource("4_4p3fc")
 script = ExtResource("5_frtw7")
 
-[node name="Muzzle1" type="Marker2D" parent="TurretPivot/Turret2" groups=["Muzzles"]]
-position = Vector2(5, 0)
+[node name="Muzzle3" type="Marker2D" parent="TurretPivot" groups=["Muzzles"]]
+position = Vector2(17, -20)
 
-[node name="Turret3" type="Sprite2D" parent="TurretPivot"]
-position = Vector2(12, -20)
+[node name="Turret3" type="Sprite2D" parent="TurretPivot/Muzzle3"]
+position = Vector2(-5, 0)
 texture = ExtResource("4_4p3fc")
 script = ExtResource("5_frtw7")
 
-[node name="Muzzle1" type="Marker2D" parent="TurretPivot/Turret3" groups=["Muzzles"]]
-position = Vector2(5, 0)
+[node name="Muzzle1" type="Marker2D" parent="TurretPivot/Muzzle3" groups=["Muzzles"]]
+position = Vector2(4, 30)
 
-[node name="Turret4" type="Sprite2D" parent="TurretPivot"]
-position = Vector2(16, 10)
+[node name="Turret4" type="Sprite2D" parent="TurretPivot/Muzzle3/Muzzle1"]
+position = Vector2(-5, 0)
 texture = ExtResource("4_4p3fc")
 script = ExtResource("5_frtw7")
 
-[node name="Muzzle1" type="Marker2D" parent="TurretPivot/Turret4" groups=["Muzzles"]]
-position = Vector2(5, 0)
+[node name="Muzzle4" type="Marker2D" parent="TurretPivot" groups=["Muzzles"]]
+position = Vector2(17, 20)
 
-[node name="Turret5" type="Sprite2D" parent="TurretPivot"]
-position = Vector2(12, 20)
+[node name="Turret5" type="Sprite2D" parent="TurretPivot/Muzzle4"]
+position = Vector2(-5, 0)
 texture = ExtResource("4_4p3fc")
 script = ExtResource("5_frtw7")
-
-[node name="Muzzle1" type="Marker2D" parent="TurretPivot/Turret5" groups=["Muzzles"]]
-position = Vector2(5, 0)
 
 [node name="ShootTimer" type="Timer" parent="."]
 one_shot = true

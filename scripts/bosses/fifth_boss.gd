@@ -86,10 +86,10 @@ func _physics_process(_delta: float) -> void:
 func place_turrets():
 	var angle_increment : float = PI / 12
 	var start_angle : float = - PI / 6
-	for turret : Sprite2D in turret_pivot.get_children():
-		var radius : float = (20 - abs(turret.get_index() - 2) * 4)
-		turret.position = Vector2(radius * cos(start_angle), radius * sin(start_angle))
-		turret.rotation = turret.position.angle()
+	for muzzle : Marker2D in get_tree().get_nodes_in_group("Muzzles"):
+		var radius : float = (20 - abs(muzzle.get_index() - 2) * 4)
+		muzzle.position = Vector2(radius * cos(start_angle), radius * sin(start_angle))
+		muzzle.rotation = muzzle.position.angle()
 		start_angle += angle_increment
 
 		
@@ -107,7 +107,7 @@ func shoot():
 		await get_tree().create_timer(0.1).timeout
 		bullet_fired.emit(bullet, muzzle.global_position)
 		SoundManager.play_effect(SoundManager.Effects.ENEMY_SHOOT)
-	
+		muzzle.rotation = muzzle.position.angle() + randf_range(-PI / 12, PI / 12)
 
 	
 	

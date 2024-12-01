@@ -1,5 +1,5 @@
 extends Node2D
-class_name Room
+class_name RoomHex
 
 @onready var exits: Node2D = $Exits
 @onready var enemies: Node2D = $Enemies
@@ -8,36 +8,30 @@ class_name Room
 @onready var walls: Node2D = $Walls
 @onready var obstacles: Node2D = $NavigationRegion2D/Obstacles
 
-@export_category("Room Elements")
-@export var wall_horizontal_scene : PackedScene
-@export var wall_horizontal_door_scene : PackedScene
-@export var wall_vertical_scene : PackedScene
-@export var wall_vertical_door_scene : PackedScene
-@export var obstacle_horizontal_scene : PackedScene
-@export var obstacle_vertical_scene : PackedScene
+@export var door_scene : PackedScene
+@export var outer_wall_scene : PackedScene
 
-@export_category("Enemies")
 @export var turret_enemy_scene : PackedScene
+
+
 @export var bosses : Array[PackedScene] = []
 
-@export_category("Misc")
 @export var explosion_scene : PackedScene
+@export var obstacle_scene : PackedScene
 @export var indicator_scene : PackedScene
 @export var gate_key_scene : PackedScene
 @export var pickup_scene : PackedScene
 
 var corners : Array[Vector2] = [
-		Vector2(0, 0),
-		Vector2(Globals.PLAYFIELD_WIDTH, 0),
-		Vector2(Globals.PLAYFIELD_WIDTH, Globals.PLAYFIELD_HEIGHT), 
-		Vector2(0, Globals.PLAYFIELD_HEIGHT)
 		]
 		
 var exit_mappings : Dictionary = {
-	0 : 0b0001,
-	1 : 0b0010,
-	2 : 0b0100,
-	3 : 0b1000,
+	0 : 0b000001,
+	1 : 0b000010,
+	2 : 0b000100,
+	3 : 0b001000,
+	4 : 0b010000,
+	5 : 0b100000
 }
 
 var position_offsets : Array = [
@@ -52,7 +46,7 @@ var player : Player
 
 var respawn_interval : int = 120
 var pickup_respawn_interval : int = 300
-var enemy_spawn_interval : float = 0.5
+var enemy_spawn_interval : float = 1.0
 
 var max_enemies : int
 var enemies_spawned : int = 0
@@ -75,58 +69,63 @@ signal room_exited(coords : Vector2i, exit_index : int)
 signal enemy_destroyed(exp_value : int)
 
 func _ready() -> void:
+	for i in 6:
+		corners.append(Vector2(147.8017 * cos(i * TAU / 6), 147.8017 * sin(i * TAU / 6)))
+	
+	position = get_viewport_rect().size * 0.5# + Vector2(-295.6033, -295.6033) * 0.5 + Vector2(0, 20)
 	configure_room()
-	player.died.connect(_on_player_died)
-	EventBus.game_completed.connect(_on_game_completed)
-	if room_data.last_cleared == 0:
-		Globals.rng.seed = room_data.first_visited
-		room_data.rng_seed = room_data.first_visited
-	else:
-		Globals.rng.seed = room_data.rng_seed
-
-	var current_time : int = int(Time.get_unix_time_from_system())
-	var time_since_last_clear: int = current_time - room_data.last_cleared
-	
-	depth  = Utils.get_depth(room_data.coords)
-	level = floor(depth / (6 - Settings.difficulty))
-	max_enemies = min(randi_range(6 + depth / 2, 10 + depth / 2), 30)
-	enemy_spawn_interval = max(1.0 - 0.05 * depth, 0.4)
-	
-	if !Globals.gate_key_coords.has(room_data.coords):
-		if room_data.last_cleared == 0 or time_since_last_clear > respawn_interval:
-			activate_doors()
-			spawn_turret(min(0.035 + depth * 0.005, 0.075))
-			EnemySpawner.setup(level)	
-			timer.start(randf_range(enemy_spawn_interval, enemy_spawn_interval * 1.25))
-		else:
-			var time_left_to_respawn = respawn_interval - time_since_last_clear
-			waiting_for_respawn = true
-			if !Globals.game_completed:
-				timer.start(time_left_to_respawn)
-	
-	
-		if room_data.coords != Vector2i.ZERO:
-			create_obstacles()
-			if room_data.pickup_spawned:
-				spawn_pickup()
-			elif room_data.pickup_collect_time > 0:
-				var time_since_last_pickup : int = current_time - room_data.pickup_collect_time
-				if time_since_last_pickup > pickup_respawn_interval and randf() < 0.025:
-					spawn_pickup()
-			elif randf() < 0.075:
-				spawn_pickup()
-		else:
-			place_key_collector()
-	
-	elif !room_data.boss_defeated:
-		activate_doors()
-		spawn_boss()
-	
-
-	
-	
-	await get_tree().process_frame
-	create_navigation_polygon()
+	#
+	#player.died.connect(_on_player_died)
+	#EventBus.game_completed.connect(_on_game_completed)
+	#if room_data.last_cleared == 0:
+		#Globals.rng.seed = room_data.first_visited
+		#room_data.rng_seed = room_data.first_visited
+	#else:
+		#Globals.rng.seed = room_data.rng_seed
+#
+	#var current_time : int = int(Time.get_unix_time_from_system())
+	#var time_since_last_clear: int = current_time - room_data.last_cleared
+	#
+	#depth  = Utils.get_depth(room_data.coords)
+	#level = floor(depth / (6 - Settings.difficulty))
+	#max_enemies = min(randi_range(3 + depth / 2, 6 + depth / 2), 30)
+	#enemy_spawn_interval = max(1.5 - 0.05 * depth, 0.2)
+	#
+	#if !Globals.gate_key_coords.has(room_data.coords):
+		#if room_data.last_cleared == 0 or time_since_last_clear > respawn_interval:
+			#activate_doors()
+			#spawn_turret(min(0.035 + depth * 0.005, 0.075))
+			#EnemySpawner.setup(level)	
+			#timer.start(randf_range(enemy_spawn_interval, enemy_spawn_interval * 1.25))
+		#else:
+			#var time_left_to_respawn = respawn_interval - time_since_last_clear
+			#waiting_for_respawn = true
+			#if !Globals.game_completed:
+				#timer.start(time_left_to_respawn)
+	#
+	#
+		#if room_data.coords != Vector2i.ZERO:
+			#create_obstacles()
+			#if room_data.pickup_spawned:
+				#spawn_pickup()
+			#elif room_data.pickup_collect_time > 0:
+				#var time_since_last_pickup : int = current_time - room_data.pickup_collect_time
+				#if time_since_last_pickup > pickup_respawn_interval and randf() < 0.025:
+					#spawn_pickup()
+			#elif randf() < 0.075:
+				#spawn_pickup()
+		#else:
+			#place_key_collector()
+	#
+	#elif !room_data.boss_defeated:
+		#activate_doors()
+		#spawn_boss()
+	#
+#
+	#
+	#
+	#await get_tree().process_frame
+	#create_navigation_polygon()
 	
 
 func create_navigation_polygon():
@@ -147,42 +146,27 @@ func change_color_palette():
 		obstacle.apply_color_palette()
 
 func apply_color_palette():
-	for wall : Wall in walls.get_children():
+	for wall : OuterWall in walls.get_children():
 		wall.apply_color_palette()
 
 func configure_room():
-	for i in 4:
-		var wall : Wall
-		if i % 2 == 0:
-			if room_data.layout_type & exit_mappings[i] == 0:
-				wall = wall_horizontal_scene.instantiate() as Wall
-			else:
-				wall = wall_horizontal_door_scene.instantiate() as Wall
-				wall.door_entered.connect(_on_door_entered)
-		else:
-			if room_data.layout_type & exit_mappings[i] == 0:
-				wall = wall_vertical_scene.instantiate() as Wall
-			else:
-				wall = wall_vertical_door_scene.instantiate() as Wall
-				wall.door_entered.connect(_on_door_entered)
-
-		wall.orientation = i
+	for i in 6:
+		var wall : OuterWallHex = outer_wall_scene.instantiate() as OuterWallHex
 		wall.position = corners[i]
-		wall.rotation = corners[i].direction_to(corners[wrapi(i + 1, 0, 4)]).angle()
+		wall.rotation = corners[i].direction_to(corners[wrapi(i + 1, 0, 6)]).angle()
 		walls.call_deferred("add_child", wall)
+		#wall.orientation = i
+		#wall.has_door = room_data.layout_type & exit_mappings[i] != 0
+		#wall.position = corners[i]
+		#wall.door_entered.connect(_on_door_entered)
+		#walls.call_deferred("add_child", wall)
 
 func create_obstacles():
 	for x in range(1, 4):
 		for y in range(1, 4, 2):
-			var obstacle : Obstacle
-			var rotation_offset : int = get_obstacle_rotation_offset(x, y)
-			if rotation_offset % 2 == 0:
-				obstacle = obstacle_horizontal_scene.instantiate() as Obstacle
-			else:
-				obstacle = obstacle_vertical_scene.instantiate() as Obstacle
-				
+			var obstacle : Obstacle = obstacle_scene.instantiate() as Obstacle
+			obstacle.rotation_offset = get_obstacle_rotation_offset(x, y)
 			obstacle.position = Vector2(x * 128, y * 64)
-			obstacle.rotation = PI / 2 * rotation_offset
 			
 			obstacles.call_deferred("add_child", obstacle)
 
@@ -276,14 +260,14 @@ func activate_doors():
 	if !is_inside_tree():
 		return
 	await get_tree().create_timer(0.25).timeout
-	for wall : Wall in walls.get_children():
+	for wall : OuterWall in walls.get_children():
 		wall.activate_door()
 			
 func deactivate_doors():
 	if !is_inside_tree():
 		return
 	await get_tree().create_timer(1.25).timeout
-	for wall : Wall in walls.get_children():
+	for wall : OuterWall in walls.get_children():
 		wall.deactivate_door()
 		
 	if Globals.leveled_up:
@@ -316,13 +300,12 @@ func _on_timer_timeout() -> void:
 				for enemy : Enemy in enemies_array:
 					if (base_pos + candidate_coords * 64).distance_squared_to(enemy.position) < 1024:
 						attempts += 1
-						break
+						continue
 				
 				if temporarily_occupied.has(candidate_coords) or permanently_occupied.has(candidate_coords) or Utils.get_manhattan_distance(candidate_coords, Utils.get_coords(to_local(player.global_position))) < 3:
 					attempts += 1
 				else:
 					accepted = true
-					
 			if accepted:
 				coords_array.append(candidate_coords)
 				temporarily_occupied.append(candidate_coords)

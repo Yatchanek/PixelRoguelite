@@ -1,0 +1,28 @@
+[gd_scene load_steps=4 format=3 uid="uid://bvfk2fyk13k8f"]
+
+[ext_resource type="Script" path="res://scripts/wall.gd" id="1_d4dk4"]
+
+[sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_3y00i"]
+polygon = PackedVector2Array(-260, -4, 260, -4, 260, 4, -260, 4)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_31evt"]
+size = Vector2(520, 8)
+
+[node name="OuterWallHorizontal" type="StaticBody2D"]
+collision_layer = 4
+collision_mask = 32771
+script = ExtResource("1_d4dk4")
+
+[node name="LightOccluder2D" type="LightOccluder2D" parent="."]
+position = Vector2(256, 0)
+occluder = SubResource("OccluderPolygon2D_3y00i")
+
+[node name="Lines" type="Node2D" parent="."]
+
+[node name="Line2D" type="Line2D" parent="Lines"]
+points = PackedVector2Array(-4, 0, 516, 0)
+width = 8.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(256, 0)
+shape = SubResource("RectangleShape2D_31evt")

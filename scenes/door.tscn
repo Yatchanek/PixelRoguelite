@@ -3,8 +3,10 @@
 [ext_resource type="Script" path="res://scripts/door.gd" id="1_uufpo"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_h8d0r"]
+size = Vector2(120, 8)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_03jas"]
+size = Vector2(120, 8)
 
 [node name="Door" type="StaticBody2D"]
 collision_layer = 4
@@ -20,9 +22,11 @@ collision_layer = 0
 monitorable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DoorArea"]
+position = Vector2(0, -8)
 shape = SubResource("RectangleShape2D_03jas")
 
-[node name="Visuals" type="Polygon2D" parent="."]
-modulate = Color(1, 1, 1, 0)
+[node name="Visuals" type="Line2D" parent="."]
+points = PackedVector2Array(-56, 0, 56, 0)
+width = 8.0
 
 [connection signal="body_entered" from="DoorArea" to="." method="_on_body_entered"]
