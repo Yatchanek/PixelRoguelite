@@ -238,12 +238,12 @@ func toggle():
 	center_coords = player_coords
 	if !visible:
 		check_for_gate_keys()
-		redraw_map()
+		redraw_map()	
 		get_tree().paused = true
 		set_process_unhandled_input(true)
 	else:
-		
-		get_tree().paused = false
+		if !Globals.leveled_up:
+			get_tree().paused = false
 		set_process_unhandled_input(false)
 	reset()
 	visible = !visible

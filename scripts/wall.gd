@@ -24,8 +24,6 @@ func apply_color_palette(boss_room : bool = false):
 			line.default_color =  Globals.color_palettes[Globals.current_palette][1]
 		else:
 			line.default_color =  Globals.color_palettes[Globals.current_palette][5]
-	if is_instance_valid(door):
-		door.apply_color_palette()
 	
 func activate_door():
 	if has_door:

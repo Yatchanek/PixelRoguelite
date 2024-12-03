@@ -11,6 +11,10 @@ const room_scene = preload("res://scenes/room.tscn")
 
 var enemy_count : int = 0
 var current_room : Room
+var cull_percentage : float = 0.5
+
+var maze_data : PackedByteArray = []
+var maze_size : int
 
 var directions : Dictionary = {
 	0 : Vector2i(0, -1),
@@ -38,7 +42,70 @@ func _ready() -> void:
 	apply_color_palette()
 	EventBus.upgrade_card_pressed.connect(_on_upgrade_selected)
 	player.position = get_viewport_rect().size * 0.5
+	create_maze_data()
+	cull_rooms()
 
+func create_maze_data():
+	maze_size = Settings.zone_size * 2 * 9 + 1
+	var unvisited : Array[Vector2i] = []
+	var stack : Array[Vector2i] = []
+	
+	for x in maze_size:
+		for y in maze_size:
+			unvisited.append(Vector2i(x, y))
+			maze_data.append(0)
+			
+	var current: Vector2i = Vector2i.ZERO
+	unvisited.erase(current)
+	
+	while unvisited:
+		var neighbours : Array[Vector2i] = get_neighbours(current, unvisited)
+		if neighbours.size() > 0:
+			var next : Vector2i = neighbours.pick_random()
+			stack.append(current)
+			var dir : Vector2i = next - current
+			var current_exits : int = maze_data[current.y * maze_size + current.x] + exit_mappings[dir]
+			var next_exits : int = maze_data[next.y * maze_size + next.x] + exit_mappings[-dir]
+			
+			maze_data[current.y * maze_size + current.x] = current_exits
+			maze_data[next.y * maze_size + next.x] = next_exits
+			
+			current = next
+			unvisited.erase(current)
+		elif stack:
+			current = stack.pop_back()
+			
+func cull_rooms():
+	var culled : Array[Vector2i] = []
+	for i in maze_size * maze_size * cull_percentage:
+		var coords : Vector2i = Vector2i(randi_range(0, maze_size - 1), randi_range(0, maze_size - 1))
+		var dirs : Array = exit_mappings.keys().duplicate()
+		dirs.shuffle()
+		while dirs:
+			var dir : Vector2i = dirs.pop_back()
+			var neighbour : Vector2i = coords + dir
+			
+			if neighbour.x < 0 or neighbour.x > maze_size - 1\
+			or neighbour.y < 0 or neighbour.y > maze_size - 1:
+				continue
+			
+			var current : int = maze_data[coords.y * maze_size + coords.x]
+			var next : int = maze_data[neighbour.y * maze_size + neighbour.x]
+			
+			if current & exit_mappings[dir] == 0:
+				current += exit_mappings[dir]
+				next += exit_mappings[-dir]
+				maze_data[coords.y * maze_size + coords.x] = current
+				maze_data[neighbour.y * maze_size + neighbour.x] = next
+				break
+
+	
+func get_neighbours(coords: Vector2i, unvisited : Array[Vector2i]) -> Array[Vector2i]:
+	var neighbours : Array[Vector2i] = []
+	for dir : Vector2i in exit_mappings.keys():
+		if unvisited.has(coords + dir):
+			neighbours.append(coords + dir)
+	return neighbours
 	
 func apply_color_palette():
 	veil.color = Globals.color_palettes[Globals.current_palette][7]
@@ -131,18 +198,26 @@ func create_new_room(coords : Vector2i) -> Room:
 	var exit_layout : int
 	var current_time = int(Time.get_unix_time_from_system())
 	
-	if coords == Vector2i.ZERO:
-		exit_layout = [3, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15].pick_random()
-
-	else:
-		exit_layout = choose_exit_layout(coords)
-		
+	#if coords == Vector2i.ZERO:
+		#exit_layout = [3, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15].pick_random()
+#
+	#else:
+		#exit_layout = choose_exit_layout(coords)
+	#exit_layout = adjust_layout_for_keys(coords, exit_layout)
+	exit_layout = maze_data[(coords.y + (maze_size - 1) * 0.5) * maze_size + coords.x + (maze_size - 1) * 0.5]
 	var room_data : RoomData = create_room_data(coords, exit_layout, current_time, 0)
 	new_room.room_data = room_data
 	
 	return new_room
 	
-
+func adjust_layout_for_keys(coords : Vector2i, layout : int):
+	for dir : Vector2i in exit_mappings.keys():
+		var neighbour_coords : Vector2i = coords + dir
+		if Globals.gate_key_coords.has(neighbour_coords):
+			if layout & exit_mappings[dir] == 0:
+				layout += exit_mappings[dir]
+				
+	return layout
 	
 func choose_exit_layout(coords : Vector2i) -> int:
 	var layout : int

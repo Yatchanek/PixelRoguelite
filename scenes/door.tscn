@@ -26,6 +26,7 @@ position = Vector2(0, -8)
 shape = SubResource("RectangleShape2D_03jas")
 
 [node name="Visuals" type="Line2D" parent="."]
+modulate = Color(1, 1, 1, 0)
 points = PackedVector2Array(-56, 0, 56, 0)
 width = 8.0
 

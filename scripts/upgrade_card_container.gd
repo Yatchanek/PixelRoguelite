@@ -29,7 +29,7 @@ const upgrade_probabilities : Dictionary = {
 	Upgrades.BULLET_DAMAGE : 0.025,
 	Upgrades.DASH_DURATION : 0.075,
 	Upgrades.DASH_REGEN : 0.1,
-	Upgrades.DASH_ENERGY : 0.075,
+	Upgrades.DASH_ENERGY : 0.0745,
 }
 
 const amounts: Dictionary = {
@@ -85,9 +85,8 @@ signal cards_hidden
 func add_cards():
 	var candidates : Array[Upgrades] = get_possible_upgrades()
 	for i in min(candidates.size(), cards_to_add):
-		prints("Candidates before:", candidates)
+
 		var selected_upgrade : Upgrades = select_upgrade_type(candidates)
-		prints("Candidates after:", candidates)
 	
 		var card : UpgradeCard = card_scene.instantiate()
 		card.upgrade_equipped = selected_upgrade
@@ -122,16 +121,25 @@ func hide_cards():
 func select_upgrade_type(candidate_pool : Array[Upgrades]) -> Upgrades:
 	var candidate : Upgrades
 	
-	var roll : float = randf()
+	
+	var total_weight : float = 0
+	for c in candidate_pool:
+		total_weight += upgrade_probabilities[c]
+		
+	var roll : float = randf() * total_weight
+		
 	var total_chance : float = 0
 	
 	for upgrade : Upgrades in candidate_pool:
 		total_chance += upgrade_probabilities[upgrade]
 		if roll < total_chance:
+			prints("Candidates before:", candidate_pool)		
 			candidate = upgrade
-			candidate_pool.erase(candidate)
+			prints("Selected upgrade:", candidate, upgrade)
+			candidate_pool.erase(upgrade)
+			prints("Candidates after:", candidate_pool)
 			break
-
+	
 	return candidate
 
 

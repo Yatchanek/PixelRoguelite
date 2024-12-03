@@ -1,9 +1,9 @@
-[gd_scene load_steps=16 format=3 uid="uid://n3je8ff4fc1n"]
+[gd_scene load_steps=12 format=3 uid="uid://n3je8ff4fc1n"]
 
 [ext_resource type="Script" path="res://scripts/bosses/sixth_boss.gd" id="1_k2t37"]
-[ext_resource type="Texture2D" uid="uid://crmthd2rj3xli" path="res://graphics/boss_6_upper.png" id="2_slmhu"]
-[ext_resource type="Texture2D" uid="uid://bpopw8w77w8lq" path="res://graphics/boss_6_lower.png" id="3_g4fgv"]
-[ext_resource type="Texture2D" uid="uid://bva7ecv7d8rqp" path="res://graphics/boss_6_hands_legs.png" id="4_hmoms"]
+[ext_resource type="Texture2D" uid="uid://306f7776acpu" path="res://graphics/boss_body.png" id="2_70o5j"]
+[ext_resource type="Texture2D" uid="uid://bd48pj747qxdm" path="res://graphics/boss_9_chasis.png" id="3_j8ixg"]
+[ext_resource type="Texture2D" uid="uid://c8wr360fees3y" path="res://graphics/boss_8_chasis.png" id="4_tqnqr"]
 [ext_resource type="PackedScene" uid="uid://drd2m072phc4v" path="res://scenes/hitbox.tscn" id="5_wcrvi"]
 [ext_resource type="PackedScene" uid="uid://cwshy400yx3qo" path="res://scenes/hurt_box.tscn" id="6_3eafv"]
 [ext_resource type="Texture2D" uid="uid://d3otih1xwa7g2" path="res://graphics/progress_bar.png" id="7_udwbm"]
@@ -11,40 +11,6 @@
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_48w8c"]
 radius = 18.0
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_qwoqg"]
-atlas = ExtResource("4_hmoms")
-region = Rect2(0, 0, 32, 32)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_d3yd8"]
-atlas = ExtResource("4_hmoms")
-region = Rect2(32, 0, 32, 32)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_2syyw"]
-atlas = ExtResource("4_hmoms")
-region = Rect2(64, 0, 32, 32)
-
-[sub_resource type="SpriteFrames" id="SpriteFrames_idrxm"]
-animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_qwoqg")
-}],
-"loop": true,
-"name": &"idle",
-"speed": 0.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_d3yd8")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_2syyw")
-}],
-"loop": true,
-"name": &"walk",
-"speed": 5.0
-}]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_d8mox"]
 resource_local_to_scene = true
@@ -81,21 +47,18 @@ shape = SubResource("CircleShape2D_48w8c")
 [node name="Timer" type="Timer" parent="."]
 one_shot = true
 
-[node name="BodyUpper" type="Sprite2D" parent="."]
-modulate = Color(1, 1, 1, 0)
-texture_filter = 1
-texture = ExtResource("2_slmhu")
-
-[node name="BodyLower" type="Sprite2D" parent="BodyUpper"]
-texture = ExtResource("3_g4fgv")
-
-[node name="MovingParts" type="AnimatedSprite2D" parent="."]
-modulate = Color(1, 1, 1, 0)
-sprite_frames = SubResource("SpriteFrames_idrxm")
-animation = &"idle"
-
 [node name="ShootTimer" type="Timer" parent="."]
 one_shot = true
+
+[node name="BodyLower" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("2_70o5j")
+
+[node name="BodyUpper" type="Sprite2D" parent="BodyLower"]
+texture = ExtResource("3_j8ixg")
+
+[node name="Top" type="Sprite2D" parent="BodyLower"]
+texture = ExtResource("4_tqnqr")
 
 [node name="Hitbox" parent="." node_paths=PackedStringArray("target") instance=ExtResource("5_wcrvi")]
 visible = false
@@ -138,15 +101,94 @@ nine_patch_stretch = true
 texture_progress = ExtResource("7_udwbm")
 metadata/_edit_use_anchors_ = true
 
-[node name="MuzzlePivot" type="Marker2D" parent="."]
+[node name="MainPivot" type="Marker2D" parent="."]
 
-[node name="Cannon" type="Sprite2D" parent="MuzzlePivot"]
-position = Vector2(32, 0)
-scale = Vector2(1.5, 1.5)
+[node name="Pivot1" type="Marker2D" parent="MainPivot"]
+
+[node name="SubPivot1" type="Marker2D" parent="MainPivot/Pivot1"]
+position = Vector2(18, 0)
+
+[node name="Cannon" type="Sprite2D" parent="MainPivot/Pivot1/SubPivot1" groups=["Cannons"]]
+position = Vector2(8, -6)
+rotation = -0.0872665
 texture = ExtResource("8_dbbeg")
 
-[node name="Muzzle" type="Marker2D" parent="MuzzlePivot/Cannon"]
-position = Vector2(8, 0)
+[node name="Muzzle" type="Marker2D" parent="MainPivot/Pivot1/SubPivot1/Cannon" groups=["Muzzles"]]
+position = Vector2(5, 0)
+
+[node name="Cannon2" type="Sprite2D" parent="MainPivot/Pivot1/SubPivot1" groups=["Cannons"]]
+position = Vector2(8, 6)
+rotation = 0.0872665
+texture = ExtResource("8_dbbeg")
+
+[node name="Muzzle" type="Marker2D" parent="MainPivot/Pivot1/SubPivot1/Cannon2" groups=["Muzzles"]]
+position = Vector2(5, 0)
+
+[node name="Pivot2" type="Marker2D" parent="MainPivot"]
+rotation = 1.5708
+
+[node name="SubPivot2" type="Marker2D" parent="MainPivot/Pivot2"]
+position = Vector2(18, 0)
+
+[node name="Cannon" type="Sprite2D" parent="MainPivot/Pivot2/SubPivot2" groups=["Cannons"]]
+position = Vector2(8, -6)
+rotation = -0.0872665
+texture = ExtResource("8_dbbeg")
+
+[node name="Muzzle" type="Marker2D" parent="MainPivot/Pivot2/SubPivot2/Cannon" groups=["Muzzles"]]
+position = Vector2(5, 0)
+
+[node name="Cannon2" type="Sprite2D" parent="MainPivot/Pivot2/SubPivot2" groups=["Cannons"]]
+position = Vector2(8, 6)
+rotation = 0.0872665
+texture = ExtResource("8_dbbeg")
+
+[node name="Muzzle" type="Marker2D" parent="MainPivot/Pivot2/SubPivot2/Cannon2" groups=["Muzzles"]]
+position = Vector2(5, 0)
+
+[node name="Pivot3" type="Marker2D" parent="MainPivot"]
+rotation = 3.14159
+
+[node name="SubPivot3" type="Marker2D" parent="MainPivot/Pivot3"]
+position = Vector2(18, 0)
+
+[node name="Cannon" type="Sprite2D" parent="MainPivot/Pivot3/SubPivot3" groups=["Cannons"]]
+position = Vector2(8, -6)
+rotation = -0.0872665
+texture = ExtResource("8_dbbeg")
+
+[node name="Muzzle" type="Marker2D" parent="MainPivot/Pivot3/SubPivot3/Cannon" groups=["Muzzles"]]
+position = Vector2(5, 0)
+
+[node name="Cannon2" type="Sprite2D" parent="MainPivot/Pivot3/SubPivot3" groups=["Cannons"]]
+position = Vector2(8, 6)
+rotation = 0.0872665
+texture = ExtResource("8_dbbeg")
+
+[node name="Muzzle" type="Marker2D" parent="MainPivot/Pivot3/SubPivot3/Cannon2" groups=["Muzzles"]]
+position = Vector2(5, 0)
+
+[node name="Pivot4" type="Marker2D" parent="MainPivot"]
+rotation = -1.5708
+
+[node name="SubPivot4" type="Marker2D" parent="MainPivot/Pivot4"]
+position = Vector2(18, 0)
+
+[node name="Cannon" type="Sprite2D" parent="MainPivot/Pivot4/SubPivot4" groups=["Cannons"]]
+position = Vector2(8, -6)
+rotation = -0.0872665
+texture = ExtResource("8_dbbeg")
+
+[node name="Muzzle" type="Marker2D" parent="MainPivot/Pivot4/SubPivot4/Cannon" groups=["Muzzles"]]
+position = Vector2(5, 0)
+
+[node name="Cannon2" type="Sprite2D" parent="MainPivot/Pivot4/SubPivot4" groups=["Cannons"]]
+position = Vector2(8, 6)
+rotation = 0.0872665
+texture = ExtResource("8_dbbeg")
+
+[node name="Muzzle" type="Marker2D" parent="MainPivot/Pivot4/SubPivot4/Cannon2" groups=["Muzzles"]]
+position = Vector2(5, 0)
 
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
 [connection signal="timeout" from="ShootTimer" to="." method="_on_shoot_timer_timeout"]
