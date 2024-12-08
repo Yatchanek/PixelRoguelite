@@ -14,9 +14,20 @@ class_name HUD
 @onready var message_label: Label = $Control/MessageLabel
 @onready var cursor: Sprite2D = $Cursor
 @onready var ui_veil: ColorRect = $Control/UIVeil
+@onready var game_over_panel: PanelContainer = $Control/GameOverPanel
+@onready var restart_label: Label = %RestartLabel
+@onready var back_to_menu_label: Label = %BackToMenuLabel
+@onready var game_over_label: Label = $Control/GameOverPanel/VBoxContainer/GameOverLabel
+@onready var restart_button: Button = %RestartButton
+@onready var back_to_menu_button: Button = %BackToMenuButton
+@onready var hand_cursor: Sprite2D = $HandCursor
+@onready var cursor_inner: Sprite2D = $HandCursor/CursorInner
 
+var game_over : bool = false
 
 func _unhandled_input(event: InputEvent) -> void:
+	if Globals.game_completed:
+		return
 	if event is InputEventKey:
 		if event.pressed and event.keycode == KEY_M:
 			toggle_minimap()
@@ -29,8 +40,15 @@ func _ready() -> void:
 	EventBus.gate_left.connect(hide_message)
 	EventBus.game_completed.connect(_on_game_completed)
 
+	for button : Button in get_tree().get_nodes_in_group("GameOverButtons"):
+		button.mouse_entered.connect(_on_button_hovered.bind(button))
+		button.mouse_exited.connect(_on_button_unhovered.bind(button))
+		
 func _process(delta: float) -> void:
-	cursor.position = cursor.get_global_mouse_position()
+	if !game_over:
+		cursor.position = cursor.get_global_mouse_position()
+	else:
+		hand_cursor.position = hand_cursor.get_global_mouse_position()
 	
 func update_health(value : int):
 	if value < hp_bar.value:
@@ -75,9 +93,20 @@ func apply_color_palette():
 	
 	top_bar.add_theme_stylebox_override("panel", stylebox)
 	
+	stylebox = stylebox.duplicate()
+	stylebox.set_border_width_all(2)
+	game_over_panel.add_theme_stylebox_override("panel", stylebox)
+	
 	coords_label.label_settings.font_color = Globals.color_palettes[Globals.current_palette][3] 
 	message_label.label_settings.font_color = Globals.color_palettes[Globals.current_palette][4]
 	message_label.label_settings.outline_color = Globals.color_palettes[Globals.current_palette][2] 
+	restart_label.label_settings.font_color = Globals.color_palettes[Globals.current_palette][3] 
+	restart_label.label_settings.outline_color = Globals.color_palettes[Globals.current_palette][5] 
+	back_to_menu_label.label_settings.font_color = Globals.color_palettes[Globals.current_palette][3] 
+	back_to_menu_label.label_settings.outline_color = Globals.color_palettes[Globals.current_palette][5] 
+	game_over_label.label_settings.font_color = Globals.color_palettes[Globals.current_palette][3] 
+	game_over_label.label_settings.outline_color = Globals.color_palettes[Globals.current_palette][5] 
+		
 	
 	hp_bar.tint_progress = Globals.color_palettes[Globals.current_palette][3]
 	hp_bar.tint_over = Globals.color_palettes[Globals.current_palette][4]
@@ -96,6 +125,8 @@ func apply_color_palette():
 			keys_container.get_child(i).self_modulate = Globals.color_palettes[Globals.current_palette][7]
 
 	cursor.self_modulate = Globals.color_palettes[Globals.current_palette][1]
+	hand_cursor.self_modulate = Globals.color_palettes[Globals.current_palette][6]
+	cursor_inner.self_modulate = Globals.color_palettes[Globals.current_palette][3]
 
 	minimap.apply_color_palette()
 
@@ -113,8 +144,15 @@ func hide_message():
 	message_label.hide()
 
 func _on_game_completed():
-	message_label.text = "You won!"
-	show_message()
+	game_over_label.text = "You won!"
+	await get_tree().create_timer(2.0).timeout
+	ui_veil.modulate.a = 0.75
+	game_over_panel.show()
+	cursor.hide()
+	hand_cursor.show()
+	game_over = true
+	hand_cursor.position = hand_cursor.get_global_mouse_position()	
+
 
 func toggle_minimap():
 	if minimap.visible:
@@ -126,3 +164,35 @@ func toggle_minimap():
 
 func _on_cards_hidden() -> void:
 	ui_veil.modulate.a = 0.0
+
+func _on_button_hovered(button : Button):
+	var label : Label = button.get_child(0) as Label
+	label.label_settings.font_color = Globals.color_palettes[Globals.current_palette][6]
+	label.label_settings.outline_color = Globals.color_palettes[Globals.current_palette][2]
+
+func _on_button_unhovered(button : Button):
+	var label : Label = button.get_child(0) as Label
+	label.label_settings.font_color = Globals.color_palettes[Globals.current_palette][3]
+	label.label_settings.outline_color = Globals.color_palettes[Globals.current_palette][5]
+
+
+func _on_player_died() -> void:
+	await get_tree().create_timer(2.0).timeout
+	ui_veil.modulate.a = 0.75
+	game_over_panel.show()
+	cursor.hide()
+	hand_cursor.show()
+	game_over = true
+	hand_cursor.position = hand_cursor.get_global_mouse_position()
+
+
+func _on_restart_button_pressed() -> void:
+	restart_button.disabled = true
+	back_to_menu_button.disabled = true
+	get_tree().reload_current_scene()
+
+
+func _on_back_to_menu_button_pressed() -> void:
+	restart_button.disabled = true
+	back_to_menu_button.disabled = true
+	get_tree().change_scene_to_file("res://scenes/title_screen.tscn")

@@ -92,7 +92,7 @@ func _ready() -> void:
 func fill_grid():
 	for i in num_rows * num_cols:
 		var room : MapRoom = room_scene.instantiate()
-		room.self_modulate = Globals.color_palettes[Globals.current_palette][5]
+		#room.self_modulate = Globals.color_palettes[Globals.current_palette][5]
 		room.cell_size = cell_size
 		grid.add_child(room)
 
@@ -108,7 +108,7 @@ func apply_color_palette():
 		button.apply_color_palette()
 		
 	for room in grid.get_children():
-		room.self_modulate = Globals.color_palettes[Globals.current_palette][5]
+		room.apply_color_palette()
 	
 	if visible:
 		queue_redraw()
@@ -145,24 +145,38 @@ func update_map_size():
 	
 	fill_grid()
 	
+	if center_coords.x - (num_cols - 1) * 0.5 <= -(Globals.maze_size - 1) * 0.5:
+		center_coords.x += -(Globals.maze_size - 1) * 0.5 - (center_coords.x - (num_cols - 1) * 0.5)
+	elif center_coords.x + (num_cols - 1) * 0.5 >= (Globals.maze_size - 1) * 0.5:
+		center_coords.x -= (center_coords.x + (num_cols - 1) * 0.5) - (Globals.maze_size - 1) * 0.5 
+		
+	if center_coords.y - (num_rows - 1) * 0.5 <= -(Globals.maze_size - 1) * 0.5:
+		center_coords.y += -(Globals.maze_size - 1) * 0.5 - (center_coords.y - (num_rows - 1) * 0.5)
+	elif center_coords.y + (num_rows - 1) * 0.5 >= (Globals.maze_size - 1) * 0.5:
+		center_coords.y -= center_coords.y + (num_rows - 1) * 0.5 - (Globals.maze_size - 1) * 0.5
+
 	if visible:		
 		redraw_map()
 
 func move_left():
-	center_coords += Vector2i.LEFT
-	redraw_map()
+	if center_coords.x - (num_cols - 1) * 0.5 > -(Globals.maze_size - 1) * 0.5:
+		center_coords += Vector2i.LEFT
+		redraw_map()
 	
 func move_right():
-	center_coords += Vector2i.RIGHT
-	redraw_map()
+	if center_coords.x + (num_cols - 1) * 0.5 < (Globals.maze_size - 1) * 0.5:
+		center_coords += Vector2i.RIGHT
+		redraw_map()
 	
 func move_up():
-	center_coords += Vector2i.UP
-	redraw_map()
+	if center_coords.y - (num_rows - 1) * 0.5 > -(Globals.maze_size - 1) * 0.5:
+		center_coords += Vector2i.UP
+		redraw_map()
 	
 func move_down():
-	center_coords += Vector2i.DOWN
-	redraw_map()
+	if center_coords.y + (num_rows - 1) * 0.5 < (Globals.maze_size - 1) * 0.5:
+		center_coords += Vector2i.DOWN
+		redraw_map()
 			
 func redraw_map():
 	start_x = center_coords.x - floori(num_cols / 2)
@@ -203,6 +217,7 @@ func redraw_map():
 				room.room_idx = 0
 				
 			room.update_texture()
+				
 			if y == 0:
 				l = Label.new()
 				l.label_settings = l_s

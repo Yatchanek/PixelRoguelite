@@ -13,9 +13,6 @@ var enemy_count : int = 0
 var current_room : Room
 var cull_percentage : float = 0.5
 
-var maze_data : PackedByteArray = []
-var maze_size : int
-
 var directions : Dictionary = {
 	0 : Vector2i(0, -1),
 	1 : Vector2i(1, 0),
@@ -46,14 +43,14 @@ func _ready() -> void:
 	cull_rooms()
 
 func create_maze_data():
-	maze_size = Settings.zone_size * 2 * 9 + 1
+	Globals.maze_size = Settings.zone_size * 2 * 9 + 1
 	var unvisited : Array[Vector2i] = []
 	var stack : Array[Vector2i] = []
 	
-	for x in maze_size:
-		for y in maze_size:
+	for x in Globals.maze_size:
+		for y in Globals.maze_size:
 			unvisited.append(Vector2i(x, y))
-			maze_data.append(0)
+			Globals.maze_data.append(0)
 			
 	var current: Vector2i = Vector2i.ZERO
 	unvisited.erase(current)
@@ -64,11 +61,11 @@ func create_maze_data():
 			var next : Vector2i = neighbours.pick_random()
 			stack.append(current)
 			var dir : Vector2i = next - current
-			var current_exits : int = maze_data[current.y * maze_size + current.x] + exit_mappings[dir]
-			var next_exits : int = maze_data[next.y * maze_size + next.x] + exit_mappings[-dir]
+			var current_exits : int = Globals.maze_data[current.y * Globals.maze_size + current.x] + exit_mappings[dir]
+			var next_exits : int = Globals.maze_data[next.y * Globals.maze_size + next.x] + exit_mappings[-dir]
 			
-			maze_data[current.y * maze_size + current.x] = current_exits
-			maze_data[next.y * maze_size + next.x] = next_exits
+			Globals.maze_data[current.y * Globals.maze_size + current.x] = current_exits
+			Globals.maze_data[next.y * Globals.maze_size + next.x] = next_exits
 			
 			current = next
 			unvisited.erase(current)
@@ -77,26 +74,26 @@ func create_maze_data():
 			
 func cull_rooms():
 	var culled : Array[Vector2i] = []
-	for i in maze_size * maze_size * cull_percentage:
-		var coords : Vector2i = Vector2i(randi_range(0, maze_size - 1), randi_range(0, maze_size - 1))
+	for i in Globals.maze_size * Globals.maze_size * cull_percentage:
+		var coords : Vector2i = Vector2i(randi_range(0, Globals.maze_size - 1), randi_range(0, Globals.maze_size - 1))
 		var dirs : Array = exit_mappings.keys().duplicate()
 		dirs.shuffle()
 		while dirs:
 			var dir : Vector2i = dirs.pop_back()
 			var neighbour : Vector2i = coords + dir
 			
-			if neighbour.x < 0 or neighbour.x > maze_size - 1\
-			or neighbour.y < 0 or neighbour.y > maze_size - 1:
+			if neighbour.x < 0 or neighbour.x > Globals.maze_size - 1\
+			or neighbour.y < 0 or neighbour.y > Globals.maze_size - 1:
 				continue
 			
-			var current : int = maze_data[coords.y * maze_size + coords.x]
-			var next : int = maze_data[neighbour.y * maze_size + neighbour.x]
+			var current : int = Globals.maze_data[coords.y * Globals.maze_size + coords.x]
+			var next : int = Globals.maze_data[neighbour.y * Globals.maze_size + neighbour.x]
 			
 			if current & exit_mappings[dir] == 0:
 				current += exit_mappings[dir]
 				next += exit_mappings[-dir]
-				maze_data[coords.y * maze_size + coords.x] = current
-				maze_data[neighbour.y * maze_size + neighbour.x] = next
+				Globals.maze_data[coords.y * Globals.maze_size + coords.x] = current
+				Globals.maze_data[neighbour.y * Globals.maze_size + neighbour.x] = next
 				break
 
 	
@@ -204,7 +201,7 @@ func create_new_room(coords : Vector2i) -> Room:
 	#else:
 		#exit_layout = choose_exit_layout(coords)
 	#exit_layout = adjust_layout_for_keys(coords, exit_layout)
-	exit_layout = maze_data[(coords.y + (maze_size - 1) * 0.5) * maze_size + coords.x + (maze_size - 1) * 0.5]
+	exit_layout = Globals.maze_data[(coords.y + (Globals.maze_size - 1) * 0.5) * Globals.maze_size + coords.x + (Globals.maze_size - 1) * 0.5]
 	var room_data : RoomData = create_room_data(coords, exit_layout, current_time, 0)
 	new_room.room_data = room_data
 	

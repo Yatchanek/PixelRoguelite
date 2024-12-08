@@ -31,8 +31,8 @@ func _process(delta: float) -> void:
 	if elapsed_time > color_flip_interval:
 		color_flip()
 		elapsed_time = 0.0
-		if beep:
-			SoundManager.play_effect(SoundManager.Effects.BEEP)
+		#if beep:
+			#SoundManager.play_effect(SoundManager.Effects.BEEP)
 
 func apply_color_palette():
 	primary_color = Globals.color_palettes[Globals.current_palette][2]

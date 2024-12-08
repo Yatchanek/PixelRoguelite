@@ -7,6 +7,8 @@ var master_volume : float = 0
 var effects_volume : float = 0
 var music_volume : float = 0
 
+var color_palette : int = 0
+
 func _ready() -> void:
 	load_settings()
 
@@ -15,6 +17,8 @@ func save_settings():
 	
 	config_file.set_value("Gameplay Settings", "zone_size", zone_size)
 	config_file.set_value("Gameplay Settings", "difficulty", difficulty)
+	
+	config_file.set_value("Graphics Settings", "color_palette", color_palette)
 	
 	config_file.set_value("Sound Settings", "master_volume", master_volume)
 	config_file.set_value("Sound Settings", "effects_volume", effects_volume)

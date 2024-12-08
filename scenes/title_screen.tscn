@@ -1103,6 +1103,7 @@ color = Color(0, 0, 0, 1)
 
 [connection signal="pressed" from="UI/Control/Menu/StartGame" to="." method="_on_start_game_pressed"]
 [connection signal="pressed" from="UI/Control/Menu/Options" to="." method="_on_options_pressed"]
+[connection signal="pressed" from="UI/Control/Menu/Quit" to="." method="_on_quit_pressed"]
 [connection signal="value_changed" from="UI/Control/MarginContainer/Options/GAMEPLAY/MarginContainer/VBoxContainer/HBoxContainer/maze_size" to="." method="_on_maze_size_value_changed"]
 [connection signal="value_changed" from="UI/Control/MarginContainer/Options/GAMEPLAY/MarginContainer/VBoxContainer/HBoxContainer2/difficulty" to="." method="_on_difficulty_value_changed"]
 [connection signal="pressed" from="UI/Control/MarginContainer/Options/GRAPHICS/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/ChangePaletteButon" to="." method="_on_change_palette_buton_pressed"]

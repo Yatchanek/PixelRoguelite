@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://bdpxgjmayljm6"]
+[gd_scene load_steps=15 format=3 uid="uid://bdpxgjmayljm6"]
 
 [ext_resource type="Script" path="res://scripts/autoloads/sound_manager.gd" id="1_sy5cd"]
 [ext_resource type="AudioStream" uid="uid://dhnr8wnf2b0ru" path="res://sounds/shoot_by_little_robot_sound_factory.ogg" id="2_dn0vs"]
@@ -6,12 +6,18 @@
 [ext_resource type="AudioStream" uid="uid://benilu5tidf" path="res://sounds/hit_by_little_robot_sound_factory.ogg" id="4_2gigp"]
 [ext_resource type="AudioStream" uid="uid://bo2wl8k2kepak" path="res://sounds/laser_by_kenney.ogg" id="4_mbm1f"]
 [ext_resource type="AudioStream" uid="uid://es7fbcvtd0bj" path="res://sounds/missile_by_juhani_junkala.ogg" id="5_omqyu"]
-[ext_resource type="AudioStream" uid="uid://bfhcog5w2syw7" path="res://sounds/beep_by_phoenix1291.ogg" id="6_spina"]
 [ext_resource type="AudioStream" uid="uid://cifvlw1h1bj5e" path="res://sounds/explosion_by_juhani_junkala.ogg" id="7_17ns8"]
+[ext_resource type="AudioStream" uid="uid://cipa1tb8ayxim" path="res://sounds/health_pickup_by_little_robot_factory.ogg" id="8_ykanh"]
+[ext_resource type="AudioStream" uid="uid://c1bsu5q05wx5d" path="res://sounds/shield_pickup_by_little_robot_factory.ogg" id="9_54vb8"]
+[ext_resource type="AudioStream" uid="uid://bxd0oqoysqpik" path="res://sounds/player_death_by_little_robot_factory.ogg" id="10_ygl36"]
+[ext_resource type="AudioStream" uid="uid://bew5cv8eragvh" path="res://sounds/menu_navigate_by_juhani_junkala.ogg" id="11_w0p14"]
+[ext_resource type="AudioStream" uid="uid://tenxwdxfre5f" path="res://sounds/menu_select_by_juhani_junkala.ogg" id="12_8jfcm"]
+[ext_resource type="AudioStream" uid="uid://c6qh40qejl74w" path="res://sounds/start_game_by_juhani_junkala.ogg" id="13_qool1"]
+[ext_resource type="AudioStream" uid="uid://de6hrlkpm0rxw" path="res://sounds/game_won_by_little_robot_sound_factory.ogg" id="14_cvjdd"]
 
 [node name="SoundManager" type="Node"]
 script = ExtResource("1_sy5cd")
-sound_effects = Array[AudioStream]([ExtResource("2_dn0vs"), ExtResource("3_721wc"), ExtResource("4_mbm1f"), ExtResource("5_omqyu"), ExtResource("4_2gigp"), ExtResource("7_17ns8"), ExtResource("6_spina")])
+sound_effects = Array[AudioStream]([ExtResource("2_dn0vs"), ExtResource("3_721wc"), ExtResource("4_mbm1f"), ExtResource("5_omqyu"), ExtResource("4_2gigp"), ExtResource("7_17ns8"), ExtResource("8_ykanh"), ExtResource("9_54vb8"), ExtResource("10_ygl36"), ExtResource("11_w0p14"), ExtResource("12_8jfcm"), ExtResource("13_qool1"), ExtResource("14_cvjdd")])
 
 [node name="EffectChannels" type="Node" parent="."]
 

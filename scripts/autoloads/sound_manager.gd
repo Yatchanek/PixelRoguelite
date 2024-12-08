@@ -11,7 +11,13 @@ enum Effects {
 	MISSILE,
 	HIT,
 	EXPLOSION,
-	BEEP
+	PICKUP_HEALTH,
+	PICKUP_SHIELD,
+	PLAYER_DEATH,
+	MENU_NAVIGATE,
+	MENU_SELECT,
+	MENU_START_GAME,
+	GAME_WON
 }
 
 # Called when the node enters the scene tree for the first time.

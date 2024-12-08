@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=3 uid="uid://ddylky5tp6bpd"]
+[gd_scene load_steps=40 format=3 uid="uid://ddylky5tp6bpd"]
 
 [ext_resource type="Script" path="res://scripts/game.gd" id="1_w3yxl"]
 [ext_resource type="Script" path="res://scripts/world.gd" id="2_4ply8"]
@@ -11,6 +11,8 @@
 [ext_resource type="Script" path="res://scripts/upgrade_card_container.gd" id="8_2xbi3"]
 [ext_resource type="PackedScene" uid="uid://s65dq4a3p8hf" path="res://scenes/ui_elements/minimap.tscn" id="8_0353o"]
 [ext_resource type="Texture2D" uid="uid://882ajyq5akwp" path="res://graphics/keys.png" id="8_ga3uy"]
+[ext_resource type="Texture2D" uid="uid://t8ckmrjn0o6v" path="res://graphics/pointing_hand_small_outer.png" id="12_3cai3"]
+[ext_resource type="Texture2D" uid="uid://0ssdwvll1a56" path="res://graphics/pointing_hand_small_inner.png" id="13_ytn46"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pyc1a"]
 border_width_left = 1
@@ -65,6 +67,43 @@ font = ExtResource("6_yc8th")
 font_size = 24
 outline_size = 8
 outline_color = Color(0.223103, 0.223103, 0.223103, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_ibiwc"]
+font = ExtResource("6_yc8th")
+font_size = 36
+outline_size = 12
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_gtx0n"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ntaj4"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_xb7l0"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_2gqjf"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ygq3l"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_8op5l"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_pxexp"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_tf1w1"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_t0ykd"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_53gup"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_nyh3c"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_swo4g"]
+font = ExtResource("6_yc8th")
+font_size = 18
+outline_size = 8
+
+[sub_resource type="LabelSettings" id="LabelSettings_ysc5c"]
+font = ExtResource("6_yc8th")
+font_size = 18
+outline_size = 8
 
 [node name="Game" type="Node"]
 process_mode = 3
@@ -407,14 +446,129 @@ label_settings = SubResource("LabelSettings_t8dk0")
 horizontal_alignment = 1
 uppercase = true
 
+[node name="GameOverPanel" type="PanelContainer" parent="Hud/Control"]
+visible = false
+custom_minimum_size = Vector2(384, 192)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -192.0
+offset_top = -76.0
+offset_right = 192.0
+offset_bottom = 116.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Hud/Control/GameOverPanel"]
+layout_mode = 2
+theme_override_constants/separation = 64
+alignment = 1
+
+[node name="GameOverLabel" type="Label" parent="Hud/Control/GameOverPanel/VBoxContainer"]
+layout_mode = 2
+text = "game over"
+label_settings = SubResource("LabelSettings_ibiwc")
+horizontal_alignment = 1
+uppercase = true
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Hud/Control/GameOverPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 24
+alignment = 1
+
+[node name="RestartButton" type="Button" parent="Hud/Control/GameOverPanel/VBoxContainer/HBoxContainer" groups=["GameOverButtons"]]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(160, 24)
+layout_mode = 2
+theme_override_styles/focus = SubResource("StyleBoxEmpty_gtx0n")
+theme_override_styles/disabled_mirrored = SubResource("StyleBoxEmpty_ntaj4")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_xb7l0")
+theme_override_styles/hover_pressed_mirrored = SubResource("StyleBoxEmpty_2gqjf")
+theme_override_styles/hover_pressed = SubResource("StyleBoxEmpty_ygq3l")
+theme_override_styles/hover_mirrored = SubResource("StyleBoxEmpty_8op5l")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_pxexp")
+theme_override_styles/pressed_mirrored = SubResource("StyleBoxEmpty_tf1w1")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_t0ykd")
+theme_override_styles/normal_mirrored = SubResource("StyleBoxEmpty_53gup")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_nyh3c")
+
+[node name="RestartLabel" type="Label" parent="Hud/Control/GameOverPanel/VBoxContainer/HBoxContainer/RestartButton"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(160, 0)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -80.0
+offset_top = -8.5
+offset_right = 80.0
+offset_bottom = 8.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "restart"
+label_settings = SubResource("LabelSettings_swo4g")
+horizontal_alignment = 1
+uppercase = true
+
+[node name="BackToMenuButton" type="Button" parent="Hud/Control/GameOverPanel/VBoxContainer/HBoxContainer" groups=["GameOverButtons"]]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(160, 24)
+layout_mode = 2
+theme_override_styles/focus = SubResource("StyleBoxEmpty_gtx0n")
+theme_override_styles/disabled_mirrored = SubResource("StyleBoxEmpty_ntaj4")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_xb7l0")
+theme_override_styles/hover_pressed_mirrored = SubResource("StyleBoxEmpty_2gqjf")
+theme_override_styles/hover_pressed = SubResource("StyleBoxEmpty_ygq3l")
+theme_override_styles/hover_mirrored = SubResource("StyleBoxEmpty_8op5l")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_pxexp")
+theme_override_styles/pressed_mirrored = SubResource("StyleBoxEmpty_tf1w1")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_t0ykd")
+theme_override_styles/normal_mirrored = SubResource("StyleBoxEmpty_53gup")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_nyh3c")
+
+[node name="BackToMenuLabel" type="Label" parent="Hud/Control/GameOverPanel/VBoxContainer/HBoxContainer/BackToMenuButton"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(160, 0)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -80.0
+offset_top = -8.5
+offset_right = 80.0
+offset_bottom = 8.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "main menu"
+label_settings = SubResource("LabelSettings_ysc5c")
+horizontal_alignment = 1
+uppercase = true
+
 [node name="Cursor" type="Sprite2D" parent="Hud"]
 z_index = 5
 texture_filter = 1
 texture = ExtResource("4_foggy")
 
+[node name="HandCursor" type="Sprite2D" parent="Hud"]
+visible = false
+texture_filter = 1
+texture = ExtResource("12_3cai3")
+offset = Vector2(5, 21)
+
+[node name="CursorInner" type="Sprite2D" parent="Hud/HandCursor"]
+texture = ExtResource("13_ytn46")
+offset = Vector2(5, 21)
+
 [connection signal="bullet_fired" from="World/Player" to="World" method="_on_bullet_fired"]
 [connection signal="dash_energy_changed" from="World/Player" to="Hud" method="update_energy"]
-[connection signal="died" from="World/Player" to="World" method="_on_player_died"]
+[connection signal="died" from="World/Player" to="Hud" method="_on_player_died"]
 [connection signal="exploded" from="World/Player" to="World" method="_on_explosion"]
 [connection signal="ghost_spawned" from="World/Player" to="World" method="_on_ghost_spawned"]
 [connection signal="health_changed" from="World/Player" to="Hud" method="update_health"]
@@ -423,3 +577,5 @@ texture = ExtResource("4_foggy")
 [connection signal="max_shield_hp_changed" from="World/Player" to="Hud" method="update_max_shield"]
 [connection signal="shield_hp_changed" from="World/Player" to="Hud" method="update_shield"]
 [connection signal="cards_hidden" from="Hud/Control/UpgradeCardContainer" to="Hud" method="_on_cards_hidden"]
+[connection signal="pressed" from="Hud/Control/GameOverPanel/VBoxContainer/HBoxContainer/RestartButton" to="Hud" method="_on_restart_button_pressed"]
+[connection signal="pressed" from="Hud/Control/GameOverPanel/VBoxContainer/HBoxContainer/BackToMenuButton" to="Hud" method="_on_back_to_menu_button_pressed"]

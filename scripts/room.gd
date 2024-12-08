@@ -334,7 +334,7 @@ func _on_timer_timeout() -> void:
 
 
 func spawn_indicators(coords_array : Array[Vector2i]):	
-	if !is_inside_tree():
+	if !is_inside_tree() or Globals.game_completed:
 		return
 		
 	for i in coords_array.size():
@@ -345,7 +345,7 @@ func spawn_indicators(coords_array : Array[Vector2i]):
 			indicator.tree_exited.connect(spawn_enemies.bind(coords_array))
 
 func spawn_enemies(coords_array : Array[Vector2i]):
-	if !is_inside_tree():
+	if !is_inside_tree() or Globals.game_completed:
 		return
 		
 	for coords : Vector2i in coords_array:			
@@ -457,8 +457,9 @@ func _on_all_keys_collected():
 	place_gate()
 
 func _on_player_died():
+	timer.stop()
 	for enemy in enemies_array:
-		enemy.target = null
+		enemy.disable()
 
 func _on_game_completed():
 	for enemy in enemies_array:

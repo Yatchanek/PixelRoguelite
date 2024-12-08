@@ -20,18 +20,26 @@ var current_palette : int = 0
 var color_palettes : Array[PackedColorArray] = [
 ]
 
+var maze_data : PackedByteArray = []
+var maze_size : int
+
 var player : Player
 var leveled_up : bool = false
 
 var gate_key_coords : Dictionary = {}
-var keys_collected : Array[int] = []
-var keys_returned : Array[int] = []
+var keys_collected : Array[int] = [0, 1, 2, 3, 4, 5, 6, 7, 8]
+var keys_returned : Array[int] = [0, 1, 2, 3, 4, 5, 6, 7, 8]
 
 var game_completed : bool = false
 
 func _ready() -> void:
 	rng = RandomNumberGenerator.new()
+	
 	create_color_palettes()
+	current_palette = Settings.color_palette
+	if current_palette > color_palettes.size() - 1:
+		current_palette = color_palettes.size() - 1
+		Settings.color_palette = current_palette
 
 func new_game():
 	reset()
@@ -72,8 +80,8 @@ func reset():
 	game_completed = false
 	room_grid = {}
 	gate_key_coords = {}
-	keys_collected = []
-	keys_returned = []
+	keys_collected = [0, 1, 2, 3, 4, 5, 6, 7, 8]
+	keys_returned = [0, 1, 2, 3, 4, 5, 6, 7, 8]
 	
 	for i in 9:
 		var coords : Vector2i = get_coords_in_distance_range(Settings.zone_size + Settings.zone_size * i, Settings.zone_size + Settings.zone_size * (i + 1) - 1)

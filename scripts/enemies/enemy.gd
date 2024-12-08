@@ -74,3 +74,12 @@ func explode(dir : Vector2):
 	explosion.initialize(dir, colors)
 	exploded.emit(explosion, global_position)
 	SoundManager.play_effect(SoundManager.Effects.EXPLOSION)
+
+func disable():
+	target = null
+	set_physics_process(false)
+	set_process(false)
+	if has_node("Timer"):
+		$Timer.stop()
+	if has_node("ShootTimer"):
+		$ShootTimer.stop()

@@ -100,7 +100,7 @@ func _ready() -> void:
 	player_ready.connect(Globals._on_player_ready)
 	EventBus.game_completed.connect(_on_game_completed)
 	await get_tree().process_frame
-	self.max_hp = 50
+	self.max_hp = 10
 	self.hp = max_hp
 	self.max_shield_hp = 5
 	self.shield_hp = 0
@@ -129,8 +129,7 @@ func _process(delta: float) -> void:
 		if dash_regen >= dash_regen_speed:
 			dash_energy += 0.1
 			dash_regen -= dash_regen_speed
-		
-	
+
 
 func get_input() -> Vector2:
 	var move_dir : Vector2 = Input.get_vector("left", "right", "forward", "back").normalized()
@@ -209,10 +208,7 @@ func take_damage(amount : int, _dir : Vector2):
 		dead = true
 		$Hitbox/CollisionShape2D.set_deferred("disabled", true)
 		$CollisionShape2D.set_deferred("disabled", true)
-		
-		await get_tree().create_timer(2.0).timeout
-		Globals.reset()
-		get_tree().reload_current_scene()
+		SoundManager.play_effect(SoundManager.Effects.PLAYER_DEATH)
 		
 	else:
 		SoundManager.play_effect(SoundManager.Effects.HIT)
@@ -342,5 +338,3 @@ func _on_game_completed():
 	set_physics_process(false)
 	set_process_unhandled_input(false)
 	legs.play("idle")
-	await get_tree().create_timer(2.0).timeout
-	get_tree().change_scene_to_file("res://scenes/title_screen.tscn")

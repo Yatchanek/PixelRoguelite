@@ -5,7 +5,7 @@ var bordered_button_scene = preload("res://scenes/ui_elements/bordered_button.ts
 @onready var background: ColorRect = $Background/Background
 @onready var options: TabContainer = $UI/Control/MarginContainer/Options
 @onready var animation_player: AnimationPlayer = $AnimationPlayer
-@onready var color_palette: TextureRect = %ColorPalette
+@onready var current_color_palette: TextureRect = %ColorPalette
 @onready var cursor: Sprite2D = $UI/Cursor
 @onready var cursor_inner: Sprite2D = $UI/Cursor/CursorInner
 @onready var color_palettes: PanelContainer = %ColorPalettes
@@ -140,7 +140,7 @@ func set_sliders():
 func apply_color_palette():
 	cursor.self_modulate = Globals.color_palettes[Globals.current_palette][6]
 	cursor_inner.self_modulate = Globals.color_palettes[Globals.current_palette][3]
-	color_palette.texture = Globals.palette_images[Globals.current_palette]
+	current_color_palette.texture = Globals.palette_images[Globals.current_palette]
 	background.color = Globals.color_palettes[Globals.current_palette][7]
 	for label : Label in get_tree().get_nodes_in_group("MainButtonLabels"):
 		label.label_settings.font_color = Globals.color_palettes[Globals.current_palette][3]
@@ -205,6 +205,9 @@ func apply_color_palette():
 
 	$GameDemo.apply_color_palette()
 
+func _process(_delta: float) -> void:
+	cursor.position = get_global_mouse_position()
+
 func create_palette_buttons():
 	for i in Globals.palette_images.size():
 		
@@ -231,44 +234,6 @@ func set_hand_cursor():
 	cursor.offset = Vector2(12, 19)
 	cursor_inner.offset = Vector2(12, 19)
 
-func _process(_delta: float) -> void:
-	cursor.position = get_global_mouse_position()
-
-
-func _on_palette_selected(button : BorderedButton):
-	candidate_color_palette = button.idx
-	for _button : BorderedButton in palette_buttons_container.get_children():
-		if _button != button and _button.active:
-			_button.deactivate()
-
-func _on_interactable_ui_hovered():
-	set_hand_cursor()
-
-func _on_interactable_ui_unhovered():
-	set_arrow_cursor()
-
-func _on_menu_label_hovered(label : Label):
-	label.label_settings.font_color = Globals.color_palettes[Globals.current_palette][2]
-	
-func _on_menu_label_unhovered(label : Label):
-	label.label_settings.font_color = Globals.color_palettes[Globals.current_palette][3]
-
-func _on_button_hovered(button : Button):
-	if button.disabled:
-		return
-	var label : Label = button.get_child(0)
-	label.label_settings.font_color = Globals.color_palettes[Globals.current_palette][6]
-	label.label_settings.outline_color = Globals.color_palettes[Globals.current_palette][2]
-	label.label_settings.outline_size = 12
-	
-func _on_button_unhovered(button : Button):
-	if button.disabled:
-		return
-	var label : Label = button.get_child(0)
-	label.label_settings.font_color = Globals.color_palettes[Globals.current_palette][3]
-	label.label_settings.outline_color = Globals.color_palettes[Globals.current_palette][5]
-	label.label_settings.outline_size = 12
-
 func disable_button(button : Button):
 	button.disabled = true
 	var label : Label = button.get_child(0)
@@ -292,17 +257,67 @@ func enable_buttons():
 		enable_button(button)
 
 
+func _on_palette_selected(button : BorderedButton):
+	candidate_color_palette = button.idx
+	for _button : BorderedButton in palette_buttons_container.get_children():
+		if _button != button and _button.active:
+			_button.deactivate()
+
+func _on_interactable_ui_hovered():
+	SoundManager.play_effect(SoundManager.Effects.MENU_NAVIGATE)
+	set_hand_cursor()
+
+func _on_interactable_ui_unhovered():
+	set_arrow_cursor()
+
+func _on_menu_label_hovered(label : Label):
+	label.label_settings.font_color = Globals.color_palettes[Globals.current_palette][2]
+	
+func _on_menu_label_unhovered(label : Label):
+	label.label_settings.font_color = Globals.color_palettes[Globals.current_palette][3]
+
+func _on_button_hovered(button : Button):
+	if button.disabled:
+		return
+	var label : Label = button.get_child(0)
+	label.label_settings.font_color = Globals.color_palettes[Globals.current_palette][6]
+	label.label_settings.outline_color = Globals.color_palettes[Globals.current_palette][2]
+	label.label_settings.outline_size = 12
+	if button.get_parent().modulate.a > 0.99:
+		SoundManager.play_effect(SoundManager.Effects.MENU_NAVIGATE)
+	
+func _on_button_unhovered(button : Button):
+	if button.disabled:
+		return
+	var label : Label = button.get_child(0)
+	label.label_settings.font_color = Globals.color_palettes[Globals.current_palette][3]
+	label.label_settings.outline_color = Globals.color_palettes[Globals.current_palette][5]
+	label.label_settings.outline_size = 12
+
+
+
+
 func _on_options_pressed() -> void:
+	SoundManager.play_effect(SoundManager.Effects.MENU_SELECT)
 	set_arrow_cursor()
 	disable_buttons()
 	animation_player.play("OpenOptions")
 
 
 func _on_close_options_pressed() -> void:
+	SoundManager.play_effect(SoundManager.Effects.MENU_SELECT)
 	set_arrow_cursor()
-	enable_buttons()
-	animation_player.play_backwards("OpenOptions")
-
+	
+	if color_palettes.scale.x > 0.1:
+		animation_player.play_backwards("OpenPalettes")
+		await animation_player.animation_finished
+		animation_player.play_backwards("OpenOptions")
+		await animation_player.animation_finished
+		enable_buttons()
+	else:
+		animation_player.play_backwards("OpenOptions")
+		await animation_player.animation_finished
+		enable_buttons()
 
 func _on_crt_shader_check_box_toggled(toggled_on: bool) -> void:
 	CrtOverlay.visible = toggled_on
@@ -310,13 +325,14 @@ func _on_crt_shader_check_box_toggled(toggled_on: bool) -> void:
 
 
 func _on_start_game_pressed() -> void:
-	
-	await get_tree().process_frame
+	SoundManager.play_effect(SoundManager.Effects.MENU_START_GAME)
+	await get_tree().create_timer(0.75).timeout
 	get_tree().change_scene_to_file("res://scenes/game.tscn")
 
 
 func _on_apply_palette_pressed() -> void:
 	Globals.current_palette = candidate_color_palette
+	Settings.color_palette = candidate_color_palette
 	animation_player.play_backwards("OpenPalettes")
 	apply_color_palette()
 
@@ -355,3 +371,10 @@ func _on_maze_size_value_changed(value: float) -> void:
 
 func _on_difficulty_value_changed(value: float) -> void:
 	Settings.difficulty = int(value)
+
+
+func _on_quit_pressed() -> void:
+	Settings.save_settings()
+	SoundManager.play_effect(SoundManager.Effects.MENU_SELECT)
+	await get_tree().create_timer(0.4).timeout
+	get_tree().quit()

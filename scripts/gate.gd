@@ -61,4 +61,5 @@ func show_bar(idx : int = 0):
 	show_bar(idx + 1)
 	
 func _on_area_2d_body_entered(_body: Node2D) -> void:
+	SoundManager.play_effect(SoundManager.Effects.GAME_WON)
 	EventBus.game_completed.emit()
