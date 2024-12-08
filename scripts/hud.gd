@@ -39,6 +39,8 @@ func _ready() -> void:
 	EventBus.gate_approached.connect(show_message)
 	EventBus.gate_left.connect(hide_message)
 	EventBus.game_completed.connect(_on_game_completed)
+	EventBus.room_changed.connect(update_room)
+	EventBus.upgrade_time.connect(_on_player_leveled_up)
 
 	for button : Button in get_tree().get_nodes_in_group("GameOverButtons"):
 		button.mouse_entered.connect(_on_button_hovered.bind(button))
@@ -130,7 +132,7 @@ func apply_color_palette():
 
 	minimap.apply_color_palette()
 
-func show_gate_key(idx : int):
+func show_gate_key(idx : int, _coords : Vector2i):
 	keys_container.get_child(idx).self_modulate = Globals.color_palettes[Globals.current_palette][0]
 	
 func show_upgrades():
@@ -142,6 +144,11 @@ func show_message():
 	
 func hide_message():
 	message_label.hide()
+
+func _on_player_leveled_up():
+	get_tree().paused = true
+	await get_tree().create_timer(0.25).timeout
+	show_upgrades()
 
 func _on_game_completed():
 	game_over_label.text = "You won!"

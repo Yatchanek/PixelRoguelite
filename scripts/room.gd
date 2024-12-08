@@ -25,6 +25,7 @@ class_name Room
 @export var indicator_scene : PackedScene
 @export var gate_key_scene : PackedScene
 @export var pickup_scene : PackedScene
+@export var map_pickup_scene : PackedScene
 
 var corners : Array[Vector2] = [
 		Vector2(0, 0),
@@ -115,6 +116,10 @@ func _ready() -> void:
 					spawn_pickup()
 			elif randf() < 0.075:
 				spawn_pickup()
+		
+		if Globals.map_pickup_coords.has(room_data.coords):
+			spawn_map_pickup()
+		
 		else:
 			place_key_collector()
 	
@@ -197,6 +202,25 @@ func get_obstacle_rotation_offset(x : int, y : int) -> int:
 		rotation_offset = Globals.rng.randi() % 4
 	
 	return rotation_offset
+
+func spawn_map_pickup():
+	var map_pickup : Area2D = map_pickup_scene.instantiate()
+	if room_data.map_spawned:
+		map_pickup.position = base_pos + room_data.map_coords * 64
+	else:
+		var coords : Vector2i
+		var coords_accepted : bool = false
+		while !coords_accepted:
+			coords = Utils.get_random_coords()
+			if !permanently_occupied.has(coords):
+				coords_accepted = true
+				
+		map_pickup.position = base_pos + coords * 64
+		room_data.map_coords = coords
+		permanently_occupied.append(room_data.map_coords)
+		room_data.map_spawned = true
+		
+	call_deferred("add_child", map_pickup)
 
 func spawn_pickup():
 	var pickup : Pickup = pickup_scene.instantiate()

@@ -8,3 +8,4 @@ signal gate_key_collected(number : int)
 signal gate_approached
 signal gate_left
 signal game_completed
+signal map_found

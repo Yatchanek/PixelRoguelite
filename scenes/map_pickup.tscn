@@ -1,0 +1,23 @@
+[gd_scene load_steps=4 format=3 uid="uid://ytpyhcsmgrab"]
+
+[ext_resource type="Script" path="res://scripts/map_pickup.gd" id="1_kspy5"]
+[ext_resource type="Texture2D" uid="uid://b43ugilqwmtij" path="res://graphics/map.png" id="2_fj442"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_y5v04"]
+radius = 8.0
+
+[node name="Pickup" type="Area2D"]
+texture_filter = 1
+collision_layer = 0
+monitorable = false
+script = ExtResource("1_kspy5")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_y5v04")
+
+[node name="Sprite" type="Sprite2D" parent="."]
+texture = ExtResource("2_fj442")
+region_enabled = true
+region_rect = Rect2(0, 0, 16, 16)
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

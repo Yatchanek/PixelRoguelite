@@ -35,15 +35,19 @@ signal player_health_changed(value : int)
 ## Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	room_pos = (get_viewport_rect().size - Vector2(Globals.PLAYFIELD_WIDTH, Globals.PLAYFIELD_HEIGHT)) * 0.5 + Vector2.DOWN * 20
-	change_room(Vector2i.ZERO, 0)
+	
 	apply_color_palette()
 	EventBus.upgrade_card_pressed.connect(_on_upgrade_selected)
+	Globals.keys_placed.connect(start_game)
 	player.position = get_viewport_rect().size * 0.5
+	
+func start_game():
 	create_maze_data()
 	cull_rooms()
+	change_room(Vector2i.ZERO, 0)
 
 func create_maze_data():
-	Globals.maze_size = Settings.zone_size * 2 * 9 + 1
+	Globals.maze_size = Settings.zone_size * (Globals.max_layer + 1) * 2 + 3
 	var unvisited : Array[Vector2i] = []
 	var stack : Array[Vector2i] = []
 	

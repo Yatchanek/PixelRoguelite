@@ -105,6 +105,7 @@ size_flags_horizontal = 8
 size_flags_vertical = 4
 mouse_filter = 2
 script = ExtResource("1_w81rf")
+map_scale = null
 
 [node name="MainVbox" type="VBoxContainer" parent="MarginContainer/Minimap"]
 z_index = -1

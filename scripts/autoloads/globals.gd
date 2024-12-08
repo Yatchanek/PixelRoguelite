@@ -27,10 +27,16 @@ var player : Player
 var leveled_up : bool = false
 
 var gate_key_coords : Dictionary = {}
-var keys_collected : Array[int] = [0, 1, 2, 3, 4, 5, 6, 7, 8]
-var keys_returned : Array[int] = [0, 1, 2, 3, 4, 5, 6, 7, 8]
+var keys_collected : Array[int] = []
+var keys_returned : Array[int] = []
+
+var map_pickup_coords : Array[Vector2i] = []
 
 var game_completed : bool = false
+
+var max_layer : int
+
+signal keys_placed
 
 func _ready() -> void:
 	rng = RandomNumberGenerator.new()
@@ -40,10 +46,9 @@ func _ready() -> void:
 	if current_palette > color_palettes.size() - 1:
 		current_palette = color_palettes.size() - 1
 		Settings.color_palette = current_palette
-
+	
 func new_game():
 	reset()
-
 	
 func create_color_palettes():
 	var files : PackedStringArray = DirAccess.get_files_at("res://graphics/color_palettes")
@@ -66,11 +71,28 @@ func adjust_missile_palette():
 		
 	missile_material.color_initial_ramp.gradient = gradient
 
-func get_coords_in_distance_range(min_dist : int, max_dist : int) -> Vector2i:
-	return Vector2i(
-		randi_range(min_dist, max_dist) * pow(-1, randi() % 2),
-		randi_range(min_dist, max_dist) * pow(-1, randi() % 2),
-	)
+func get_coords_in_distance_range(min_dist : int, max_dist : int, quart : int = 1) -> Vector2i:
+	var coords : Vector2i
+	if randf() < 0.5:
+		var side : int = 1
+		if quart >= 3:
+			side = -1
+		coords.x = randi_range(min_dist, max_dist) * side
+		if quart == 1 or quart == 4:
+			coords.y = -randi_range(min_dist, max_dist)
+		else:
+			coords.y = randi_range(min_dist, max_dist)
+	else:
+		var side : int = 1
+		if quart == 1 or quart == 4:
+			side = -1	
+		coords.y = randi_range(min_dist, max_dist) * side
+		if quart < 3:
+			coords.x = randi_range(min_dist, max_dist)
+		else:
+			coords.x = -randi_range(min_dist, max_dist)	
+	
+	return coords
 		
 func _on_player_ready(_player : Player):
 	player = _player
@@ -80,9 +102,41 @@ func reset():
 	game_completed = false
 	room_grid = {}
 	gate_key_coords = {}
-	keys_collected = [0, 1, 2, 3, 4, 5, 6, 7, 8]
-	keys_returned = [0, 1, 2, 3, 4, 5, 6, 7, 8]
+	keys_collected = []
+	keys_returned = []
+	place_keys()
+
+func place_maps():
+	var quart : int = 1
+	for i in 4:
+		var coords : Vector2i
+		var min_dist : int = max(4, Settings.zone_size)
+		var max_dist : int = min(Settings.zone_size * (max_layer + 1) - 1, 10)
+		coords = get_coords_in_distance_range(min_dist, max_dist, quart)
+		
+		quart += 1
 	
+func place_keys():
+	max_layer = 0
+	var max_keys_in_layer : int = 2
+	var quart : int = 1
 	for i in 9:
-		var coords : Vector2i = get_coords_in_distance_range(Settings.zone_size + Settings.zone_size * i, Settings.zone_size + Settings.zone_size * (i + 1) - 1)
+		if i > 0 and i % max_keys_in_layer == 0:
+			max_layer += 1
+		var coords : Vector2i
+		var accepted : bool = false
+		while !accepted:
+			var is_ok : bool = true
+			coords = get_coords_in_distance_range(2 + Settings.zone_size * max_layer, 2 + Settings.zone_size * (max_layer + 1) - 1, quart)
+			#for placed_coords : Vector2i in gate_key_coords.keys():
+				#if Utils.get_manhattan_distance(placed_coords, coords) < 2:
+					#is_ok = false
+					#break
+					
+			if is_ok:
+				accepted = true
+				
 		gate_key_coords[coords] = i
+		quart = wrapi(quart + 1, 1, 5)
+	
+	keys_placed.emit()

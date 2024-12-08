@@ -17,6 +17,8 @@ var pickup_spawned : bool = false
 var pickup_collect_time : int = 0
 var pickup_coords : Vector2i
 var pickup_type : int = -1
+var map_spawned : bool = false
+var map_coords : Vector2i
 
 func print_data():
 	prints(

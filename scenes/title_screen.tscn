@@ -8,7 +8,6 @@
 [ext_resource type="Texture2D" uid="uid://1nqasxfkf5b6" path="res://graphics/button_checked.png" id="6_e45ct"]
 [ext_resource type="Texture2D" uid="uid://beajwkgtma0om" path="res://graphics/button_unchecked.png" id="7_3kbh8"]
 [ext_resource type="Texture2D" uid="uid://dvbgse6rvr74r" path="res://graphics/grabber.png" id="8_d2vhc"]
-[ext_resource type="Script" path="res://scripts/wrapping_scroll_container.gd" id="8_w7r0r"]
 [ext_resource type="Texture2D" uid="uid://t8ckmrjn0o6v" path="res://graphics/pointing_hand_small_outer.png" id="10_jdfys"]
 [ext_resource type="Texture2D" uid="uid://0ssdwvll1a56" path="res://graphics/pointing_hand_small_inner.png" id="11_py0tw"]
 [ext_resource type="Material" uid="uid://bue4xq2qhgq08" path="res://explosion.tres" id="12_swn47"]
@@ -104,6 +103,8 @@ grow_begin = 0.0
 bg_color = Color(0.762404, 0.762404, 0.762403, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_28c4v"]
+
+[sub_resource type="Theme" id="Theme_km0lg"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_30d6v"]
 
@@ -534,7 +535,7 @@ layout_mode = 2
 mouse_filter = 2
 theme_override_fonts/font = ExtResource("2_8u3cf")
 theme_override_font_sizes/font_size = 12
-current_tab = 2
+current_tab = 1
 tab_focus_mode = 0
 
 [node name="GAMEPLAY" type="PanelContainer" parent="UI/Control/MarginContainer/Options"]
@@ -607,7 +608,6 @@ allow_greater = true
 allow_lesser = true
 
 [node name="GRAPHICS" type="PanelContainer" parent="UI/Control/MarginContainer/Options"]
-visible = false
 layout_mode = 2
 mouse_filter = 2
 metadata/_tab_index = 1
@@ -848,6 +848,7 @@ allow_greater = true
 allow_lesser = true
 
 [node name="SOUND" type="PanelContainer" parent="UI/Control/MarginContainer/Options"]
+visible = false
 layout_mode = 2
 metadata/_tab_index = 2
 
@@ -962,7 +963,6 @@ offset_right = 128.0
 offset_bottom = 128.0
 grow_horizontal = 2
 grow_vertical = 2
-scale = Vector2(1e-05, 1e-05)
 pivot_offset = Vector2(128, 124)
 size_flags_horizontal = 4
 size_flags_vertical = 4
@@ -985,8 +985,8 @@ theme_override_constants/separation = 16
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 176)
 layout_mode = 2
+theme = SubResource("Theme_km0lg")
 horizontal_scroll_mode = 0
-script = ExtResource("8_w7r0r")
 
 [node name="PaletteButtonsContainer" type="VBoxContainer" parent="UI/Control/ColorPalettes/MarginContainer/VBoxContainer/WrappingScrollContainer"]
 unique_name_in_owner = true
@@ -1093,6 +1093,7 @@ speed_scale = 4.0
 layer = 100
 
 [node name="Veil" type="ColorRect" parent="CanvasLayer"]
+visible = false
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0

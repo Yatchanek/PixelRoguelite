@@ -172,6 +172,24 @@ func apply_color_palette():
 	
 	stylebox = StyleBoxFlat.new()
 	stylebox.bg_color = Globals.color_palettes[Globals.current_palette][4]
+	wrapping_scroll_container.get_node("_v_scroll").add_theme_stylebox_override("grabber", stylebox)
+	
+	stylebox = StyleBoxFlat.new()
+	stylebox.bg_color = Globals.color_palettes[Globals.current_palette][4]
+	wrapping_scroll_container.get_node("_v_scroll").add_theme_stylebox_override("grabber_highlight", stylebox)
+
+	stylebox = StyleBoxFlat.new()
+	stylebox.bg_color = Globals.color_palettes[Globals.current_palette][4]
+	wrapping_scroll_container.get_node("_v_scroll").add_theme_stylebox_override("grabber_pressed", stylebox)
+			
+	stylebox = StyleBoxFlat.new()
+	stylebox.bg_color = Globals.color_palettes[Globals.current_palette][1]
+	stylebox.content_margin_left = 4
+	stylebox.content_margin_right = 4
+	wrapping_scroll_container.get_node("_v_scroll").add_theme_stylebox_override("scroll", stylebox)
+	
+	stylebox = StyleBoxFlat.new()
+	stylebox.bg_color = Globals.color_palettes[Globals.current_palette][4]
 	stylebox.expand_margin_right = 8
 	stylebox.border_width_right = 16
 	stylebox.expand_margin_left = 8
@@ -219,8 +237,8 @@ func create_palette_buttons():
 		button.add_to_group("InteractableUI")
 		palette_buttons_container.add_child(button)
 	
-	await get_tree().process_frame
-	wrapping_scroll_container.configure()
+	#await get_tree().process_frame
+	#wrapping_scroll_container.configure()
 
 func set_arrow_cursor():
 	cursor.texture = load("res://graphics/arrow_cursor_small_outer.png")
