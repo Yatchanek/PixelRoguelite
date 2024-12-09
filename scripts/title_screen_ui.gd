@@ -81,7 +81,7 @@ func _ready() -> void:
 	var tw : Tween = create_tween()
 	tw.tween_property(veil, "modulate:a", 0.0, 1.5)
 	await tw.finished
-	
+	SoundManager.play_music(SoundManager.Music.TITLE_SCREEN_MUSIC)
 	animate_title()
 
 func animate_title():
@@ -92,7 +92,6 @@ func animate_title():
 	tw.set_parallel()
 	
 	for i in letter_array.size():
-		#letter_array[i].label_settings = letter_array[i].label_settings.duplicate()
 		tw.tween_property(letter_array[i], "modulate:a", 1.0, 0.15).set_delay(1.0 + i * 0.075)
 
 	await tw.finished
@@ -236,9 +235,7 @@ func create_palette_buttons():
 		button.idx = i
 		button.add_to_group("InteractableUI")
 		palette_buttons_container.add_child(button)
-	
-	#await get_tree().process_frame
-	#wrapping_scroll_container.configure()
+
 
 func set_arrow_cursor():
 	cursor.texture = load("res://graphics/arrow_cursor_small_outer.png")
@@ -301,7 +298,7 @@ func _on_button_hovered(button : Button):
 	label.label_settings.font_color = Globals.color_palettes[Globals.current_palette][6]
 	label.label_settings.outline_color = Globals.color_palettes[Globals.current_palette][2]
 	label.label_settings.outline_size = 12
-	if button.get_parent().modulate.a > 0.99:
+	if menu.modulate.a > 0.999:
 		SoundManager.play_effect(SoundManager.Effects.MENU_NAVIGATE)
 	
 func _on_button_unhovered(button : Button):
@@ -323,6 +320,7 @@ func _on_options_pressed() -> void:
 
 
 func _on_close_options_pressed() -> void:
+	Settings.save_settings()
 	SoundManager.play_effect(SoundManager.Effects.MENU_SELECT)
 	set_arrow_cursor()
 	
@@ -344,6 +342,7 @@ func _on_crt_shader_check_box_toggled(toggled_on: bool) -> void:
 
 func _on_start_game_pressed() -> void:
 	SoundManager.play_effect(SoundManager.Effects.MENU_START_GAME)
+	SoundManager.switch_music(SoundManager.Music.MAIN_MUSIC)
 	await get_tree().create_timer(0.75).timeout
 	get_tree().change_scene_to_file("res://scenes/game.tscn")
 
@@ -392,7 +391,6 @@ func _on_difficulty_value_changed(value: float) -> void:
 
 
 func _on_quit_pressed() -> void:
-	Settings.save_settings()
 	SoundManager.play_effect(SoundManager.Effects.MENU_SELECT)
 	await get_tree().create_timer(0.4).timeout
 	get_tree().quit()

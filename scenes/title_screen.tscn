@@ -316,6 +316,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Quit" type="Button" parent="UI/Control/Menu" groups=["InteractableUI", "MainButtons"]]
+visible = false
 custom_minimum_size = Vector2(256, 48)
 layout_mode = 2
 mouse_default_cursor_shape = 2
@@ -963,6 +964,7 @@ offset_right = 128.0
 offset_bottom = 128.0
 grow_horizontal = 2
 grow_vertical = 2
+scale = Vector2(1e-05, 1e-05)
 pivot_offset = Vector2(128, 124)
 size_flags_horizontal = 4
 size_flags_vertical = 4
@@ -1093,7 +1095,6 @@ speed_scale = 4.0
 layer = 100
 
 [node name="Veil" type="ColorRect" parent="CanvasLayer"]
-visible = false
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0

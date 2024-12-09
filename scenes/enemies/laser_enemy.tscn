@@ -25,12 +25,14 @@ collision_layer = 2
 collision_mask = 6
 motion_mode = 1
 script = ExtResource("1_ro0de")
-exp_value = 60
+exp_value = 50
 power = 2
 base_fire_interval = 2.0
 min_fire_interval = 1.0
 base_hp = 3
 max_hp = 9
+base_speed = 96
+max_speed = 192
 speed_per_level = 16
 base_power = 3
 

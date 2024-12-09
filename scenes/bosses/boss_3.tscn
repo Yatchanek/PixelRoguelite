@@ -53,14 +53,14 @@ power = 3
 base_fire_interval = 0.25
 fire_interval_per_level = 0.025
 min_fire_interval = 0.15
-base_hp = 80
+base_hp = 60
 max_hp = 120
 hp_per_level = 10
 base_speed = 192
-max_speed = 256
+max_speed = 288
 speed_per_level = 16
 base_power = 3
-max_power = 8
+max_power = 15
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_48w8c")

@@ -45,7 +45,7 @@ func _on_mouse_entered() -> void:
 	add_theme_stylebox_override("panel", stylebox)
 	
 	desc_label.label_settings.font_color = Globals.color_palettes[Globals.current_palette][2] 
-
+	desc_label.label_settings.outline_color = Globals.color_palettes[Globals.current_palette][5] 
 
 func _on_mouse_exited() -> void:
 	apply_color_palette()
@@ -57,5 +57,6 @@ func _on_gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
 		if event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 			card_pressed.emit()
+			SoundManager.play_effect(SoundManager.Effects.UPGRADE)
 			EventBus.upgrade_card_pressed.emit(upgrade_equipped)
 			disable()

@@ -25,17 +25,18 @@ texture_filter = 1
 collision_layer = 2
 collision_mask = 4
 script = ExtResource("1_al6d6")
+exp_value = 280
 base_fire_interval = 0.2
 fire_interval_per_level = 0.05
-base_hp = 60
-max_hp = 120
-hp_per_level = 15
-base_speed = 128
-max_speed = 224
+base_hp = 70
+max_hp = 130
+hp_per_level = 20
+base_speed = 160
+max_speed = 320
 speed_per_level = 32
-base_power = 3
+base_power = 5
 power_per_level = 2.0
-max_power = 10
+max_power = 20
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_48w8c")

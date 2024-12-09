@@ -10,12 +10,14 @@
 resource_local_to_scene = true
 font = ExtResource("4_myq5a")
 font_size = 12
+outline_size = 4
+outline_color = Color(1, 0.309804, 1, 1)
 
 [node name="UpgradeCard" type="TextureRect"]
 process_mode = 3
 self_modulate = Color(0, 0, 0, 1)
 texture_filter = 1
-custom_minimum_size = Vector2(128, 176)
+custom_minimum_size = Vector2(132, 176)
 offset_right = 128.0
 offset_bottom = 176.0
 pivot_offset = Vector2(64, 88)
@@ -25,7 +27,7 @@ texture = ExtResource("1_catbv")
 script = ExtResource("1_iqs6v")
 
 [node name="Border" type="TextureRect" parent="."]
-custom_minimum_size = Vector2(128, 176)
+custom_minimum_size = Vector2(132, 176)
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0

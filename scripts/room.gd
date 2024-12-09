@@ -116,16 +116,18 @@ func _ready() -> void:
 					spawn_pickup()
 			elif randf() < 0.075:
 				spawn_pickup()
-		
-		if Globals.map_pickup_coords.has(room_data.coords):
-			spawn_map_pickup()
+				
+			if Globals.map_pickup_coords.has(room_data.coords):
+				spawn_map_pickup()
 		
 		else:
 			place_key_collector()
+		
 	
 	elif !room_data.boss_defeated:
 		activate_doors()
 		spawn_boss()
+		SoundManager.switch_music(SoundManager.Music.BATTLE_MUSIC)
 	
 
 	
@@ -409,7 +411,7 @@ func spawn_boss():
 	await get_tree().create_timer(enemy_spawn_interval).timeout
 	
 	if is_inside_tree():
-		var boss : Boss = bosses[5].instantiate() as Boss#bosses[Globals.gate_key_coords[room_data.coords]].instantiate() as Boss
+		var boss : Boss = bosses[Globals.gate_key_coords[room_data.coords]].instantiate() as Boss
 		
 		var accepted : bool = false
 		var candidate_coords : Vector2i
@@ -460,7 +462,8 @@ func _on_missile_fired(missile: Node2D, pos: Vector2) -> void:
 	call_deferred("add_child", missile)
 
 func _on_boss_destroyed(enemy : Enemy):
-	enemy_destroyed.emit(200)
+	SoundManager.switch_music(SoundManager.Music.MAIN_MUSIC)
+	#enemy_destroyed.emit(200)
 	room_data.boss_defeated = true
 	place_gate_key(enemy.position)
 	deactivate_doors()

@@ -100,7 +100,7 @@ func _ready() -> void:
 	player_ready.connect(Globals._on_player_ready)
 	EventBus.game_completed.connect(_on_game_completed)
 	await get_tree().process_frame
-	self.max_hp = 10
+	self.max_hp = 20
 	self.hp = max_hp
 	self.max_shield_hp = 5
 	self.shield_hp = 0
@@ -241,7 +241,7 @@ func gain_exp(value):
 	if experience >= exp_to_next_level:
 		Globals.leveled_up = true
 		level += 1
-		exp_to_next_level += level * 300
+		exp_to_next_level += 300 + 150 * level
 
 func deactivate_collision():
 	$CollisionShape2D.set_deferred("disabled", true)

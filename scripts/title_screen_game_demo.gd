@@ -34,6 +34,8 @@ func start():
 	spawn_dummies(10)
 	
 func spawn_dummies(amount : int):
+	if !is_inside_tree():
+		return
 	if amount == 0:
 		battle_timer.start(randf_range(10, 20))
 		return

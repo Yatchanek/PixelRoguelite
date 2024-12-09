@@ -25,16 +25,16 @@ texture_filter = 1
 collision_layer = 2
 collision_mask = 4
 script = ExtResource("1_ui52t")
-exp_value = 100
+exp_value = 215
 min_fire_interval = 0.5
 base_hp = 60
 max_hp = 160
 hp_per_level = 15
 base_speed = 112
-max_speed = 256
+max_speed = 288
 speed_per_level = 24
-base_power = 3
-max_power = 10
+base_power = 4
+max_power = 15
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 visible = false
@@ -45,16 +45,16 @@ wait_time = 0.1
 one_shot = true
 
 [node name="Base" type="Sprite2D" parent="."]
-self_modulate = Color(41.081, 0.248, 0.234, 1)
+modulate = Color(1, 1, 1, 0)
 texture_filter = 1
 texture = ExtResource("2_3esnr")
 
 [node name="Middle" type="Sprite2D" parent="."]
-self_modulate = Color(0.0388404, 0.548404, 0.031644, 1)
+modulate = Color(1, 1, 1, 0)
 texture = ExtResource("3_kyd4l")
 
 [node name="TurretPivot" type="Marker2D" parent="."]
-self_modulate = Color(0.337812, 0.526588, 0.948227, 1)
+modulate = Color(1, 1, 1, 0)
 
 [node name="Muzzle1" type="Marker2D" parent="TurretPivot" groups=["Muzzles"]]
 position = Vector2(25, 0)

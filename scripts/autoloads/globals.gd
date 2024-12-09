@@ -79,18 +79,18 @@ func get_coords_in_distance_range(min_dist : int, max_dist : int, quart : int = 
 			side = -1
 		coords.x = randi_range(min_dist, max_dist) * side
 		if quart == 1 or quart == 4:
-			coords.y = -randi_range(min_dist, max_dist)
+			coords.y = -randi_range(0, max_dist)
 		else:
-			coords.y = randi_range(min_dist, max_dist)
+			coords.y = randi_range(1, max_dist)
 	else:
 		var side : int = 1
 		if quart == 1 or quart == 4:
 			side = -1	
 		coords.y = randi_range(min_dist, max_dist) * side
 		if quart < 3:
-			coords.x = randi_range(min_dist, max_dist)
+			coords.x = randi_range(0, max_dist)
 		else:
-			coords.x = -randi_range(min_dist, max_dist)	
+			coords.x = -randi_range(1, max_dist)	
 	
 	return coords
 		
@@ -105,6 +105,7 @@ func reset():
 	keys_collected = []
 	keys_returned = []
 	place_keys()
+	place_maps()
 
 func place_maps():
 	var quart : int = 1
@@ -112,7 +113,11 @@ func place_maps():
 		var coords : Vector2i
 		var min_dist : int = max(4, Settings.zone_size)
 		var max_dist : int = min(Settings.zone_size * (max_layer + 1) - 1, 10)
-		coords = get_coords_in_distance_range(min_dist, max_dist, quart)
+		var accepted : bool = false
+		while !accepted:
+			coords = get_coords_in_distance_range(min_dist, max_dist, quart)
+			if !gate_key_coords.has(coords):
+				accepted = true
 		
 		quart += 1
 	
@@ -138,5 +143,5 @@ func place_keys():
 				
 		gate_key_coords[coords] = i
 		quart = wrapi(quart + 1, 1, 5)
-	
+
 	keys_placed.emit()
