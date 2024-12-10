@@ -35,15 +35,19 @@ signal player_health_changed(value : int)
 ## Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	room_pos = (get_viewport_rect().size - Vector2(Globals.PLAYFIELD_WIDTH, Globals.PLAYFIELD_HEIGHT)) * 0.5 + Vector2.DOWN * 20
-	
+	SoundManager.switch_music(SoundManager.Music.MAIN_MUSIC, true)
 	apply_color_palette()
 	EventBus.upgrade_card_pressed.connect(_on_upgrade_selected)
 	Globals.keys_placed.connect(start_game)
 	player.position = get_viewport_rect().size * 0.5
+	if !SceneChanger.is_connected("scene_changed", _on_scene_changed):
+		SceneChanger.scene_changed.connect(_on_scene_changed)	
 	
 func start_game():
 	create_maze_data()
 	cull_rooms()
+
+func _on_scene_changed():
 	change_room(Vector2i.ZERO, 0)
 
 func create_maze_data():
@@ -77,7 +81,6 @@ func create_maze_data():
 			current = stack.pop_back()
 			
 func cull_rooms():
-	var culled : Array[Vector2i] = []
 	for i in Globals.maze_size * Globals.maze_size * cull_percentage:
 		var coords : Vector2i = Vector2i(randi_range(0, Globals.maze_size - 1), randi_range(0, Globals.maze_size - 1))
 		var dirs : Array = exit_mappings.keys().duplicate()

@@ -16,7 +16,6 @@ func _ready() -> void:
 	
 	
 	check_for_keys_at_load()
-
 	
 func check_for_keys_at_load():
 	for key : int in Globals.keys_returned:
@@ -32,6 +31,7 @@ func check_for_keys():
 			Globals.keys_returned.append(key)
 	
 	if Globals.keys_returned.size() == 9:
+		SoundManager.switch_music(SoundManager.Music.GAME_WON_MUSIC)
 		all_keys_collected.emit()
 		$Area2D/CollisionShape2D.set_deferred("disabled", false)
 	else:

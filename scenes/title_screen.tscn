@@ -1,4 +1,4 @@
-[gd_scene load_steps=66 format=3 uid="uid://blgcf5t6qthui"]
+[gd_scene load_steps=73 format=3 uid="uid://blgcf5t6qthui"]
 
 [ext_resource type="FontFile" uid="uid://bs4wn8lq821l5" path="res://fonts/NotJamChunkySans.ttf" id="2_8u3cf"]
 [ext_resource type="Script" path="res://scripts/title_screen_ui.gd" id="2_x1msa"]
@@ -9,6 +9,7 @@
 [ext_resource type="Texture2D" uid="uid://beajwkgtma0om" path="res://graphics/button_unchecked.png" id="7_3kbh8"]
 [ext_resource type="Texture2D" uid="uid://dvbgse6rvr74r" path="res://graphics/grabber.png" id="8_d2vhc"]
 [ext_resource type="Texture2D" uid="uid://t8ckmrjn0o6v" path="res://graphics/pointing_hand_small_outer.png" id="10_jdfys"]
+[ext_resource type="FontFile" uid="uid://wnb2movo6eli" path="res://fonts/m6x11 Daniel Linssen.ttf" id="11_exp4f"]
 [ext_resource type="Texture2D" uid="uid://0ssdwvll1a56" path="res://graphics/pointing_hand_small_inner.png" id="11_py0tw"]
 [ext_resource type="Material" uid="uid://bue4xq2qhgq08" path="res://explosion.tres" id="12_swn47"]
 [ext_resource type="Material" uid="uid://b41m7nd51ster" path="res://directional_explosion.tres" id="13_6b7lp"]
@@ -136,6 +137,28 @@ font_size = 12
 font = ExtResource("2_8u3cf")
 font_size = 12
 
+[sub_resource type="LabelSettings" id="LabelSettings_mnspl"]
+font = ExtResource("2_8u3cf")
+font_size = 30
+outline_size = 8
+
+[sub_resource type="LabelSettings" id="LabelSettings_8wf3n"]
+font = ExtResource("2_8u3cf")
+font_size = 18
+
+[sub_resource type="LabelSettings" id="LabelSettings_17ucc"]
+font = ExtResource("2_8u3cf")
+font_size = 12
+
+[sub_resource type="LabelSettings" id="LabelSettings_12qok"]
+font = ExtResource("11_exp4f")
+
+[sub_resource type="LabelSettings" id="LabelSettings_pwsdo"]
+font = ExtResource("2_8u3cf")
+font_size = 12
+outline_size = 8
+outline_color = Color(0.169245, 0.169245, 0.169245, 1)
+
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_kswp7"]
 
 [sub_resource type="Animation" id="Animation_spklm"]
@@ -185,8 +208,25 @@ tracks/0/keys = {
 "values": [Vector2(1e-05, 1e-05)]
 }
 
+[sub_resource type="Animation" id="Animation_jlt6s"]
+resource_name = "OpenCredits"
+step = 0.1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("UI/Control/Credits:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [Vector2(1e-05, 1e-05), Vector2(0.1, 0.1), Vector2(0.2, 0.2), Vector2(0.3, 0.3), Vector2(0.4, 0.4), Vector2(0.5, 0.5), Vector2(0.6, 0.6), Vector2(0.7, 0.7), Vector2(0.8, 0.8), Vector2(0.9, 0.9), Vector2(1, 1)]
+}
+
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_brsjj"]
 _data = {
+"OpenCredits": SubResource("Animation_jlt6s"),
 "OpenOptions": SubResource("Animation_spklm"),
 "OpenPalettes": SubResource("Animation_dhjma"),
 "RESET": SubResource("Animation_vaefi")
@@ -1067,6 +1107,184 @@ horizontal_alignment = 1
 vertical_alignment = 1
 uppercase = true
 
+[node name="Credits" type="PanelContainer" parent="UI/Control"]
+custom_minimum_size = Vector2(554, 320)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -277.0
+offset_top = -160.0
+offset_right = 277.0
+offset_bottom = 160.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1e-05, 1e-05)
+pivot_offset = Vector2(277, 160)
+
+[node name="MarginContainer" type="MarginContainer" parent="UI/Control/Credits"]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/Control/Credits/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 24
+
+[node name="CreditsLabel" type="Label" parent="UI/Control/Credits/MarginContainer/VBoxContainer" groups=["MenuLabels"]]
+unique_name_in_owner = true
+layout_mode = 2
+text = "credits"
+label_settings = SubResource("LabelSettings_mnspl")
+horizontal_alignment = 1
+uppercase = true
+
+[node name="CreditsScrollContainer" type="ScrollContainer" parent="UI/Control/Credits/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="UI/Control/Credits/MarginContainer/VBoxContainer/CreditsScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 24
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/Control/Credits/MarginContainer/VBoxContainer/CreditsScrollContainer/VBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 12
+
+[node name="MainCredit" type="Label" parent="UI/Control/Credits/MarginContainer/VBoxContainer/CreditsScrollContainer/VBoxContainer2/VBoxContainer" groups=["MenuLabels"]]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+text = "The last mazewalker
+(c) 2024 by yatchan"
+label_settings = SubResource("LabelSettings_8wf3n")
+uppercase = true
+
+[node name="Artwork" type="Label" parent="UI/Control/Credits/MarginContainer/VBoxContainer/CreditsScrollContainer/VBoxContainer2/VBoxContainer" groups=["MenuLabels"]]
+layout_mode = 2
+text = "artwork by yatchan"
+label_settings = SubResource("LabelSettings_17ucc")
+horizontal_alignment = 1
+uppercase = true
+
+[node name="Sounds" type="Label" parent="UI/Control/Credits/MarginContainer/VBoxContainer/CreditsScrollContainer/VBoxContainer2/VBoxContainer" groups=["MenuLabels"]]
+layout_mode = 2
+text = "sounds by juhani junkala & 
+little robot sound factory"
+label_settings = SubResource("LabelSettings_17ucc")
+horizontal_alignment = 1
+uppercase = true
+
+[node name="Music" type="Label" parent="UI/Control/Credits/MarginContainer/VBoxContainer/CreditsScrollContainer/VBoxContainer2/VBoxContainer" groups=["MenuLabels"]]
+layout_mode = 2
+text = "music by sampixelz"
+label_settings = SubResource("LabelSettings_17ucc")
+horizontal_alignment = 1
+uppercase = true
+
+[node name="Fonts" type="Label" parent="UI/Control/Credits/MarginContainer/VBoxContainer/CreditsScrollContainer/VBoxContainer2/VBoxContainer" groups=["MenuLabels"]]
+layout_mode = 2
+text = "fonts by daniel linssen and not jam"
+label_settings = SubResource("LabelSettings_17ucc")
+horizontal_alignment = 1
+uppercase = true
+
+[node name="LicensesLabel" type="Label" parent="UI/Control/Credits/MarginContainer/VBoxContainer/CreditsScrollContainer/VBoxContainer2" groups=["MenuLabels"]]
+unique_name_in_owner = true
+layout_mode = 2
+text = "licenses"
+label_settings = SubResource("LabelSettings_mnspl")
+horizontal_alignment = 1
+uppercase = true
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="UI/Control/Credits/MarginContainer/VBoxContainer/CreditsScrollContainer/VBoxContainer2"]
+layout_mode = 2
+
+[node name="GodotLicense" type="Label" parent="UI/Control/Credits/MarginContainer/VBoxContainer/CreditsScrollContainer/VBoxContainer2/VBoxContainer2" groups=["MenuLabels"]]
+unique_name_in_owner = true
+layout_mode = 2
+text = "This game uses Godot Engine, available under the following license:
+
+Copyright (c) 2014-2024 Godot Engine contributors.
+Copyright (c) 2007-2014 Juan Linietsky, Ariel Manzur.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the \"Software\"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE."
+label_settings = SubResource("LabelSettings_12qok")
+
+[node name="CloseCredits" type="TextureButton" parent="UI/Control/Credits" groups=["InteractableUI"]]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 0
+focus_mode = 0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("3_u2ysa")
+texture_pressed = ExtResource("3_u2ysa")
+texture_hover = ExtResource("3_u2ysa")
+
+[node name="CreditsButton" type="Button" parent="UI/Control" groups=["InteractableUI", "MainButtons"]]
+unique_name_in_owner = true
+visible = false
+modulate = Color(1, 1, 1, 0)
+custom_minimum_size = Vector2(96, 24)
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -24.0
+offset_right = 96.0
+grow_vertical = 0
+mouse_default_cursor_shape = 2
+theme_override_styles/focus = SubResource("StyleBoxEmpty_t7wdc")
+theme_override_styles/disabled_mirrored = SubResource("StyleBoxEmpty_8fgp0")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_iyahn")
+theme_override_styles/hover_pressed_mirrored = SubResource("StyleBoxEmpty_mlaoo")
+theme_override_styles/hover_pressed = SubResource("StyleBoxEmpty_fscce")
+theme_override_styles/hover_mirrored = SubResource("StyleBoxEmpty_lohuj")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_r1xic")
+theme_override_styles/pressed_mirrored = SubResource("StyleBoxEmpty_rpuf2")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_bkxkg")
+theme_override_styles/normal_mirrored = SubResource("StyleBoxEmpty_3st6p")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_jh6wt")
+
+[node name="CreditsButtonLabel" type="Label" parent="UI/Control/CreditsButton" groups=["MainButtonLabels"]]
+custom_minimum_size = Vector2(96, 24)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "credits"
+label_settings = SubResource("LabelSettings_pwsdo")
+horizontal_alignment = 1
+vertical_alignment = 1
+uppercase = true
+
 [node name="Cursor" type="Sprite2D" parent="UI"]
 texture_filter = 1
 texture = ExtResource("10_jdfys")
@@ -1091,18 +1309,6 @@ libraries = {
 }
 speed_scale = 4.0
 
-[node name="CanvasLayer" type="CanvasLayer" parent="."]
-layer = 100
-
-[node name="Veil" type="ColorRect" parent="CanvasLayer"]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-color = Color(0, 0, 0, 1)
-
 [connection signal="pressed" from="UI/Control/Menu/StartGame" to="." method="_on_start_game_pressed"]
 [connection signal="pressed" from="UI/Control/Menu/Options" to="." method="_on_options_pressed"]
 [connection signal="pressed" from="UI/Control/Menu/Quit" to="." method="_on_quit_pressed"]
@@ -1114,4 +1320,6 @@ color = Color(0, 0, 0, 1)
 [connection signal="gui_input" from="UI/Control/ColorPalettes/MarginContainer/VBoxContainer/WrappingScrollContainer" to="UI/Control/ColorPalettes/MarginContainer/VBoxContainer/WrappingScrollContainer" method="_on_gui_input"]
 [connection signal="pressed" from="UI/Control/ColorPalettes/MarginContainer/VBoxContainer/HBoxContainer/ApplyPalette" to="." method="_on_apply_palette_pressed"]
 [connection signal="pressed" from="UI/Control/ColorPalettes/MarginContainer/VBoxContainer/HBoxContainer/Cancel" to="." method="_on_cancel_pressed"]
+[connection signal="pressed" from="UI/Control/Credits/CloseCredits" to="." method="_on_close_credits_pressed"]
+[connection signal="pressed" from="UI/Control/CreditsButton" to="." method="_on_credits_button_pressed"]
 [connection signal="timeout" from="GameDemo/BattleTimer" to="GameDemo" method="_on_battle_timer_timeout"]

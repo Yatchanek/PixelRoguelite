@@ -59,11 +59,10 @@ region = Rect2(112, 0, 16, 16)
 atlas = ExtResource("5_kf4ff")
 region = Rect2(128, 0, 16, 16)
 
-[sub_resource type="LabelSettings" id="LabelSettings_t8dk0"]
+[sub_resource type="LabelSettings" id="LabelSettings_g6a32"]
 font = ExtResource("2_f1aie")
 font_size = 12
-outline_size = 8
-outline_color = Color(0.223103, 0.223103, 0.223103, 1)
+outline_size = 6
 
 [sub_resource type="LabelSettings" id="LabelSettings_ibiwc"]
 font = ExtResource("2_f1aie")
@@ -399,7 +398,7 @@ grow_horizontal = 2
 grow_vertical = 2
 text = "retrieve all nine keys
 to open the gate!"
-label_settings = SubResource("LabelSettings_t8dk0")
+label_settings = SubResource("LabelSettings_g6a32")
 horizontal_alignment = 1
 uppercase = true
 

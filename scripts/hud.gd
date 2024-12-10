@@ -99,10 +99,9 @@ func apply_color_palette():
 	stylebox = stylebox.duplicate()
 	stylebox.set_border_width_all(2)
 	game_over_panel.add_theme_stylebox_override("panel", stylebox)
-	
 	coords_label.label_settings.font_color = Globals.color_palettes[Globals.current_palette][3] 
-	message_label.label_settings.font_color = Globals.color_palettes[Globals.current_palette][4]
-	message_label.label_settings.outline_color = Globals.color_palettes[Globals.current_palette][2] 
+	message_label.label_settings.font_color = Globals.color_palettes[Globals.current_palette][5]
+	message_label.label_settings.outline_color = Globals.color_palettes[Globals.current_palette][1] 
 	restart_label.label_settings.font_color = Globals.color_palettes[Globals.current_palette][3] 
 	restart_label.label_settings.outline_color = Globals.color_palettes[Globals.current_palette][5] 
 	back_to_menu_label.label_settings.font_color = Globals.color_palettes[Globals.current_palette][3] 
@@ -201,10 +200,10 @@ func _on_player_died() -> void:
 func _on_restart_button_pressed() -> void:
 	restart_button.disabled = true
 	back_to_menu_button.disabled = true
-	get_tree().reload_current_scene()
+	SceneChanger.change_scene(SceneChanger.game_scene)
 
 
 func _on_back_to_menu_button_pressed() -> void:
 	restart_button.disabled = true
 	back_to_menu_button.disabled = true
-	get_tree().change_scene_to_file("res://scenes/title_screen.tscn")
+	SceneChanger.change_scene(SceneChanger.title_screen_scene)

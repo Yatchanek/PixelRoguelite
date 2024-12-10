@@ -66,7 +66,9 @@ func play_music(music : Music):
 		tw.tween_property(current_music_player, "volume_db", 0.0, 2.0)
 	timer.start(current_music_player.stream.get_length() - 3)
 	
-func switch_music(music : Music):
+func switch_music(music : Music, restart : bool = false):
+	if current_music_player.stream == music_tracks[music] and !restart:
+		return
 	next_music_player.stream = music_tracks[music]
 	next_music_player.play()
 	var tw : Tween = create_tween()
@@ -79,6 +81,7 @@ func switch_music(music : Music):
 	next_music_player = temp
 
 func _on_timer_timeout() -> void:
+	
 	if current_music_player.stream == music_tracks[Music.MAIN_MUSIC]:
 		switch_music(Music.MAIN_MUSIC)
 	elif current_music_player.stream == music_tracks[Music.TITLE_SCREEN_MUSIC]:

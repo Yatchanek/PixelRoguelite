@@ -11,7 +11,6 @@ resource_local_to_scene = true
 font = ExtResource("4_myq5a")
 font_size = 12
 outline_size = 4
-outline_color = Color(1, 0.309804, 1, 1)
 
 [node name="UpgradeCard" type="TextureRect"]
 process_mode = 3

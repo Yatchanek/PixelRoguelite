@@ -43,11 +43,13 @@ func _ready() -> void:
 	
 	create_color_palettes()
 	current_palette = Settings.color_palette
+	print(current_palette)
 	if current_palette > color_palettes.size() - 1:
 		current_palette = color_palettes.size() - 1
 		Settings.color_palette = current_palette
 	
 func new_game():
+	
 	reset()
 	
 func create_color_palettes():

@@ -141,7 +141,7 @@ func _physics_process(_delta: float) -> void:
 			nav_agent.set_velocity(intended_velocity)
 
 
-		if can_shoot and global_transform.x.dot(global_position.direction_to(target.global_position)) > 0.98:
+		if can_shoot and is_instance_valid(target) and global_transform.x.dot(global_position.direction_to(target.global_position)) > 0.98:
 			shoot()
 	elif current_state == State.CRUISE:
 		var intended_velocity : Vector2 = global_position.direction_to(nav_agent.get_next_path_position()) * speed

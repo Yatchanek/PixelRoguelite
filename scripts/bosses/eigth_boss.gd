@@ -162,7 +162,7 @@ func check_linesight(origin : Node2D):
 	shape.size = Vector2(640, 48)
 	var query : PhysicsShapeQueryParameters2D = PhysicsShapeQueryParameters2D.new()
 	query.shape = shape
-	query.transform = body.global_transform.translated(body.global_transform.x * 320)	
+	query.transform = origin.global_transform.translated(origin.global_transform.x * 320)	
 	query.collision_mask = 4096
 	query.collide_with_areas = true
 	query.collide_with_bodies = false

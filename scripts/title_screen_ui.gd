@@ -12,6 +12,8 @@ var bordered_button_scene = preload("res://scenes/ui_elements/bordered_button.ts
 @onready var palette_buttons_container: VBoxContainer = %PaletteButtonsContainer
 @onready var wrapping_scroll_container: ScrollContainer = %WrappingScrollContainer
 @onready var close_options: TextureButton = %CloseOptions
+@onready var close_credits: TextureButton = %CloseCredits
+
 @onready var crt_options: VBoxContainer = %CRTOptions
 
 @onready var crt_curve_slider: HSlider = %crt_curve
@@ -27,15 +29,24 @@ var bordered_button_scene = preload("res://scenes/ui_elements/bordered_button.ts
 @onready var effects_colume_slider: HSlider = %effects_volume
 @onready var music_volume_slider: HSlider = %music_volume
 
+@onready var credits: PanelContainer = $UI/Control/Credits
+@onready var credits_label: Label = %CreditsLabel
+@onready var credits_scroll_container: ScrollContainer = %CreditsScrollContainer
+@onready var main_credit: Label = %MainCredit
+@onready var licenses_label: Label = %LicensesLabel
+@onready var godot_license: Label = %GodotLicense
+@onready var credits_button: Button = %CreditsButton
+
+
 @onready var menu: VBoxContainer = $UI/Control/Menu
 @onready var game_demo: Node2D = $GameDemo
-
-@onready var veil: ColorRect = $CanvasLayer/Veil
 
 var candidate_color_palette : int
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	if !SceneChanger.is_connected("scene_changed", _on_scene_changed):
+		SceneChanger.scene_changed.connect(_on_scene_changed)	
 	create_palette_buttons()
 	Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
 	#Input.set_custom_mouse_cursor(load("res://graphics/arrow_cursor_small.png"), Input.CURSOR_ARROW, Vector2.ZERO)
@@ -76,11 +87,7 @@ func _ready() -> void:
 		emitter.finished.connect(emitter.queue_free)
 		emitter.emitting = true
 
-		
-
-	var tw : Tween = create_tween()
-	tw.tween_property(veil, "modulate:a", 0.0, 1.5)
-	await tw.finished
+func _on_scene_changed():
 	SoundManager.play_music(SoundManager.Music.TITLE_SCREEN_MUSIC)
 	animate_title()
 
@@ -99,11 +106,12 @@ func animate_title():
 	
 func animate_menu():
 	menu.show()
+	credits_button.show()
 	var tw : Tween = create_tween()
 	tw.set_ease(Tween.EASE_IN_OUT)
 	tw.tween_interval(1.0)
 	tw.tween_property(menu, "modulate:a", 1.0, 0.75)
-	
+	tw.tween_property(credits_button, "modulate:a", 1.0, 0.75)
 	await tw.finished
 	#blink_letter()
 	game_demo.start()
@@ -141,6 +149,7 @@ func apply_color_palette():
 	cursor_inner.self_modulate = Globals.color_palettes[Globals.current_palette][3]
 	current_color_palette.texture = Globals.palette_images[Globals.current_palette]
 	background.color = Globals.color_palettes[Globals.current_palette][7]
+	
 	for label : Label in get_tree().get_nodes_in_group("MainButtonLabels"):
 		label.label_settings.font_color = Globals.color_palettes[Globals.current_palette][3]
 		label.label_settings.outline_color = Globals.color_palettes[Globals.current_palette][5]
@@ -148,6 +157,10 @@ func apply_color_palette():
 	for label : Label in get_tree().get_nodes_in_group("MenuLabels"):
 		label.label_settings.font_color = Globals.color_palettes[Globals.current_palette][3]
 
+	credits_label.label_settings.outline_color = Globals.color_palettes[Globals.current_palette][5]
+	licenses_label.label_settings.outline_color = Globals.color_palettes[Globals.current_palette][5]
+
+	
 	
 	for checkbox : CheckBox in get_tree().get_nodes_in_group("MenuCheckBoxes"):
 		checkbox.self_modulate = Globals.color_palettes[Globals.current_palette][3]
@@ -156,11 +169,11 @@ func apply_color_palette():
 		slider.self_modulate = Globals.color_palettes[Globals.current_palette][3]
 		
 	close_options.self_modulate = Globals.color_palettes[Globals.current_palette][3]
+	close_credits.self_modulate = Globals.color_palettes[Globals.current_palette][3]
 	
 	options.add_theme_color_override("font_selected_color", Globals.color_palettes[Globals.current_palette][0])
 	options.add_theme_color_override("font_unselected_color", Globals.color_palettes[Globals.current_palette][2])
 	options.add_theme_color_override("font_hovered_color", Globals.color_palettes[Globals.current_palette][1])
-
 
 	var stylebox : StyleBoxFlat = StyleBoxFlat.new()
 	stylebox.bg_color = Globals.color_palettes[Globals.current_palette][7]
@@ -168,18 +181,22 @@ func apply_color_palette():
 	stylebox.set_border_width_all(8)
 	options.add_theme_stylebox_override("panel", stylebox)
 	color_palettes.add_theme_stylebox_override("panel", stylebox)
+	credits.add_theme_stylebox_override("panel", stylebox)
 	
 	stylebox = StyleBoxFlat.new()
 	stylebox.bg_color = Globals.color_palettes[Globals.current_palette][4]
 	wrapping_scroll_container.get_node("_v_scroll").add_theme_stylebox_override("grabber", stylebox)
+	credits_scroll_container.get_node("_v_scroll").add_theme_stylebox_override("grabber", stylebox)
 	
 	stylebox = StyleBoxFlat.new()
 	stylebox.bg_color = Globals.color_palettes[Globals.current_palette][4]
 	wrapping_scroll_container.get_node("_v_scroll").add_theme_stylebox_override("grabber_highlight", stylebox)
-
+	credits_scroll_container.get_node("_v_scroll").add_theme_stylebox_override("grabber_highlight", stylebox)
+	
 	stylebox = StyleBoxFlat.new()
 	stylebox.bg_color = Globals.color_palettes[Globals.current_palette][4]
 	wrapping_scroll_container.get_node("_v_scroll").add_theme_stylebox_override("grabber_pressed", stylebox)
+	credits_scroll_container.get_node("_v_scroll").add_theme_stylebox_override("grabber_pressed", stylebox)
 			
 	stylebox = StyleBoxFlat.new()
 	stylebox.bg_color = Globals.color_palettes[Globals.current_palette][1]
@@ -279,7 +296,7 @@ func _on_palette_selected(button : BorderedButton):
 			_button.deactivate()
 
 func _on_interactable_ui_hovered():
-	SoundManager.play_effect(SoundManager.Effects.MENU_NAVIGATE)
+	#SoundManager.play_effect(SoundManager.Effects.MENU_NAVIGATE)
 	set_hand_cursor()
 
 func _on_interactable_ui_unhovered():
@@ -298,7 +315,7 @@ func _on_button_hovered(button : Button):
 	label.label_settings.font_color = Globals.color_palettes[Globals.current_palette][6]
 	label.label_settings.outline_color = Globals.color_palettes[Globals.current_palette][2]
 	label.label_settings.outline_size = 12
-	if menu.modulate.a > 0.999:
+	if menu.modulate.a == 1.0:
 		SoundManager.play_effect(SoundManager.Effects.MENU_NAVIGATE)
 	
 func _on_button_unhovered(button : Button):
@@ -342,9 +359,9 @@ func _on_crt_shader_check_box_toggled(toggled_on: bool) -> void:
 
 func _on_start_game_pressed() -> void:
 	SoundManager.play_effect(SoundManager.Effects.MENU_START_GAME)
-	SoundManager.switch_music(SoundManager.Music.MAIN_MUSIC)
+	#SoundManager.switch_music(SoundManager.Music.MAIN_MUSIC)
 	await get_tree().create_timer(0.75).timeout
-	get_tree().change_scene_to_file("res://scenes/game.tscn")
+	SceneChanger.change_scene(SceneChanger.game_scene)
 
 
 func _on_apply_palette_pressed() -> void:
@@ -379,7 +396,6 @@ func _on_sound_slider_value_changed(value : float, _name : String):
 		"music_volume":
 			AudioServer.set_bus_volume_db(2, Settings.music_volume)
 	
-	#prints(AudioServer.get_bus_volume_db(0), AudioServer.get_bus_volume_db(1), AudioServer.get_bus_volume_db(2))
 
 func _on_maze_size_value_changed(value: float) -> void:
 	Settings.zone_size = int(value)
@@ -394,3 +410,14 @@ func _on_quit_pressed() -> void:
 	SoundManager.play_effect(SoundManager.Effects.MENU_SELECT)
 	await get_tree().create_timer(0.4).timeout
 	get_tree().quit()
+
+
+func _on_close_credits_pressed() -> void:
+	SoundManager.play_effect(SoundManager.Effects.MENU_SELECT)
+	animation_player.play_backwards("OpenCredits")
+	credits_button.disabled = false
+
+func _on_credits_button_pressed() -> void:
+	SoundManager.play_effect(SoundManager.Effects.MENU_SELECT)
+	animation_player.play("OpenCredits")
+	credits_button.disabled = true

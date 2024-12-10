@@ -24,7 +24,7 @@
 [node name="SoundManager" type="Node"]
 process_mode = 3
 script = ExtResource("1_sy5cd")
-sound_effects = Array[AudioStream]([ExtResource("2_dn0vs"), ExtResource("3_721wc"), ExtResource("4_mbm1f"), ExtResource("5_omqyu"), ExtResource("4_2gigp"), ExtResource("7_17ns8"), ExtResource("8_ykanh"), ExtResource("9_54vb8"), ExtResource("10_t6xn4"), ExtResource("11_oc0yu"), ExtResource("10_ygl36"), ExtResource("11_w0p14"), ExtResource("12_8jfcm"), ExtResource("13_qool1"), ExtResource("14_cvjdd")])
+sound_effects = Array[AudioStream]([ExtResource("2_dn0vs"), ExtResource("3_721wc"), ExtResource("4_mbm1f"), ExtResource("5_omqyu"), ExtResource("4_2gigp"), ExtResource("7_17ns8"), ExtResource("8_ykanh"), ExtResource("9_54vb8"), ExtResource("10_t6xn4"), ExtResource("10_ygl36"), ExtResource("11_oc0yu"), ExtResource("11_w0p14"), ExtResource("12_8jfcm"), ExtResource("13_qool1"), ExtResource("14_cvjdd")])
 music_tracks = Array[AudioStream]([ExtResource("17_horbv"), ExtResource("18_5dtxs"), ExtResource("19_763ee"), ExtResource("20_gexo4")])
 
 [node name="EffectChannels" type="Node" parent="."]

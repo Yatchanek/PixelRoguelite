@@ -17,6 +17,7 @@ config/icon="res://icon.svg"
 
 [autoload]
 
+SceneChanger="*res://scenes/autoloads/scene_changer.tscn"
 Settings="*res://scenes/autoloads/settings.tscn"
 Globals="*res://scenes/autoloads/globals.tscn"
 EventBus="*res://scenes/autoloads/event_bus.tscn"
