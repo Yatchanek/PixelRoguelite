@@ -1,4 +1,4 @@
-[gd_scene load_steps=73 format=3 uid="uid://blgcf5t6qthui"]
+[gd_scene load_steps=74 format=3 uid="uid://blgcf5t6qthui"]
 
 [ext_resource type="FontFile" uid="uid://bs4wn8lq821l5" path="res://fonts/NotJamChunkySans.ttf" id="2_8u3cf"]
 [ext_resource type="Script" path="res://scripts/title_screen_ui.gd" id="2_x1msa"]
@@ -66,6 +66,10 @@ font = ExtResource("2_8u3cf")
 font_size = 18
 
 [sub_resource type="StyleBoxLine" id="StyleBoxLine_gcvmh"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_vvexn"]
+font = ExtResource("2_8u3cf")
+font_size = 6
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_25mjt"]
 
@@ -295,7 +299,7 @@ offset_bottom = 157.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-theme_override_constants/separation = 8
+theme_override_constants/separation = 16
 
 [node name="StartGame" type="Button" parent="UI/Control/Menu" groups=["InteractableUI", "MainButtons"]]
 custom_minimum_size = Vector2(256, 48)
@@ -576,11 +580,10 @@ layout_mode = 2
 mouse_filter = 2
 theme_override_fonts/font = ExtResource("2_8u3cf")
 theme_override_font_sizes/font_size = 12
-current_tab = 1
+current_tab = 0
 tab_focus_mode = 0
 
 [node name="GAMEPLAY" type="PanelContainer" parent="UI/Control/MarginContainer/Options"]
-visible = false
 layout_mode = 2
 mouse_filter = 2
 metadata/_tab_index = 0
@@ -623,6 +626,54 @@ value = 1.0
 allow_greater = true
 allow_lesser = true
 
+[node name="HBoxContainer3" type="HBoxContainer" parent="UI/Control/MarginContainer/Options/GAMEPLAY/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="UI/Control/MarginContainer/Options/GAMEPLAY/MarginContainer/VBoxContainer/HBoxContainer3" groups=["MenuLabels"]]
+custom_minimum_size = Vector2(220, 0)
+layout_mode = 2
+text = "maze type"
+label_settings = SubResource("LabelSettings_apjwr")
+uppercase = true
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/Control/MarginContainer/Options/GAMEPLAY/MarginContainer/VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="UI/Control/MarginContainer/Options/GAMEPLAY/MarginContainer/VBoxContainer/HBoxContainer3/VBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="Label" type="Label" parent="UI/Control/MarginContainer/Options/GAMEPLAY/MarginContainer/VBoxContainer/HBoxContainer3/VBoxContainer/HBoxContainer" groups=["MenuLabels"]]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "linear"
+label_settings = SubResource("LabelSettings_vvexn")
+uppercase = true
+
+[node name="Label2" type="Label" parent="UI/Control/MarginContainer/Options/GAMEPLAY/MarginContainer/VBoxContainer/HBoxContainer3/VBoxContainer/HBoxContainer" groups=["MenuLabels"]]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "connected"
+label_settings = SubResource("LabelSettings_vvexn")
+horizontal_alignment = 2
+uppercase = true
+
+[node name="cull_ratio_slider" type="HSlider" parent="UI/Control/MarginContainer/Options/GAMEPLAY/MarginContainer/VBoxContainer/HBoxContainer3/VBoxContainer" groups=["InteractableUI", "MenuSliders"]]
+unique_name_in_owner = true
+clip_contents = true
+custom_minimum_size = Vector2(128, 0)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_icons/grabber = ExtResource("8_d2vhc")
+theme_override_icons/grabber_highlight = ExtResource("8_d2vhc")
+theme_override_styles/slider = SubResource("StyleBoxLine_gcvmh")
+min_value = 0.15
+max_value = 0.85
+step = 0.05
+value = 0.5
+allow_greater = true
+allow_lesser = true
+
 [node name="HBoxContainer2" type="HBoxContainer" parent="UI/Control/MarginContainer/Options/GAMEPLAY/MarginContainer/VBoxContainer"]
 layout_mode = 2
 
@@ -649,6 +700,7 @@ allow_greater = true
 allow_lesser = true
 
 [node name="GRAPHICS" type="PanelContainer" parent="UI/Control/MarginContainer/Options"]
+visible = false
 layout_mode = 2
 mouse_filter = 2
 metadata/_tab_index = 1
@@ -1313,6 +1365,7 @@ speed_scale = 4.0
 [connection signal="pressed" from="UI/Control/Menu/Options" to="." method="_on_options_pressed"]
 [connection signal="pressed" from="UI/Control/Menu/Quit" to="." method="_on_quit_pressed"]
 [connection signal="value_changed" from="UI/Control/MarginContainer/Options/GAMEPLAY/MarginContainer/VBoxContainer/HBoxContainer/maze_size" to="." method="_on_maze_size_value_changed"]
+[connection signal="value_changed" from="UI/Control/MarginContainer/Options/GAMEPLAY/MarginContainer/VBoxContainer/HBoxContainer3/VBoxContainer/cull_ratio_slider" to="." method="_on_cull_ratio_slider_value_changed"]
 [connection signal="value_changed" from="UI/Control/MarginContainer/Options/GAMEPLAY/MarginContainer/VBoxContainer/HBoxContainer2/difficulty" to="." method="_on_difficulty_value_changed"]
 [connection signal="pressed" from="UI/Control/MarginContainer/Options/GRAPHICS/MarginContainer/VBoxContainer/HBoxContainer/HBoxContainer/ChangePaletteButon" to="." method="_on_change_palette_buton_pressed"]
 [connection signal="toggled" from="UI/Control/MarginContainer/Options/GRAPHICS/MarginContainer/VBoxContainer/HBoxContainer2/CrtShaderCheckBox" to="." method="_on_crt_shader_check_box_toggled"]

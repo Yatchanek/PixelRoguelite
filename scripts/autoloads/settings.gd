@@ -2,6 +2,7 @@ extends Node
 
 var zone_size : int = 1
 var difficulty : int = 1
+var cull_ratio : float = 0.5
 
 var master_volume : float = 0
 var effects_volume : float = 0
@@ -17,6 +18,7 @@ func save_settings():
 	
 	config_file.set_value("Gameplay Settings", "zone_size", zone_size)
 	config_file.set_value("Gameplay Settings", "difficulty", difficulty)
+	config_file.set_value("Gameplay Settings", "cull_ratio", cull_ratio)
 	
 	config_file.set_value("Graphics Settings", "color_palette", color_palette)
 	

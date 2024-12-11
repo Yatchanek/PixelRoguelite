@@ -133,11 +133,8 @@ func select_upgrade_type(candidate_pool : Array[Upgrades]) -> Upgrades:
 	for upgrade : Upgrades in candidate_pool:
 		total_chance += upgrade_probabilities[upgrade]
 		if roll < total_chance:
-			prints("Candidates before:", candidate_pool)		
 			candidate = upgrade
-			prints("Selected upgrade:", candidate, upgrade)
 			candidate_pool.erase(upgrade)
-			prints("Candidates after:", candidate_pool)
 			break
 	
 	return candidate

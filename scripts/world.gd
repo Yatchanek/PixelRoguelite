@@ -11,7 +11,7 @@ const room_scene = preload("res://scenes/room.tscn")
 
 var enemy_count : int = 0
 var current_room : Room
-var cull_percentage : float = 0.5
+var cull_ratio : float = 0.5
 
 var directions : Dictionary = {
 	0 : Vector2i(0, -1),
@@ -51,6 +51,7 @@ func _on_scene_changed():
 	change_room(Vector2i.ZERO, 0)
 
 func create_maze_data():
+	cull_ratio = Settings.cull_ratio
 	Globals.maze_size = Settings.zone_size * (Globals.max_layer + 1) * 2 + 3
 	var unvisited : Array[Vector2i] = []
 	var stack : Array[Vector2i] = []
@@ -81,7 +82,7 @@ func create_maze_data():
 			current = stack.pop_back()
 			
 func cull_rooms():
-	for i in Globals.maze_size * Globals.maze_size * cull_percentage:
+	for i in Globals.maze_size * Globals.maze_size * cull_ratio:
 		var coords : Vector2i = Vector2i(randi_range(0, Globals.maze_size - 1), randi_range(0, Globals.maze_size - 1))
 		var dirs : Array = exit_mappings.keys().duplicate()
 		dirs.shuffle()

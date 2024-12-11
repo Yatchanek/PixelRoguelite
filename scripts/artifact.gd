@@ -12,6 +12,7 @@ func _ready() -> void:
 	body.region_rect.position.x = number * 16
 
 func _on_body_entered(_body: Node2D) -> void:
+	SoundManager.play_effect(SoundManager.Effects.PICKUP_KEY)
 	EventBus.gate_key_collected.emit(number, coords)
 	Globals.keys_collected.append(number)
 	collected.emit()

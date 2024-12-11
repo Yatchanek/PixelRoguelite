@@ -125,7 +125,7 @@ func apply_color_palette():
 	chasis.self_modulate = secondary_color
 
 func _on_navigation_agent_2d_velocity_computed(safe_velocity: Vector2) -> void:
-	if current_state != State.MOVE:
+	if current_state != State.MOVE or dead:
 		return
 	velocity = lerp(velocity, safe_velocity, 0.5)
 	if safe_velocity != Vector2.ZERO:

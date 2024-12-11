@@ -36,7 +36,7 @@ func _unhandled_input(event: InputEvent) -> void:
 func _ready() -> void:
 	apply_color_palette()
 	EventBus.gate_key_collected.connect(show_gate_key)
-	EventBus.gate_approached.connect(show_message.bind("retrieve all nine keys\nto open the gate!", -1.0))
+	EventBus.gate_approached.connect(show_message.bind("retrieve all nine keys\nto open the gate!"))
 	EventBus.gate_left.connect(hide_message)
 	EventBus.map_found.connect(show_message.bind("You've found the map of the maze!", 2.0))
 	EventBus.game_completed.connect(_on_game_completed)
@@ -139,11 +139,11 @@ func show_upgrades():
 	ui_veil.modulate.a = 0.75
 	upgrade_card_container.add_cards()
 
-func show_message(msg : String, duration : float):
+func show_message(msg : String, duration : float = -1.0):
 	message_label.text = msg
 	message_label.show()
 	if duration > 0:
-		await get_tree().create_timer(duration)
+		await get_tree().create_timer(duration).timeout
 		hide_message()
 	
 func hide_message():

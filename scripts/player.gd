@@ -88,7 +88,7 @@ signal died
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey:
 		if event.pressed and event.keycode == KEY_ESCAPE:
-			get_tree().change_scene_to_file("res://scenes/title_screen.tscn")
+			SceneChanger.change_scene(SceneChanger.title_screen_scene)
 		
 	if event is InputEventMouseButton:
 		if dead:

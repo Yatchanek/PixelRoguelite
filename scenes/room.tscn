@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=3 uid="uid://dcryx3x5sypq"]
+[gd_scene load_steps=24 format=3 uid="uid://dcryx3x5sypq"]
 
 [ext_resource type="Script" path="res://scripts/room.gd" id="1_sifb4"]
 [ext_resource type="PackedScene" uid="uid://bvfk2fyk13k8f" path="res://scenes/wall_horizontal.tscn" id="4_8xvrl"]
@@ -21,6 +21,7 @@
 [ext_resource type="PackedScene" uid="uid://d2epvby5lw7gl" path="res://scenes/indicator.tscn" id="15_3a2ij"]
 [ext_resource type="PackedScene" uid="uid://b4n7mvndh8rj3" path="res://scenes/gate_key.tscn" id="16_nd756"]
 [ext_resource type="PackedScene" uid="uid://dgoxuogx50x5m" path="res://scenes/pickup.tscn" id="18_qgbj8"]
+[ext_resource type="PackedScene" uid="uid://ytpyhcsmgrab" path="res://scenes/map_pickup.tscn" id="22_4p8tk"]
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_vic26"]
 agent_radius = 12.0
@@ -40,6 +41,7 @@ explosion_scene = ExtResource("13_x3ili")
 indicator_scene = ExtResource("15_3a2ij")
 gate_key_scene = ExtResource("16_nd756")
 pickup_scene = ExtResource("18_qgbj8")
+map_pickup_scene = ExtResource("22_4p8tk")
 
 [node name="Walls" type="Node2D" parent="."]
 z_index = -1

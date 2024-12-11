@@ -10,11 +10,7 @@ var enemies : Array[Enemy] = []
 var spawn_called : bool = false
 var occupied_coords : Array[Vector2i] = []
 
-func _unhandled_input(event: InputEvent) -> void:
-	if event is InputEventKey:
-		if event.pressed and event.keycode == KEY_ESCAPE:
-			get_tree().quit()
-# Called when the node enters the scene tree for the first time.
+
 func _ready() -> void:
 	var points : PackedVector2Array = [
 		Vector2(0, 0),

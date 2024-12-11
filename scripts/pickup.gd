@@ -20,8 +20,10 @@ func apply_color_palette():
 
 func _on_body_entered(body: Player) -> void:
 	if type == 0:
+		SoundManager.play_effect(SoundManager.Effects.PICKUP_HEALTH)
 		body.heal(5)
 	else:
+		SoundManager.play_effect(SoundManager.Effects.PICKUP_SHIELD)
 		body.get_shield(5)
 	$CollisionShape2D.set_deferred("disabled", true)
 	collected.emit()

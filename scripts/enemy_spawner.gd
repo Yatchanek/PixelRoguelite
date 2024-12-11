@@ -73,15 +73,13 @@ func select_enemy(depth : int) -> Array[PackedScene]:
 func get_possible_enemies(depth : int) -> Array[Enemies]:
 	var enemies : Array[Enemies] = [Enemies.BASIC_ENEMY]
 
-	if depth > 2:
+	if depth > 1:
 		enemies.append(Enemies.KAMIKAZE_ENEMY)
-	if depth > 3:
+	if depth > 2:
 		enemies.append(Enemies.RAPID_FIRE_ENEMY)
-	if depth > 4 and swarms_spawned < max_swarms:
-		enemies.append(Enemies.SWARM_ENEMY)
-	if depth > 4:
-		enemies.append(Enemies.MISSILE_ENEMY)
-	if depth > 5:
+		enemies.append(Enemies.MISSILE_ENEMY) 
 		enemies.append(Enemies.LASER_ENEMY)
+	if depth > 3 and swarms_spawned < max_swarms:
+		enemies.append(Enemies.SWARM_ENEMY)
 		
 	return enemies

@@ -77,6 +77,7 @@ func explode(dir : Vector2):
 
 func disable():
 	target = null
+	dead = true
 	set_physics_process(false)
 	set_process(false)
 	if has_node("Timer"):

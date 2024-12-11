@@ -114,7 +114,7 @@ func _ready() -> void:
 				var time_since_last_pickup : int = current_time - room_data.pickup_collect_time
 				if time_since_last_pickup > pickup_respawn_interval and randf() < 0.025:
 					spawn_pickup()
-			elif randf() < 0.075:
+			elif randf() < 0.09:
 				spawn_pickup()
 				
 			if Globals.map_pickup_coords.has(room_data.coords):
@@ -360,7 +360,7 @@ func _on_timer_timeout() -> void:
 
 
 func spawn_indicators(coords_array : Array[Vector2i]):	
-	if !is_inside_tree() or Globals.game_completed:
+	if !is_inside_tree() or Globals.game_completed or player.dead:
 		return
 		
 	for i in coords_array.size():
@@ -485,7 +485,7 @@ func _on_all_keys_collected():
 
 func _on_player_died():
 	timer.stop()
-	for enemy in enemies_array:
+	for enemy : Enemy in enemies_array:
 		enemy.disable()
 
 func _on_game_completed():

@@ -134,7 +134,7 @@ func apply_color_palette():
 	laser.apply_color_palette()
 
 func _on_navigation_agent_2d_velocity_computed(safe_velocity: Vector2) -> void:
-	if current_state != State.MOVE:
+	if current_state != State.MOVE or dead:
 		return
 	velocity = safe_velocity
 	if safe_velocity != Vector2.ZERO:

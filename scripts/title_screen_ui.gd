@@ -25,6 +25,7 @@ var bordered_button_scene = preload("res://scenes/ui_elements/bordered_button.ts
 
 @onready var maze_size_slider: HSlider = %maze_size
 @onready var difficulty_slider: HSlider = %difficulty
+@onready var cull_ratio_slider: HSlider = %cull_ratio_slider
 @onready var master_volume_slider: HSlider = %master_volume
 @onready var effects_colume_slider: HSlider = %effects_volume
 @onready var music_volume_slider: HSlider = %music_volume
@@ -143,6 +144,7 @@ func set_sliders():
 	
 	maze_size_slider.value = Settings.zone_size
 	difficulty_slider.value = Settings.difficulty
+	cull_ratio_slider.value = Settings.cull_ratio
 
 func apply_color_palette():
 	cursor.self_modulate = Globals.color_palettes[Globals.current_palette][6]
@@ -399,12 +401,15 @@ func _on_sound_slider_value_changed(value : float, _name : String):
 
 func _on_maze_size_value_changed(value: float) -> void:
 	Settings.zone_size = int(value)
-
+	
 
 
 func _on_difficulty_value_changed(value: float) -> void:
 	Settings.difficulty = int(value)
 
+
+func _on_cull_ratio_slider_value_changed(value: float) -> void:
+	Settings.cull_ratio = value
 
 func _on_quit_pressed() -> void:
 	SoundManager.play_effect(SoundManager.Effects.MENU_SELECT)

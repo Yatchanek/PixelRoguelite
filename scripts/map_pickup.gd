@@ -4,17 +4,14 @@ extends Area2D
 
 signal collected
 
-# Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	pass # Replace with function body.
-
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	pass
-
+	apply_color_palette()
 
 func _on_body_entered(body: Node2D) -> void:
+	SoundManager.play_effect(SoundManager.Effects.PICKUP_MAP)
 	EventBus.map_found.emit()
-	Globals.map_pickup_coords = []
+	Globals.map_pickup_coords.clear()
 	queue_free()
+
+func apply_color_palette():
+	sprite.self_modulate = Globals.color_palettes[Globals.current_palette][3]
