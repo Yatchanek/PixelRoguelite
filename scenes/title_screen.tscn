@@ -165,6 +165,22 @@ outline_color = Color(0.169245, 0.169245, 0.169245, 1)
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_kswp7"]
 
+[sub_resource type="Animation" id="Animation_jlt6s"]
+resource_name = "OpenCredits"
+step = 0.1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("UI/Control/Credits:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [Vector2(1e-05, 1e-05), Vector2(0.1, 0.1), Vector2(0.2, 0.2), Vector2(0.3, 0.3), Vector2(0.4, 0.4), Vector2(0.5, 0.5), Vector2(0.6, 0.6), Vector2(0.7, 0.7), Vector2(0.8, 0.8), Vector2(0.9, 0.9), Vector2(1, 1)]
+}
+
 [sub_resource type="Animation" id="Animation_spklm"]
 resource_name = "OpenOptions"
 step = 0.1
@@ -210,22 +226,6 @@ tracks/0/keys = {
 "transitions": PackedFloat32Array(1),
 "update": 0,
 "values": [Vector2(1e-05, 1e-05)]
-}
-
-[sub_resource type="Animation" id="Animation_jlt6s"]
-resource_name = "OpenCredits"
-step = 0.1
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("UI/Control/Credits:scale")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
-"update": 1,
-"values": [Vector2(1e-05, 1e-05), Vector2(0.1, 0.1), Vector2(0.2, 0.2), Vector2(0.3, 0.3), Vector2(0.4, 0.4), Vector2(0.5, 0.5), Vector2(0.6, 0.6), Vector2(0.7, 0.7), Vector2(0.8, 0.8), Vector2(0.9, 0.9), Vector2(1, 1)]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_brsjj"]
@@ -1183,35 +1183,37 @@ theme_override_constants/margin_top = 16
 theme_override_constants/margin_right = 16
 theme_override_constants/margin_bottom = 16
 
-[node name="VBoxContainer" type="VBoxContainer" parent="UI/Control/Credits/MarginContainer"]
-layout_mode = 2
-theme_override_constants/separation = 24
-
-[node name="CreditsLabel" type="Label" parent="UI/Control/Credits/MarginContainer/VBoxContainer" groups=["MenuLabels"]]
-unique_name_in_owner = true
-layout_mode = 2
-text = "credits"
-label_settings = SubResource("LabelSettings_mnspl")
-horizontal_alignment = 1
-uppercase = true
-
-[node name="CreditsScrollContainer" type="ScrollContainer" parent="UI/Control/Credits/MarginContainer/VBoxContainer"]
+[node name="CreditsScrollContainer" type="ScrollContainer" parent="UI/Control/Credits/MarginContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 horizontal_scroll_mode = 0
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="UI/Control/Credits/MarginContainer/VBoxContainer/CreditsScrollContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/Control/Credits/MarginContainer/CreditsScrollContainer"]
+layout_mode = 2
+theme_override_constants/separation = 24
+
+[node name="CreditsLabel" type="Label" parent="UI/Control/Credits/MarginContainer/CreditsScrollContainer/VBoxContainer" groups=["MenuLabels"]]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+text = "credits"
+label_settings = SubResource("LabelSettings_mnspl")
+horizontal_alignment = 1
+vertical_alignment = 2
+uppercase = true
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="UI/Control/Credits/MarginContainer/CreditsScrollContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 24
 
-[node name="VBoxContainer" type="VBoxContainer" parent="UI/Control/Credits/MarginContainer/VBoxContainer/CreditsScrollContainer/VBoxContainer2"]
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/Control/Credits/MarginContainer/CreditsScrollContainer/VBoxContainer/VBoxContainer2"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 12
 
-[node name="MainCredit" type="Label" parent="UI/Control/Credits/MarginContainer/VBoxContainer/CreditsScrollContainer/VBoxContainer2/VBoxContainer" groups=["MenuLabels"]]
+[node name="MainCredit" type="Label" parent="UI/Control/Credits/MarginContainer/CreditsScrollContainer/VBoxContainer/VBoxContainer2/VBoxContainer" groups=["MenuLabels"]]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 4
@@ -1220,14 +1222,14 @@ text = "The last mazewalker
 label_settings = SubResource("LabelSettings_8wf3n")
 uppercase = true
 
-[node name="Artwork" type="Label" parent="UI/Control/Credits/MarginContainer/VBoxContainer/CreditsScrollContainer/VBoxContainer2/VBoxContainer" groups=["MenuLabels"]]
+[node name="Artwork" type="Label" parent="UI/Control/Credits/MarginContainer/CreditsScrollContainer/VBoxContainer/VBoxContainer2/VBoxContainer" groups=["MenuLabels"]]
 layout_mode = 2
 text = "artwork by yatchan"
 label_settings = SubResource("LabelSettings_17ucc")
 horizontal_alignment = 1
 uppercase = true
 
-[node name="Sounds" type="Label" parent="UI/Control/Credits/MarginContainer/VBoxContainer/CreditsScrollContainer/VBoxContainer2/VBoxContainer" groups=["MenuLabels"]]
+[node name="Sounds" type="Label" parent="UI/Control/Credits/MarginContainer/CreditsScrollContainer/VBoxContainer/VBoxContainer2/VBoxContainer" groups=["MenuLabels"]]
 layout_mode = 2
 text = "sounds by juhani junkala & 
 little robot sound factory"
@@ -1235,21 +1237,38 @@ label_settings = SubResource("LabelSettings_17ucc")
 horizontal_alignment = 1
 uppercase = true
 
-[node name="Music" type="Label" parent="UI/Control/Credits/MarginContainer/VBoxContainer/CreditsScrollContainer/VBoxContainer2/VBoxContainer" groups=["MenuLabels"]]
+[node name="Music" type="Label" parent="UI/Control/Credits/MarginContainer/CreditsScrollContainer/VBoxContainer/VBoxContainer2/VBoxContainer" groups=["MenuLabels"]]
 layout_mode = 2
 text = "music by sampixelz"
 label_settings = SubResource("LabelSettings_17ucc")
 horizontal_alignment = 1
 uppercase = true
 
-[node name="Fonts" type="Label" parent="UI/Control/Credits/MarginContainer/VBoxContainer/CreditsScrollContainer/VBoxContainer2/VBoxContainer" groups=["MenuLabels"]]
+[node name="Fonts" type="Label" parent="UI/Control/Credits/MarginContainer/CreditsScrollContainer/VBoxContainer/VBoxContainer2/VBoxContainer" groups=["MenuLabels"]]
 layout_mode = 2
 text = "fonts by daniel linssen and not jam"
 label_settings = SubResource("LabelSettings_17ucc")
 horizontal_alignment = 1
 uppercase = true
 
-[node name="LicensesLabel" type="Label" parent="UI/Control/Credits/MarginContainer/VBoxContainer/CreditsScrollContainer/VBoxContainer2" groups=["MenuLabels"]]
+[node name="Palettes" type="Label" parent="UI/Control/Credits/MarginContainer/CreditsScrollContainer/VBoxContainer/VBoxContainer2/VBoxContainer" groups=["MenuLabels"]]
+custom_minimum_size = Vector2(514, 90)
+layout_mode = 2
+text = "Color palettes by: bixbyte, hirohi, inkpendude, lostinindigo, maber, magcoin, mahyellaw, mig moog, morganne, octoshrimpy, pineappleonpizza, polyphrog, rsvp asap, skeddlespicks, skiller thomson
+downloaded from lospec.com"
+label_settings = SubResource("LabelSettings_17ucc")
+horizontal_alignment = 1
+autowrap_mode = 2
+uppercase = true
+
+[node name="Crt" type="Label" parent="UI/Control/Credits/MarginContainer/CreditsScrollContainer/VBoxContainer/VBoxContainer2/VBoxContainer" groups=["MenuLabels"]]
+layout_mode = 2
+text = "crt shader by arlez80"
+label_settings = SubResource("LabelSettings_17ucc")
+horizontal_alignment = 1
+uppercase = true
+
+[node name="LicensesLabel" type="Label" parent="UI/Control/Credits/MarginContainer/CreditsScrollContainer/VBoxContainer/VBoxContainer2" groups=["MenuLabels"]]
 unique_name_in_owner = true
 layout_mode = 2
 text = "licenses"
@@ -1257,10 +1276,10 @@ label_settings = SubResource("LabelSettings_mnspl")
 horizontal_alignment = 1
 uppercase = true
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="UI/Control/Credits/MarginContainer/VBoxContainer/CreditsScrollContainer/VBoxContainer2"]
+[node name="VBoxContainer2" type="VBoxContainer" parent="UI/Control/Credits/MarginContainer/CreditsScrollContainer/VBoxContainer/VBoxContainer2"]
 layout_mode = 2
 
-[node name="GodotLicense" type="Label" parent="UI/Control/Credits/MarginContainer/VBoxContainer/CreditsScrollContainer/VBoxContainer2/VBoxContainer2" groups=["MenuLabels"]]
+[node name="GodotLicense" type="Label" parent="UI/Control/Credits/MarginContainer/CreditsScrollContainer/VBoxContainer/VBoxContainer2/VBoxContainer2" groups=["MenuLabels"]]
 unique_name_in_owner = true
 layout_mode = 2
 text = "This game uses Godot Engine, available under the following license:
